@@ -1,0 +1,125 @@
+
+.head{
+    padding-bottom: 00px;
+        display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 30px;
+    background-color:#F4F0E5 ;
+    
+
+
+
+
+}
+.par3{
+    line-height: 47px;
+    font-family: "Libre Baskerville", serif;
+    padding-right: 15%;
+    padding-left: 15%;
+    padding-bottom: 200px;
+    font-size:32px;
+    font-Weight:400;
+        margin: 0 auto;
+        color :rgb(0, 0, 0);
+        height: 418 px;
+        align-items: center;
+        text-align: center;
+}
+
+.containerWrapper2 {
+    position: relative;
+    width: fit-content;
+}
+
+/* Background Box */
+.BackColorG {
+    
+        background-color: #97967A !important;
+        position: absolute !important;
+        width: 550px !important;
+        height: 400px !important;
+        left: 13% !important;
+        top: 29% !important;
+        z-index: 2 !important; /* Make sure it's behind .Branch-card */
+      opacity: 0.8;
+    }
+    
+
+
+/* Main Branch Card */
+.Branch-card {
+    position: relative;
+    width: 900px;
+    height: 500px;
+    margin-left: 200px;
+    margin-bottom: 200px;
+    background-size: cover;
+    background-position: center 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 4;
+    transition: all 0.7s ease-in-out;
+    overflow: hidden;
+}
+
+.Branch-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+/* Dark overlay effect */
+.Branch-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.34);
+    transition: background-color 0.3s ease-in-out;
+    z-index: 2;
+}
+
+
+
+/* Branch Title - Bottom Right */
+.branch-title {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: 700;
+    color: white;
+    z-index: 3;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+}
+/* Links - Positioned under the Branch Card at the right */
+.links1 {
+    position: absolute !important;
+    display: flex !important;
+    gap: 20px !important;
+    z-index: 10 !important; /* Ensures they are visible */
+    position: absolute !important;
+    bottom: -40px !important; /* Moves links BELOW the branch card */
+    right: 0px !important; /* Aligns them to the right */
+
+}
+
+
+.links1 a {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #333 !important;
+    text-decoration: none !important;
+}
+
+.links1 a:hover {
+    color: #666 !important;
+}

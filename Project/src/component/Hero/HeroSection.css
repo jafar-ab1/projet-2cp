@@ -1,0 +1,183 @@
+
+
+.Welcome{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    
+}
+.par{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 350px;
+    margin-left: 100px;
+}
+
+
+
+
+.par1{
+        font-size: 68px;
+        font-weight:700;
+        margin: 0 auto;
+        color :white;
+        font-family:'Libre Baskerville',sans-serif;
+        
+    
+}
+.par2{
+    font-size: 24px;
+    padding-left: 100px;
+    padding-right: 100px;
+    color:white;
+    padding-top: 2%;
+    font-weight:400;
+    line-height: 29.76px;
+
+    margin-bottom: 2%;
+}
+
+
+.buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 0%;
+    margin-left: 15%;
+    margin-right: 15%;
+
+    align-content: center;
+}
+
+
+.Booking{
+    padding: 12px 24px;
+    font-size: 25px;
+    border-radius: 10px;
+    margin: 5px;
+    margin-right: 5%;
+    cursor: pointer;
+    border:none;
+    background-color: white;
+    color:black;
+    transition: 0.4s;
+}
+.More{
+    padding: 12px 24px;
+    font-size: 25px;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer; 
+    border:none;
+    color:white;
+    background: none;
+    transition: 0.5s;
+
+}
+.Booking:hover{
+    background-color: rgb(214, 212, 212);
+    transform: scale(1.2);
+
+}
+.More:hover{
+    background-color:white;
+    color:black;
+    transform: scale(1.2);
+
+}
+
+  .Navigation-Bar {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+  }
+    .navigation-bar{
+    display: flex;
+  
+    justify-content: space-between;
+    align-items: center;
+    height: 70px; 
+    padding: 0 40px;
+    color: white;
+}
+
+.left-section p {
+    font-size: 28px;
+    font-weight: 400;
+    font-family: 'Libre Baskerville',sans-serif;
+    color: white;
+    text-transform: uppercase;
+    line-height: 34.72px;
+}
+
+.middle-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+.middle-section p {
+    font-family: 'Libre Baskerville',sans-serif;
+font-weight: 400;
+font-size: 24px;
+line-height: 29.76px;
+letter-spacing: 0%;
+
+
+}
+.middle-section a{
+    font-family: 'Libre Baskerville',sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 29.76px;
+    letter-spacing: 0;
+    text-transform: capitalize;
+    color:white;
+    text-decoration: none;
+
+}
+.middle-section button {
+    background: none;
+ 
+    border:2px none  white;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.middle-section button:hover {
+    background: white;
+    color: black;
+}
+
+.right-section .Sign-in {
+    background: white;
+    color: black;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.Sign-in P{
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 19px;
+    padding-right: 32px;
+    padding-bottom: 19px;
+    padding-left: 32px;;
+}
+
+.right-section .Sign-in:hover {
+    background: lightgray;
+} 

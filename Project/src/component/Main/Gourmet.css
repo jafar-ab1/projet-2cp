@@ -1,0 +1,95 @@
+.GourmetS{
+    background-color:#f8f5eb ;
+    margin: 0;
+}
+
+.reservation-container {
+    display: grid;
+    grid-template-columns: 3fr 3fr; /* Left side smaller, right side larger */
+    gap: 20px;
+    background-color: #f8f5eb;
+    padding: 40px;
+    align-items: start;
+    width: 100%;
+    max-width: 1100px;
+    margin-left: 100px;
+   
+}
+
+/* Left Column: Text + Button + Bottom Image */
+.reservation-content {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.subtitle {
+    font-family: serif;
+    font-size: 18px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.reservation-container p {
+    margin: 10px 0;
+    color: #555;
+}
+
+.reservation-button {
+    padding: 10px 15px;
+    border: 1px solid #666;
+    background: transparent;
+    cursor: pointer;
+    width:278px;
+    height:62px;
+    border-radius: 8px;
+    border: 1px solid #837453;
+    border-color: #837453;
+    color: #97967A;
+    transition:0.3s ease-in-out
+   
+}
+
+.reservation-button:hover {
+    background-color: #6e623e;
+}
+
+/* Bottom Left Image */
+.bottom-left img {
+    width: 100%;
+    height: 335px;
+    object-fit: cover;
+    margin-top: 20px;
+}
+
+/* Right Column: Top Right Image */
+.top-right img {
+    width: 100%;
+    height:827px;
+    object-fit: cover;
+}
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto; /* Adjust as needed */
+    overflow: hidden; /* Remove if it's cutting the image */
+  }
+  .full-width{
+    padding-bottom: 100px;
+  }
+/* Full Width Restaurant Image */
+.full-width img {
+    width: 80%;
+    height: 500px;
+    
+    object-fit:cover;
+
+    margin-top: 20px;
+    margin-left: 138px;
+}

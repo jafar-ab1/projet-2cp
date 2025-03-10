@@ -1,0 +1,38 @@
+.Details{
+
+    gap:10px;
+}
+.Room{
+    font-family: 'Libre Baskerville',sans-serif;
+    font-size: 44px;
+    font-weight: 400;
+    ;
+}
+.Algiers{
+    font-size: 24px;
+    font-weight: 400;
+
+}
+.Details{
+    font-size: 24px;
+    font-family: 'Libre Baskerville',sans-serif;
+    font-weight: 400;
+
+}
+.Book1 {
+    border: 1px solid #837453; /* Ensure border has a style (solid, dashed, etc.) */
+    border-radius: 8px;
+    color: #97967A; /* Fix: Color should not be transparent (#97967A00 is invalid) */
+    padding: 19px 32px; /* Simplified padding */
+    background-color:#F4F0E5; /* Add a background color if needed */
+    cursor: pointer; /* Improve button usability */
+    transition:0.3s ease-in-out
+}
+
+.Book1:hover {
+    background-color: #6e623e;
+}
+.Book1 {
+    width: 174px;
+    height: 62px;
+}
