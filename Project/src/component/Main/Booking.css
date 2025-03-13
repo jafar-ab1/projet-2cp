@@ -1,0 +1,136 @@
+.Page {
+    background-color: #F4F0E5;
+    width: 100vw; 
+    height: 100vh; 
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+
+.Stay {
+    margin-top: px;
+    font-size: 64px;
+    font-weight: 400;
+    color: #494444;
+}
+
+.Check {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 50px;
+    list-style: none;
+    padding: 0;
+}
+
+.Check li a {
+    text-decoration: none;
+    font-size: 24px;
+    color: #333;
+    padding: 10px 15px;
+    
+    border-radius: 8px;
+}
+
+.comment {
+    font-size: 24px;
+    font-weight: 400;
+    margin-top: 40px;
+    padding: 0 20px;
+    color: #333;
+}
+
+
+.Check a:hover {
+    text-decoration: underline;
+}
+
+
+.CalendarBox {
+    position: absolute;
+    top: 55%;
+    left: 28%;
+    transform: translateX(-25%);
+    
+    background: #F4F0E5;
+    padding: 15px;
+    border:0px 1px 1px 0px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    width: 300px;
+}
+
+
+.react-datepicker {
+    width: 100%;
+    border: none;
+    background: transparent;
+   
+}
+
+
+.react-datepicker__header {
+    background: transparent;
+    border-bottom: none;
+    text-align: center;
+    font-size: 32px;
+    font-weight:400;
+    color: #494444;
+}
+
+
+.react-datepicker__day {
+    font-size: 16px;
+    color: #494444;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    margin: 3px;
+}
+
+.react-datepicker__day:hover {
+    background: #C1A67B;
+    color: white;
+    border-radius: 50%;
+}
+
+/* Selected Date */
+.react-datepicker__day--selected {
+    background: #A67B5B;
+    color: white;
+    font-weight: bold;
+    border-radius: 50%;
+}
+
+/* Navigation Arrows */
+.react-datepicker__navigation {
+    top: 12px;
+}
+
+.react-datepicker__navigation-icon {
+    color: #494444;
+}
+
+.react-datepicker__day--outside-month {
+    visibility: hidden; /* Hide extra days */
+}
+
+.react-datepicker__day-names {
+    display: none; /* Hide day names (Mon, Tue, etc.) */
+}
+.react-datepicker__current-month {
+    font-size: 18px;
+    font-weight: bold;
+    color: #494444;
+    text-align: center;
+    padding: 10px 0;
+}

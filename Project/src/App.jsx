@@ -9,6 +9,7 @@ import Page7 from "./Page7.jsx";
 import Page8 from "./Page8.jsx";
 import Page9 from "./Page9.jsx";
 import Page10 from "./Page1-0.jsx";
+import Booking from "./component/Main/Booking.jsx"
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
       <Route path="/Occasions" element={<Page8/>}/>
       <Route path="/Events" element={<Page9/>}/>
       <Route path="/Wellness" element={<Page10/>}/>
+      <Route path="/Book" element={<Booking/>}/>
     </Routes>
   );
 }

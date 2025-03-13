@@ -3,7 +3,9 @@ import { useNavigate } from "react-router-dom";
 
 import "./HeroSection.css"; 
 
+
 function HeroSectionH() {
+  const navigate = useNavigate();
  
   return (
     <div className="hero-container">
@@ -41,7 +43,7 @@ function HeroSectionH() {
 
       {/* Buttons */}
       <div className="buttons">
-        <button className="Booking">Book now</button>
+        <button className="Booking" onClick={() => navigate("/Book")}>Book now</button>
         <button className="More">Learn more &gt;</button>
       </div>
     </div>
