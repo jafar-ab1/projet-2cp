@@ -1,136 +1,274 @@
+/* Update the background color to match the screenshot */
 .Page {
-    background-color: #F4F0E5;
-    width: 100vw; 
-    height: 100vh; 
-    margin: 0;
-    padding: 0;
+    background-color: #f4f0e5;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-}
-
-
-.Stay {
-    margin-top: px;
-    font-size: 64px;
-    font-weight: 400;
+    position: relative;
+  }
+  
+  /* Title Styling - updated font size and color to match */
+  .Stay {
+    font-size: 48px;
+    font-weight: 500;
     color: #494444;
-}
-
-.Check {
+    margin-bottom: 30px;
+  }
+  
+  /* Booking Options Styling - updated to match the layout in screenshot */
+  .Check {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    margin-top: 50px;
+    gap: 40px;
     list-style: none;
     padding: 0;
-}
-
-.Check li a {
+    margin-bottom: 20px;
+  }
+  
+  .Check li {
+    position: relative;
+  }
+  
+  .Check li a {
     text-decoration: none;
-    font-size: 24px;
-    color: #333;
-    padding: 10px 15px;
-    
-    border-radius: 8px;
-}
-
-.comment {
-    font-size: 24px;
-    font-weight: 400;
-    margin-top: 40px;
-    padding: 0 20px;
-    color: #333;
-}
-
-
-.Check a:hover {
-    text-decoration: underline;
-}
-
-
-.CalendarBox {
-    position: absolute;
-    top: 55%;
-    left: 28%;
-    transform: translateX(-25%);
-    
-    background: #F4F0E5;
-    padding: 15px;
-    border:0px 1px 1px 0px;
-    border-radius: 5px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 100;
-    width: 300px;
-}
-
-
-.react-datepicker {
-    width: 100%;
-    border: none;
-    background: transparent;
-   
-}
-
-
-.react-datepicker__header {
-    background: transparent;
-    border-bottom: none;
-    text-align: center;
-    font-size: 32px;
-    font-weight:400;
+    font-size: 18px;
     color: #494444;
-}
-
-
-.react-datepicker__day {
+    padding: 10px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .Check li a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Description Text - updated to match the screenshot */
+  .comment {
+    font-size: 16px;
+    font-weight: 400;
+    margin-top: 20px;
+    padding: 0 20px;
+    max-width: 600px;
+    color: #494444;
+  }
+  
+  /* Calendar Box - updated styling to match the screenshot */
+  .CalendarBox {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #f4f0e5;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    width: 320px;
+  }
+  
+  /* Custom Calendar Styling to match screenshot exactly */
+  .custom-calendar {
+    width: 100%;
+    font-family: inherit;
+  }
+  
+  .calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #494444;
+  }
+  
+  .calendar-header button {
+    background: none;
+    border: none;
     font-size: 16px;
     color: #494444;
-    display: inline-block;
+    cursor: pointer;
+    padding: 0 5px;
+  }
+  
+  .calendar-month-year {
+    font-size: 16px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  
+  .calendar-day {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #494444;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .calendar-day:hover {
+    background-color: #c1a67b;
+    color: white;
+  }
+  
+  .calendar-day.selected {
+    background-color: #a67b5b;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .calendar-day.outside-month {
+    display: none;
+  }
+  
+  /* Branch Selection Dropdown - updated to match the screenshot */
+  .Dropdown {
+    position: absolute;
+    background: #f4f0e5;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    text-align: center;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .Dropdown li {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #494444;
+    border-bottom: 1px solid #e5e0d5;
+  }
+  
+  .Dropdown li:last-child {
+    border-bottom: none;
+  }
+  
+  .Dropdown li:hover {
+    background: #ded3bc;
+  }
+  
+  /* Guest Selection Box - updated to match the screenshot */
+  .GuestSelector {
+    position: absolute;
+    background: #f4f0e5;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 15px;
+    text-align: left;
+    top: 50px;
+    right: 0;
+    z-index: 100;
+  }
+  
+  .GuestSelector h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #494444;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .GuestSelector .GuestRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .GuestSelector .GuestControls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .GuestSelector button {
+    background: none;
+    border: 1px solid #a67b5b;
+    color: #a67b5b;
+    font-size: 14px;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .GuestSelector button:hover {
+    background: #a67b5b;
+    color: white;
+  }
+  
+  .GuestSelector .GuestCount {
     width: 30px;
-    height: 30px;
-    line-height: 30px;
     text-align: center;
-    border-radius: 50%;
-    margin: 3px;
-}
-
-.react-datepicker__day:hover {
-    background: #C1A67B;
+  }
+  
+  .GuestSelector .ButtonRow {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .GuestSelector .ButtonRow button {
+    width: auto;
+    padding: 5px 15px;
+    border-radius: 4px;
+  }
+  
+  .GuestSelector .ButtonRow button.Apply {
+    background: #a67b5b;
     color: white;
-    border-radius: 50%;
-}
-
-/* Selected Date */
-.react-datepicker__day--selected {
-    background: #A67B5B;
+  }
+  
+  /* Close Icon */
+  .CloseIcon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #494444;
+  }
+  
+  /* Check Availability Button */
+  .CheckAvailability {
+    background: #a67b5b;
     color: white;
-    font-weight: bold;
-    border-radius: 50%;
-}
-
-/* Navigation Arrows */
-.react-datepicker__navigation {
-    top: 12px;
-}
-
-.react-datepicker__navigation-icon {
-    color: #494444;
-}
-
-.react-datepicker__day--outside-month {
-    visibility: hidden; /* Hide extra days */
-}
-
-.react-datepicker__day-names {
-    display: none; /* Hide day names (Mon, Tue, etc.) */
-}
-.react-datepicker__current-month {
-    font-size: 18px;
-    font-weight: bold;
-    color: #494444;
-    text-align: center;
-    padding: 10px 0;
-}
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .CheckAvailability:hover {
+    background: #8a6548;
+  }
+  
+  
