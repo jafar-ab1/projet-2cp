@@ -1,58 +1,58 @@
-const Occupancy = require('../models/Occupation');
+export class occupancyController{
 
-exports.getAllOccupancies = async (req, res) => {
-  try {
-    const occupancies = await Occupancy.find();
-    res.status(200).json(occupancies);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  constructor(occupancyService){
+    this.occupancyService = occupancyService; 
   }
-};
 
+  async getAll(req, res){
+    try {
+      const occupancies = await this.occupancyService.find();
+      res.status(200).json(occupancies);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
 
-exports.getOccupancyByMonth = async (req, res) => {
+  async getByMonth(req, res){
+    try {
+      const { month } = req.params;
+      const occupancy = await this.occupancyService.findOne({month});
+      if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
+      res.status(200).json(occupancy);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
+  async create(req, res){
+    const { month, occupancyRate, totalRooms, occupiedRooms, availableRooms } = req.body;
   try {
-    const { month } = req.params;
-    const occupancy = await Occupancy.findOne({month});
-    if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
-    res.status(200).json(occupancy);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-
-exports.createOccupancy = async (req, res) => {
-  const { month, occupancyRate, totalRooms, occupiedRooms, availableRooms } = req.body;
-  try {
-    const newOccupancy = new Occupancy({ month, occupancyRate, totalRooms, occupiedRooms, availableRooms });
-    await newOccupancy.save();
+    const newOccupancy = await this.occupancyService.create({ month, occupancyRate, totalRooms, occupiedRooms, availableRooms });
     res.status(201).json(newOccupancy);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+  }; 
 
-
-exports.updateOccupancy = async (req, res) => {
-  try {
-    const { month } = req.params; 
-    const occupancy = await Occupancy.findOneAndUpdate({ month }, req.body, { new: true });
-    if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
-    res.status(200).json(occupancy);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  async update(req, res){
+    try {
+      const { month } = req.params; 
+      const occupancy = await this.occupancyService.findOneAndUpdate({ month }, req.body, { new: true });
+      if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
+      res.status(200).json(occupancy);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
-};
 
-
-exports.deleteOccupancy = async (req, res) => {
-  try {
-    const { month } = req.params;
-    const occupancy = await Occupancy.findOneAndDelete({month});
-    if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
-    res.status(200).json({ message: 'Statistique supprimée' });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  async delete(req, res){
+    try {
+      const { month } = req.params;
+      const occupancy = await this.occupancyService.findOneAndDelete({month});
+      if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
+      res.status(200).json({ message: 'Statistique supprimée' });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
   }
-};
+}

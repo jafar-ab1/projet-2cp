@@ -1,67 +1,72 @@
-const Room = require('../models/Room');
+export class roomConroller{
 
-exports.getAllRooms = async (req, res) => {
-    try {
-      const rooms = await Room.find();
-      res.status(200).json(rooms);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+    constructor(roomService){
+        this.roomService = roomService;
     }
-  };
 
-exports.getRoomsType = async(req, res) => {
-    const {type} = req.params;
-    try {
-        const rooms = await Room.find({type});
-        res.sattus(200).json(rooms);
+    async getAll(req, res){
+        try {
+            const rooms = await this.roomService.find();
+            res.status(200).json(rooms);
+          } catch (error) {
+            res.status(500).json({ message: error.message });
+          }
+    }
+
+    async getRoomById(req ,res){
+        try{
+            const room = await this.roomService.findById(req.params.is);
+            res.status(200).json(room);
     }
     catch(error){
         res.status(500).json({message: error.message}); 
     }
-}
+    };
 
-exports.getRoomById = async(req, res) => {
+
+    async getByroomStatus
+
+    async getByroomType(req, res){
+        const {type} = req.params;
     try {
-    const rooms = await Room.findById(req.params.id);
-    if (!rooms) return res.status(404).json({ message: 'chambre non trouvé'});
-    res.status(200).json(rooms);
+        const rooms = await this.roomService.find({type});
+        res.status(200).json(rooms);
     }
     catch(error){
-        res.status(500).json({ message: error.message });
+        res.status(500).json({message: error.message}); 
     }
-};
+    };
 
-exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type, status, price, floor} = req.body;
+    async create(req, res){
+        const {roomNumber, type, status, price, floor} = req.body;
     try{
-        const newRoom= new Room({roomNumber, type, status, price, floor});
-        await newRoom.save();
+        const newRoom= await this.roomService.create({roomNumber, type, status, price, floor});
         res.status(201).json(newRoom);
     }
     catch(error){
         res.status(500).json({ message: error.message });
     }
 }
+    async update(req, res){
+        try{
+            const room = await this.roomService.findByIdAndUpdate(req.params.id, req.body, {new:true});
+            if (!room) return res.status(404).json({message:'chambre non trouvé'});
+            res.status(200).json(room);
+        }
+        catch(error){
+            res.status(500).json({ message: error.message });
+        }
+    };
 
-exports.modifyRoom = async(req, res) =>{
-try{
-    const room = await Room.findByIdAndUpdate(req.params.id, req.body, {new:true});
-    if (!room) return res.status(404).json({message:'chambre non trouvé'});
-    res.status(200).json(room);
-}
-catch(error){
-    res.status(500).json({ message: error.message });
-}
-}
-
-exports.suppRoom = async(req, res) => {
-    try{
-        const room = await Room.findByIdAndDelete(req.params.id);
-        if (!room) return res.status(404).json({message: 'chambre non trouvé'});
-        res.status(200).json({message: 'room supprimer'});
+    async delete(req, res){
+        try{
+            const room = await this.roomService.findByIdAndDelete(req.params.id);
+            if (!room) return res.status(404).json({message: 'chambre non trouvé'});
+            res.status(200).json({message: 'room supprimer'});
+        }
+        catch(error){
+            res.status(500).json({ message: error.message });
+        }
     }
-    catch(error){
-        res.status(500).json({ message: error.message });
-    }
-}
 
+}

@@ -1,57 +1,72 @@
-const Guest = require('../models/Guest');
+export class guestController{
 
-exports.getAllGuests = async (req, res) => {
-    try {
-      const guests = await Guest.find();
-      res.status(200).json(guests);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+    constructor(guestService){
+        this.guestService = guestService;
     }
-  };
 
-exports.getGuestById = async (req,res)=>{
-    try{
-        const guest = await Guest.findById(req.params.id);
-        if(!guest) return res.status(404).json({message:'client non trouvé'});
-        res.status(200).json(guest);
-    }
-    catch(error){
-        res.status(500).json({message: 'error page'});
-    }
-}
+    async getAll(req, res){
+        try {
+            const guests = await this.guestService.find();
+            res.status(200).json(guests);
+          } catch (error) {
+            res.status(500).json({ 
+                message: error.message 
+            });
+          }
+    };
 
-exports.creatGuest = async(req, res) => {
-    const {guestname, roomnumber,checkInDate, checkOutDate, feedback} = req.body;
-    try{
-        const newGuest = new Guest({guestname, roomnumber,checkInDate, checkOutDate, feedback});
-        await newGuest.save();
-        res.status(201).json(newGuest);
-    }
-    catch(error)
-    {
-        res.status(500).json({message:'error page'});
-    }
-}
+    async getById(req, res){
+        try{
+            const guest = await this.guestService.findById(req.params.id);
+            if(!guest) return res.status(404).json({message:'client non trouvé'});
+            res.status(200).json(guest);
+        }
+        catch(error){
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    };
 
-exports.modifyGuest = async(req, res)=> {
-    try{
-        const guest = await Guest.findByIdAndUpdate(req.params.id, req.body, {new:true});
-        if(!guest) return res.status(404).json({message:'client non trouve'});
-        res.status(200).json(guest);
-    }
-    catch(error){
-        res.status(500).json({message: 'error page'});
-    }
-}
+    async create(req, res){
+        const {guestname, roomnumber,checkInDate, checkOutDate, feedback} = req.body;
+        try{
+            const newGuest = await this.guestService.create({ guestname, roomnumber, checkInDate, checkOutDate, feedback });
+            res.status(201).json(newGuest);
+        }
+        catch(error)
+        {
+            res.status(500).json({
+                message:error.message
+            });
+        }
+    };
 
-exports.suppGuest = async(req, res)=>{
-    try{
-       const guest = await Guest.findByIdAndDelete(req.params.id);
-       if(!guest) return res.status(404).json({message : 'client non trouve'});
-       res.status(200).json({message : 'guest supprimé'});
-    }
-    catch(error){
-        res.status(500).json({message: 'error page'});
+    async update(req, res){
+        try{
+            const guest = await this.guestService.findByIdAndUpdate(req.params.id, req.body, {new:true});
+            if(!guest) return res.status(404).json({message:'client non trouve'});
+            res.status(200).json(guest);
+        }
+        catch(error){
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    };
 
-    }
+    async delete(req, res){
+        try{
+            const guest = await this.guestService.findByIdAndDelete(req.params.id);
+            if(!guest) return res.status(404).json({message : 'client non trouve'});
+            res.status(200).json({message : 'guest supprimé'});
+         }
+         catch(error){
+             res.status(500).json({
+                message: error.message
+            });
+     
+         }
+    };
+
 }

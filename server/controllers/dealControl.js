@@ -1,62 +1,63 @@
-const Deal = require('../models/Deal');
+export class dealController{
 
-exports.getAllDeals = async (req,res) => {
-    try{
-        const deals = await Deal.find();
-        res.satuts(200).json(deals);
-     }
-     catch(error){
-        res.status(500).json({message: error.message});
-     }
-}
-
-exports.getDealByName = async(req, res) => {
-    try{
-        const dealName = req.params.dealName;
-
-        if (!dealName) {
-            return res.status(400).json({ message: 'dealName is required' });
-        }
-
-        const deal = await Deal.find({dealName});
-        if(!deal) return res.status(404).json({Message:'deals  non trouvé'});
-        res.status(200).json(deal);
+    constructor(dealService){
+        this.dealService = dealService;
     }
-    catch(error){
-        res.status(500).json({message: error.message});
-    }
-}
 
-exports.createDeal = async(req, res) => {
-    const {dealName, reservationsLeft, endDate, roomType, status} = req.body;
+    async getAll(req, res){
+        try{
+            const deals = await this.dealService.find();
+            res.status(200).json(deals);
+         }
+         catch(error){
+            res.status(500).json({
+                message: error.message
+            });
+         }
+    };
+
+    async getByName(req, res){
+        try{
+            const dealName = req.params.dealName;
     
-    if (!dealName || !reservationsLeft || !endDate || !roomType || !status) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
+            const deal = await this.dealService.findOne({dealName});
+            if(!deal) return res.status(404).json({Message:'deals  non trouvé'});
+            res.status(200).json(deal);
+        }
+        catch(error){
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    };
 
+    async create(req, res){
+        const {dealName, reservationsLeft, endDate, roomType, status} = req.body;
+    
     try{
-        const newDeal = new Deal({dealName, reservationsLeft, endDate, roomType, status});
-        await newDeal.save();
+        const newDeal = await this.dealService.create({dealName, reservationsLeft, endDate, roomType, status});
         res.status(201).json(newDeal);
     }
     catch(error){
-        res.status(500).json({message: error.message});
+        res.status(500).json({
+            message: error.message
+        });
     }
-}
+    };
 
-exports.suppFeed_back = async (req, res) => {
-    const {dealName, reservationsLeft, endDate, roomType, status} = req.params;
-    if (!dealName || !reservationsLeft || !endDate || !roomType || !status) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
+    async delete(req, res){
+        const {dealName} = req.params;
+    
     try{
-        const deal = Deal.findOne({dealName, reservationsLeft, endDate, roomType, status});
+        const deal =await this.dealService.findOneAndDelete({dealName});
         if(!deal) return res.status(404).json({message: 'commentaire non trouvé'});
-        await deal.deleteOne();
         res.status(200).json({message: 'deal supprime'});
     }
     catch(error){
-        res.status(500).json({message: 'error page'});
+        res.status(500).json({
+            message: error.message
+        });
     }
+    };
 }
+

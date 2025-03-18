@@ -1,63 +1,59 @@
-const Cleaning = require('../models/Cleaning');
+export class CleaningController {
 
-exports.getAllDeals = async (req,res) => {
-    try{
-        const cleanings = await Cleaning.find();
-        res.statuts(200).json(cleanings);
-     }
-     catch(error){
-        res.status(500).json({message: error.message});
-     }
-}
+    constructor(cleaningService) {
+        this.cleaningService = cleaningService;
+    }
 
-exports.getCleaningByRoomNb = async(req, res) => {
-    try{
-        const roomNumber = req.params.roomNumber;
-
-        if (!roomNumber) {
-            return res.status(400).json({ message: 'roomNumber is required' });
+    async getAll(req, res) {
+        try {
+            const cleanings = await this.cleaningService.find();
+            res.status(200).json(cleanings); 
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
         }
-
-        const cleaning = await Cleaning.findOne({roomNumber});
-        if(!cleaning) return res.status(404).json({Message:'cleanings  non trouvé'});
-        res.status(200).json(cleaning);
     }
-    catch(error){
-        res.status(500).json({message: error.message});
+
+    async getByRoomNb(req, res) {
+        try {
+            const roomNumber = req.params.roomNumber;
+
+            const cleaning = await this.cleaningService.findOne({ roomNumber });
+            if (!cleaning) return res.status(404).json({ message: 'Cleaning not found' });
+            res.status(200).json(cleaning);
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    }
+
+    async create(req, res) {
+        const { roomNumber, status, lastCleaned, nextCleaning } = req.body;
+
+        try {
+            const newCleaning = await this.cleaningService.create({ roomNumber, status, lastCleaned, nextCleaning }); 
+            res.status(201).json(newCleaning);
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
+    }
+
+    async delete(req, res) {
+        const { roomNumber } = req.body;
+
+        try {
+            const cleaning = await this.cleaningService.findOneAndDelete({ roomNumber }); 
+            if (!cleaning) return res.status(404).json({ message: 'Cleaning not found' });
+            res.status(200).json({ message: 'Cleaning deleted successfully' });
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            });
+        }
     }
 }
 
-exports.createCleaning = async(req, res) => {
-    const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
-    
-    if (!roomNumber || !status || !lastCleaned || !nextCleaning) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    try{
-        const newCleaning = new Cleaning({roomNumber, status, lastCleaned, nextCleaning});
-        await newCleaning.save();
-        res.status(201).json(newCleaning);
-    }
-    catch(error){
-        res.status(500).json({message: error.message});
-    }
-}
-
-exports.suppCleaning = async (req, res) => {
-    const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
-    
-    if (!roomNumber || !status || !lastCleaned || !nextCleaning) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    try{
-        const cleaning = Cleaning.findOne({roomNumber, status, lastCleaned, nextCleaning});
-        if(!cleaning) return res.status(404).json({message: 'commentaire non trouvé'});
-        await cleaning.deleteOne();
-        res.status(200).json({message: 'cleaning supprime'});
-    }
-    catch(error){
-        res.status(500).json({message: 'error page'});
-    }
-}
