@@ -1,8 +1,10 @@
 
 import { useState } from "react"
 import "./Booking.css"
+import { useNavigate } from "react-router-dom"; 
 
 function Booking() {
+  const navigate = useNavigate();
   // Single formData state for all booking-related data
   const [formData, setFormData] = useState({
     checkInDate: null,
@@ -282,7 +284,7 @@ function Booking() {
 
       {submitMessage && <p className="SubmitMessage">{submitMessage}</p>}
 
-      <button className="CheckAvailability" >
+      <button className="CheckAvailability"  onClick={() => navigate("/Choose")} >
         Check Availability
       </button>
     </div>

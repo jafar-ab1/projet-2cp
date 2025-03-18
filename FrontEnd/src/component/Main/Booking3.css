@@ -1,0 +1,150 @@
+body, html {
+    height: 100%;
+    margin: 0;
+}
+.RoomsWrapper{
+    background-color: #F4F0E5;
+}
+.AvailableRooms {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background-color: #F4F0E5;
+ 
+}
+
+
+.RoomContainer {
+    display: flex;
+    border: 1px solid #000000;
+    
+    overflow: hidden;
+    background-color: #F4F0E5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    max-width: 800px;
+    margin: auto;
+}
+
+.Room.image {
+    flex: 2;
+}
+
+.Room.image img {
+    width: 100%;
+    height: 60%;
+    object-fit: cover;
+}
+
+
+.Description {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    padding: 20px;
+}
+
+.Descriptopn1 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.Descriptopn1 h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #494444;
+}
+
+.Descriptopn1 p:first-of-type {
+    font-size: 20px;
+    color: #494444;
+}
+
+
+
+.Price {
+    flex: 1;
+
+    padding-top: 25px;
+    text-align: right;
+    display: flex;
+    gap:10px;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+
+.Price p{
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 700;
+    color: #494444;
+
+}
+
+.Price p:first-of-type {
+font-weight: 400;
+}
+
+.Price button {
+    background-color: #F4F0E5;
+    color: #97967A;
+    border:4px solid ;
+    padding: 14px 28px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.Price button:hover {
+    background-color: #97967A;
+    color:#F4F0E5
+}
+
+.RoomsWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: #F4F0E5;
+    min-height: 100vh;
+    position: relative;
+}
+
+
+.RoomContainer {
+    display: flex;
+    border: 1px solid #000000;
+    overflow: hidden;
+    background-color: #F4F0E5;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    max-width: 800px;
+    margin: auto;
+}
+
+.CheckOut {
+    margin-top: auto; 
+    align-self: flex-end; 
+    background-color: #F4F0E5;
+    color: #97967A;
+    border: 4px solid;
+    padding: 14px 28px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.CheckOut:hover {
+    background-color: #97967A;
+    color: #F4F0E5;
+}

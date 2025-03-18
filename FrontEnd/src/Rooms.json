@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Suite",
+    "capacity": 4,
+    "bed_type": "1 King Bed + 1 Sofa Bed",
+    "size": "50 m²",
+    "description": "1 Bedroom, 1 Bath, 1 King, 2 Fulls, Sitting Area, TV, Butler’s Kitchen, Private",
+    "price": "Dzd 20,000",
+    "image_url": "/images/suite.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Deluxe Room",
+    "capacity": 2,
+    "bed_type": "1 King Bed or 2 Twin Beds",
+    "size": "35 m²",
+    "description": "1 Bedroom, 1 Bath, 1 King, 2 Fulls, Sitting Area, TV, Butler’s Kitchen, Private",
+    "price": "Dzd 15,000",
+    "image_url": "/images/deluxe.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Standard Room",
+    "capacity": 2,
+    "bed_type": "1 Queen Bed or 2 Twin Beds",
+    "size": "30 m²",
+    "description": "1 Bedroom, 1 Bath, 1 King, 2 Fulls, Sitting Area, TV, Butler’s Kitchen, Private",
+    "price": "Dzd 12,000",
+    "image_url": "/images/standard.jpg"
+  }
+]
