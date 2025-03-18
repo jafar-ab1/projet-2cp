@@ -1,4 +1,4 @@
-/* Update the background color to match the screenshot */
+
 .Page {
     background-color: #f4f0e5;
     width: 100vw;
@@ -11,15 +11,13 @@
     position: relative;
   }
   
-  /* Title Styling - updated font size and color to match */
   .Stay {
     font-size: 48px;
     font-weight: 500;
     color: #494444;
     margin-bottom: 30px;
   }
-  
-  /* Booking Options Styling - updated to match the layout in screenshot */
+
   .Check {
     display: flex;
     justify-content: center;
@@ -47,7 +45,7 @@
     text-decoration: underline;
   }
   
-  /* Description Text - updated to match the screenshot */
+  
   .comment {
     font-size: 16px;
     font-weight: 400;
@@ -57,7 +55,7 @@
     color: #494444;
   }
   
-  /* Calendar Box - updated styling to match the screenshot */
+
   .CalendarBox {
     position: absolute;
     top: 50px;
@@ -72,7 +70,6 @@
     width: 320px;
   }
   
-  /* Custom Calendar Styling to match screenshot exactly */
   .custom-calendar {
     width: 100%;
     font-family: inherit;
@@ -134,8 +131,7 @@
   .calendar-day.outside-month {
     display: none;
   }
-  
-  /* Branch Selection Dropdown - updated to match the screenshot */
+
   .Dropdown {
     position: absolute;
     background: #f4f0e5;
@@ -167,8 +163,7 @@
   .Dropdown li:hover {
     background: #ded3bc;
   }
-  
-  /* Guest Selection Box - updated to match the screenshot */
+
   .GuestSelector {
     position: absolute;
     background: #f4f0e5;
@@ -245,7 +240,7 @@
     color: white;
   }
   
-  /* Close Icon */
+ 
   .CloseIcon {
     position: absolute;
     top: 20px;
@@ -254,8 +249,7 @@
     cursor: pointer;
     color: #494444;
   }
-  
-  /* Check Availability Button */
+
   .CheckAvailability {
     background: #a67b5b;
     color: white;

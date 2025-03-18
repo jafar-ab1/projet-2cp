@@ -1,19 +1,33 @@
 
-
 import { useState } from "react"
 import "./Booking.css"
 
 function Booking() {
+  // Single formData state for all booking-related data
+  const [formData, setFormData] = useState({
+    checkInDate: null,
+    checkOutDate: null,
+    selectedBranch: "choose your branch",
+    adults: 4,
+    children: 2,
+  })
+
+  // UI-related states remain separate
   const [showCheckInCalendar, setShowCheckInCalendar] = useState(false)
   const [showCheckOutCalendar, setShowCheckOutCalendar] = useState(false)
-  const [checkInDate, setCheckInDate] = useState(null)
-  const [checkOutDate, setCheckOutDate] = useState(null)
   const [showBranchDropdown, setShowBranchDropdown] = useState(false)
-  const [selectedBranch, setSelectedBranch] = useState("choose your branch")
   const [showGuestSelector, setShowGuestSelector] = useState(false)
-  const [adults, setAdults] = useState(4)
-  const [children, setChildren] = useState(2)
   const [currentMonth, setCurrentMonth] = useState(new Date(2025, 0)) // January 2025
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitMessage, setSubmitMessage] = useState("")
+
+  // Function to update form data
+  const updateFormData = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
+  }
 
   // Function to close all popups
   const closeAllPopups = () => {
@@ -55,15 +69,18 @@ function Booking() {
 
     // Add days of the current month
     for (let day = 1; day <= daysInMonth; day++) {
-      const currentDate = new Date(year, month, day)
       let isSelected = false
 
-      if (calendarType === "checkIn" && checkInDate) {
+      if (calendarType === "checkIn" && formData.checkInDate) {
         isSelected =
-          checkInDate.getDate() === day && checkInDate.getMonth() === month && checkInDate.getFullYear() === year
-      } else if (calendarType === "checkOut" && checkOutDate) {
+          formData.checkInDate.getDate() === day &&
+          formData.checkInDate.getMonth() === month &&
+          formData.checkInDate.getFullYear() === year
+      } else if (calendarType === "checkOut" && formData.checkOutDate) {
         isSelected =
-          checkOutDate.getDate() === day && checkOutDate.getMonth() === month && checkOutDate.getFullYear() === year
+          formData.checkOutDate.getDate() === day &&
+          formData.checkOutDate.getMonth() === month &&
+          formData.checkOutDate.getFullYear() === year
       }
 
       days.push({
@@ -93,10 +110,10 @@ function Booking() {
     const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
 
     if (calendarType === "checkIn") {
-      setCheckInDate(selectedDate)
+      updateFormData("checkInDate", selectedDate)
       setShowCheckInCalendar(false)
     } else {
-      setCheckOutDate(selectedDate)
+      updateFormData("checkOutDate", selectedDate)
       setShowCheckOutCalendar(false)
     }
   }
@@ -147,7 +164,7 @@ function Booking() {
               setShowBranchDropdown(!showBranchDropdown)
             }}
           >
-            {selectedBranch} ◎
+            {formData.selectedBranch} ◎
           </a>
           {showBranchDropdown && (
             <ul className="Dropdown">
@@ -155,7 +172,7 @@ function Booking() {
                 <li
                   key={branch}
                   onClick={() => {
-                    setSelectedBranch(branch)
+                    updateFormData("selectedBranch", branch)
                     setShowBranchDropdown(false)
                   }}
                 >
@@ -177,6 +194,9 @@ function Booking() {
             }}
           >
             Check-in ◎
+            {formData.checkInDate && (
+              <div style={{ fontSize: "14px", marginTop: "2px" }}>{formData.checkInDate.toLocaleDateString()}</div>
+            )}
           </a>
           {showCheckInCalendar && (
             <div className="CalendarBox">
@@ -196,6 +216,9 @@ function Booking() {
             }}
           >
             Check-out ◎
+            {formData.checkOutDate && (
+              <div style={{ fontSize: "14px", marginTop: "2px" }}>{formData.checkOutDate.toLocaleDateString()}</div>
+            )}
           </a>
           {showCheckOutCalendar && (
             <div className="CalendarBox">
@@ -216,7 +239,7 @@ function Booking() {
           >
             guests
             <div style={{ fontSize: "14px", marginTop: "2px" }}>
-              {adults} Adult, {children} children
+              {formData.adults} Adult, {formData.children} children
             </div>
           </a>
           {showGuestSelector && (
@@ -226,18 +249,18 @@ function Booking() {
               <div className="GuestRow">
                 <span>Adults</span>
                 <div className="GuestControls">
-                  <button onClick={() => setAdults(Math.max(1, adults - 1))}>-</button>
-                  <span className="GuestCount">{adults}</span>
-                  <button onClick={() => setAdults(adults + 1)}>+</button>
+                  <button onClick={() => updateFormData("adults", Math.max(1, formData.adults - 1))}>-</button>
+                  <span className="GuestCount">{formData.adults}</span>
+                  <button onClick={() => updateFormData("adults", formData.adults + 1)}>+</button>
                 </div>
               </div>
 
               <div className="GuestRow">
                 <span>Children</span>
                 <div className="GuestControls">
-                  <button onClick={() => setChildren(Math.max(0, children - 1))}>-</button>
-                  <span className="GuestCount">{children}</span>
-                  <button onClick={() => setChildren(children + 1)}>+</button>
+                  <button onClick={() => updateFormData("children", Math.max(0, formData.children - 1))}>-</button>
+                  <span className="GuestCount">{formData.children}</span>
+                  <button onClick={() => updateFormData("children", formData.children + 1)}>+</button>
                 </div>
               </div>
 
@@ -257,7 +280,11 @@ function Booking() {
         attractions, our hotel offers the ideal blend of comfort and convenience.
       </p>
 
-      <button className="CheckAvailability">Check availability</button>
+      {submitMessage && <p className="SubmitMessage">{submitMessage}</p>}
+
+      <button className="CheckAvailability" >
+        Check Availability
+      </button>
     </div>
   )
 }
