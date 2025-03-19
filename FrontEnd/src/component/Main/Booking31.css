@@ -1,0 +1,84 @@
+.Booking31 {
+    margin-top: 5px;
+    padding-top: 5px;
+    margin-left: 20%;
+    margin-right: 20%;
+    padding-left: 20%;
+    padding-right: 20%;
+    margin: 0 auto;
+
+      
+    background-color: #F4F0E5; 
+    
+}
+
+.PreviousData {
+   
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid #ccc;
+    border-bottom: none;
+}
+
+.Guests, .Check-in, .Check-out {
+    padding: 15px;
+    border-right: 1px solid #ccc;
+}
+
+.Check-out {
+    border-right: none;
+}
+
+.Guests p:first-child,
+.Check-in p:first-child,
+.Check-out p:first-child {
+    font-weight: bold;
+    color: #6a5d4d;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.Guests p:last-child,
+.Check-in p:last-child,
+.Check-out p:last-child {
+    color: #333;
+    font-size: 16px;
+}
+
+p {
+    margin: 0;
+}
+
+.offers {
+    
+    text-align: right;
+    font-size: 14px;
+    color: #6a5d4d;
+    
+    padding: 15px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 5px;
+}
+
+
+.Guests p:first-child::before {
+    content: "👤 ";
+}
+
+.Check-in p:first-child::before {
+    content: "📅 ";
+}
+
+.Check-out p:first-child::before {
+    content: "📅 ";
+}
+
+.offers::after {
+    cursor: pointer;
+    content: "⊕";
+    display: inline-block;
+    margin-left: 5px;
+}

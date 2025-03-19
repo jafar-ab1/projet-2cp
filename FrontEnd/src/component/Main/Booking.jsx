@@ -23,6 +23,20 @@ function Booking() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
 
+
+
+
+  const handleCheckAvailability = () => {
+    localStorage.setItem("bookingData", JSON.stringify(formData)); 
+//waiting for a function from backend to make api calls
+    navigate("/Choose")
+  };
+  
+  <button className="CheckAvailability" >
+    Check Availability
+  </button>
+
+
   // Function to update form data
   const updateFormData = (field, value) => {
     setFormData((prev) => ({
@@ -78,7 +92,7 @@ function Booking() {
           formData.checkInDate.getDate() === day &&
           formData.checkInDate.getMonth() === month &&
           formData.checkInDate.getFullYear() === year
-      } else if (calendarType === "checkOut" && formData.checkOutDate) {
+      } if (calendarType === "checkOut" && formData.checkOutDate) {
         isSelected =
           formData.checkOutDate.getDate() === day &&
           formData.checkOutDate.getMonth() === month &&
@@ -107,18 +121,21 @@ function Booking() {
 
   // Handle day selection
   const handleDayClick = (day, calendarType) => {
-    if (!day) return
-
-    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
-
+    if (!day) return;
+  
+    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+    
     if (calendarType === "checkIn") {
-      updateFormData("checkInDate", selectedDate)
-      setShowCheckInCalendar(false)
+      updateFormData("checkInDate", selectedDate);
+      setShowCheckInCalendar(false);
+      console.log("Check-in Date Set:", selectedDate);  // Debugging log
     } else {
-      updateFormData("checkOutDate", selectedDate)
-      setShowCheckOutCalendar(false)
+      updateFormData("checkOutDate", selectedDate);
+      setShowCheckOutCalendar(false);
+      console.log("Check-out Date Set:", selectedDate);  // Debugging log
     }
-  }
+  };
+  
 
   // Custom Calendar Component
   const CustomCalendar = ({ calendarType }) => {
@@ -284,7 +301,7 @@ function Booking() {
 
       {submitMessage && <p className="SubmitMessage">{submitMessage}</p>}
 
-      <button className="CheckAvailability"  onClick={() => navigate("/Choose")} >
+      <button className="CheckAvailability"  onClick={handleCheckAvailability} >
         Check Availability
       </button>
     </div>
