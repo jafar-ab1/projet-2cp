@@ -11,6 +11,7 @@ import Page9 from "./Page9.jsx";
 import Page10 from "./Page1-0.jsx";
 import Booking from "./component/Main/Booking.jsx"
 import Page12 from "./Page12.jsx"
+import Basket from "./component/Main/Basket.jsx"
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
       <Route path="/Wellness" element={<Page10/>}/>
       <Route path="/Book" element={<Booking/>}/>
       <Route path="/Choose" element={<Page12/>}/>
+      <Route path ="/Payment" element={<Basket/>}/>
     </Routes>
   );
 }

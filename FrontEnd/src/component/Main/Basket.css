@@ -1,0 +1,90 @@
+.BasketWrapper {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #e8e4d8; /* Light beige background */
+    font-family: 'Times New Roman', Times, serif;
+    color: #4a4a4a;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: normal;
+    color: #4a4a4a;
+  }
+  
+  .BasketContainer {
+    margin-bottom: 20px;
+  }
+  
+  .RoomItem {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 15px;
+    background-color: #f5f3eb;
+  }
+  
+  .RoomItem:before {
+ 
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4a4a4a;
+  }
+  
+  .PDetail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .PDetail p:first-child,
+  .PDetail p:nth-child(2) {
+    font-size: 18px;
+  }
+  
+  .PDetail p:last-child {
+    font-size: 18px;
+    text-align: right;
+  }
+  
+  .RoomItem > p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: #4a4a4a;
+  }
+  
+  .Total {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .Confirmation {
+    width: 100%;
+    padding: 12px;
+    background-color: transparent;
+    border: 2px solid #8a7e63;
+    color: #8a7e63;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'Times New Roman', Times, serif;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .Confirmation:hover {
+    background-color: #8a7e63;
+    color: white;
+  }
+  
+  
+  span {
+    font-size: 16px;
+    vertical-align: top;
+    margin-right: 2px;
+  }
+  
