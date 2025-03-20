@@ -24,7 +24,7 @@ export class roomConroller{
     };
 
 
-    async getByroomStatus
+    async getByroomStatus(req, res){}
 
     async getByroomType(req, res){
         const {type} = req.params;
