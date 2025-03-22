@@ -1,6 +1,4 @@
-import Payments from "../models/Payments";
-
-export class PaymentService{
+export default class PaymentService{
     constructor(paymentModel){
         this.paymentModel = paymentModel;
     }
@@ -19,5 +17,3 @@ export class PaymentService{
     }
 }
 
-const paymentService = new PaymentService(Payments);
-export default paymentService;

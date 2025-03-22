@@ -1,4 +1,6 @@
-export class maintenanceController{
+import maintenanceService from "../services/maintenanceService.js";
+
+export default class MaintenanceController{
 
   constructor(maintenanceService){
     this.maintenanceService = maintenanceService;
@@ -18,7 +20,7 @@ export class maintenanceController{
   async getByRoomNb(req, res){
     try {
       const { roomNumber } = req.params;
-      const maintenance = await this.maintenanceService.findOne({ roomNumber });
+      const maintenance = await this.maintenanceService.findByroomNb( roomNumber );
       if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
       res.status(200).json(maintenance);
     } catch (error) {
@@ -42,7 +44,7 @@ export class maintenanceController{
 
   async update(req, res){
     try {
-      const maintenance = await this.maintenanceService.findOneAndUpdate({ roomNumber }, req.body, { new: true });
+      const maintenance = await this.maintenanceService.update( roomNumber , req.body);
       if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
       res.status(200).json(maintenance);
     } catch (error) {
@@ -55,7 +57,7 @@ export class maintenanceController{
   async delete(req, res){
     try {
       const { roomNumber } = req.params;
-      const maintenance = await this.maintenanceService.findOneAndDelete({ roomNumber });
+      const maintenance = await this.maintenanceService.delete( roomNumber );
       if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
       res.status(200).json({ message: 'Maintenance record deleted' });
     } catch (error) {

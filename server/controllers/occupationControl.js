@@ -1,4 +1,6 @@
-export class occupancyController{
+import occupancyService from "../services/occupationService.js";
+
+export default class OccupancyController{
 
   constructor(occupancyService){
     this.occupancyService = occupancyService; 
@@ -6,7 +8,7 @@ export class occupancyController{
 
   async getAll(req, res){
     try {
-      const occupancies = await this.occupancyService.find();
+      const occupancies = await this.occupancyService.findAll();
       res.status(200).json(occupancies);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -16,7 +18,7 @@ export class occupancyController{
   async getByMonth(req, res){
     try {
       const { month } = req.params;
-      const occupancy = await this.occupancyService.findOne({month});
+      const occupancy = await this.occupancyService.findByMonth(month);
       if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
       res.status(200).json(occupancy);
     } catch (error) {
@@ -37,7 +39,7 @@ export class occupancyController{
   async update(req, res){
     try {
       const { month } = req.params; 
-      const occupancy = await this.occupancyService.findOneAndUpdate({ month }, req.body, { new: true });
+      const occupancy = await this.occupancyService.update( month , req.body);
       if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
       res.status(200).json(occupancy);
     } catch (error) {
@@ -48,7 +50,7 @@ export class occupancyController{
   async delete(req, res){
     try {
       const { month } = req.params;
-      const occupancy = await this.occupancyService.findOneAndDelete({month});
+      const occupancy = await this.occupancyService.delete(month);
       if (!occupancy) return res.status(404).json({ message: 'Statistique non trouvée' });
       res.status(200).json({ message: 'Statistique supprimée' });
     } catch (error) {

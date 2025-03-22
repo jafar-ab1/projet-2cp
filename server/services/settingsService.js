@@ -1,6 +1,4 @@
-import settings from '../models/Settings';
-
-export class SettingsService{
+export default class SettingsService{
     constructor(settingsModels){
         this.settingsModels = settingsModels;
     }
@@ -13,6 +11,3 @@ export class SettingsService{
         return this.settingsModels.findOneAndUpdate({},updateSettingsDto, {new: true});
     }
 }
-
-const settingsService = new SettingsService(settings);
-export default settingsService;

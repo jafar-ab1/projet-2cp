@@ -1,6 +1,4 @@
-import reservation from '../models/reservation';
-
-export class ReservationService{
+export default class ReservationService{
     constructor(reservationModels){
         this.reservationModels = reservationModels;
     }
@@ -10,7 +8,7 @@ export class ReservationService{
     }
 
     async findById(id){
-        return this.reservationModels.findById(id);
+        return this.reservationModels.findById(id).populate('guestId roomId');
     }
 
     async create(createResercationDto){
@@ -19,13 +17,10 @@ export class ReservationService{
     }
 
     async update(id, createResercationDto){
-        return this.reservationModels.findByIdAndUpdate(id, createResercationDto, {new:true});
+        return this.reservationModels.findByIdAndUpdate(id, createResercationDto, {new:true}).populate('guestId roomId');
     }
 
     async delete(id){
-        return this.reservationModels.findByIdAndDelete(id);
+        return this.reservationModels.findByIdAndDelete(id).populate('guestId roomId');
     }
 }
-
-const reservationService = new ReservationService(reservation);
-export default reservationService;

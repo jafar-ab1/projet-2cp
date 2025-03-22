@@ -1,4 +1,4 @@
-export class paymentController{
+export default class PaymentController{
 
   constructor(paymentService){
     this.paymentService= paymentService;
@@ -6,8 +6,8 @@ export class paymentController{
 
   async getAll(req, res){
     try {
-      const { guestId } = req.params; 
-      const payment = await this.paymentService.findOne({ guestId });
+       
+      const payment = await this.paymentService.findAll();
       if (!payment) return res.status(404).json({ message: 'client non trouvé' });
       res.status(200).json(payment);
     } catch (error) {
@@ -18,7 +18,7 @@ export class paymentController{
   async getByGuestId(req, res) {
     try {
       const { guestId } = req.params;
-      const payment = await this.paymentService.findOne({ guestId });
+      const payment = await this.paymentService.findByGuestId( guestId );
       if (!payment) return res.status(404).json({ message: 'Payment not found' });
       res.status(200).json(payment);
     } catch (error) {

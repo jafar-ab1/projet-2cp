@@ -1,4 +1,4 @@
-export class roomConroller{
+export default class RoomController{
 
     constructor(roomService){
         this.roomService = roomService;
@@ -13,9 +13,9 @@ export class roomConroller{
           }
     }
 
-    async getRoomById(req ,res){
+    async getById(req ,res){
         try{
-            const room = await this.roomService.findById(req.params.is);
+            const room = await this.roomService.findById(req.params.id);
             res.status(200).json(room);
     }
     catch(error){
@@ -24,12 +24,10 @@ export class roomConroller{
     };
 
 
-    async getByroomStatus(req, res){}
-
-    async getByroomType(req, res){
+    async getByType(req, res){
         const {type} = req.params;
     try {
-        const rooms = await this.roomService.find({type});
+        const rooms = await this.roomService.findByType(type);
         res.status(200).json(rooms);
     }
     catch(error){
@@ -49,7 +47,7 @@ export class roomConroller{
 }
     async update(req, res){
         try{
-            const room = await this.roomService.findByIdAndUpdate(req.params.id, req.body, {new:true});
+            const room = await this.roomService.update(req.params.id, req.body, {new:true});
             if (!room) return res.status(404).json({message:'chambre non trouvé'});
             res.status(200).json(room);
         }
@@ -60,7 +58,7 @@ export class roomConroller{
 
     async delete(req, res){
         try{
-            const room = await this.roomService.findByIdAndDelete(req.params.id);
+            const room = await this.roomService.delete(req.params.id);
             if (!room) return res.status(404).json({message: 'chambre non trouvé'});
             res.status(200).json({message: 'room supprimer'});
         }

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const tarifSchema = new mongoose.Schema({
     roomType: { type: String, enum: ["Standard", "Deluxe", "Suite"], required: true },
@@ -9,4 +9,5 @@ const tarifSchema = new mongoose.Schema({
     status: { type: String, enum: ["active", "inactive"], default: "active" }
 })
 
-module.exports = mongoose.model('Tarif', tarifSchema);
+const Tarif = mongoose.model('Tarif', tarifSchema);
+export default Tarif;

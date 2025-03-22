@@ -1,9 +1,9 @@
-// validation.js
+
 import Joi from 'joi';
 
 
 export const findByIdSchema = Joi.object({
-  id: Joi.string().required().messages({
+  id: Joi.string().required().req.messages({
     'string.empty': 'L\'ID de la chambre est requis',
     'any.required': 'L\'ID de la chambre est requis',
   }),

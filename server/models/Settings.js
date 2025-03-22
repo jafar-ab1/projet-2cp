@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
-const SettingsSchema = new mongoose.Schema({
+const settingsSchema = new mongoose.Schema({
   hotelName: { type: String, required: true },
   totalRooms: { type: Number, required: true },
   defaultRates: { type: Map, of: Number }, 
@@ -9,4 +9,5 @@ const SettingsSchema = new mongoose.Schema({
   contactPhone: { type: String, required: true } 
 });
 
-module.exports = mongoose.model('Settings', SettingsSchema);
+const Settings = mongoose.model('Settings', settingsSchema);
+export default Settings;

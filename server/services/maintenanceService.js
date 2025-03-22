@@ -1,6 +1,4 @@
-import maintenance from '../models/Maintenance';
-
-export class MaintenanceService{
+export default class MaintenanceService{
     constructor(maintenanceModel){
         this.maintenanceModel = maintenanceModel;
     }
@@ -27,5 +25,4 @@ export class MaintenanceService{
     }
 }
 
-const maintenanceService = new MaintenanceService(maintenance);
-export default maintenanceService;
+

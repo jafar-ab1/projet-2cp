@@ -1,4 +1,6 @@
-export class CleaningController {
+import  cleaningService  from '../services/cleaningService.js';
+
+export default class CleaningController {
 
     constructor(cleaningService) {
         this.cleaningService = cleaningService;
@@ -6,7 +8,7 @@ export class CleaningController {
 
     async getAll(req, res) {
         try {
-            const cleanings = await this.cleaningService.find();
+            const cleanings = await this.cleaningService.findAll();
             res.status(200).json(cleanings); 
         } catch (error) {
             res.status(500).json({
@@ -19,7 +21,7 @@ export class CleaningController {
         try {
             const roomNumber = req.params.roomNumber;
 
-            const cleaning = await this.cleaningService.findOne({ roomNumber });
+            const cleaning = await this.cleaningService.findByRoomNb( roomNumber );
             if (!cleaning) return res.status(404).json({ message: 'Cleaning not found' });
             res.status(200).json(cleaning);
         } catch (error) {
@@ -46,7 +48,7 @@ export class CleaningController {
         const { roomNumber } = req.body;
 
         try {
-            const cleaning = await this.cleaningService.findOneAndDelete({ roomNumber }); 
+            const cleaning = await this.cleaningService.Delete( roomNumber ); 
             if (!cleaning) return res.status(404).json({ message: 'Cleaning not found' });
             res.status(200).json({ message: 'Cleaning deleted successfully' });
         } catch (error) {

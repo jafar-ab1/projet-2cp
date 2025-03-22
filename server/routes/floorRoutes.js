@@ -1,15 +1,22 @@
-const express = require('express');
+import express from 'express';
+
+import Floor from '../models/Floor.js';
+import FloorService from '../services/floorService.js';
+import FloorController from'../controllers/floorControl.js';
+
+const floorService = new FloorService(Floor);
+const floorController = new FloorController(floorService);
+
 const router = express.Router();
-const floorController= require ('../controllers/floorControl');
 
-router.get('/', floorController.getAllFloors);
+router.get('/', floorController.getAll);
 
-router.get('/Floor/:floorNb', floorController.getFloorByFloorNb);
+router.get('/Floor/:floorNb', floorController.getByFloorNb);
 
-router.post('/', floorController.createFloor);
+router.post('/', floorController.create);
 
-router.put('/Floor/:floorNb', floorController.updateFloor);
+router.put('/Floor/:floorNb', floorController.update);
 
-router.delete('/Floor/:floorNb', floorController.deleteFloor);
+router.delete('/Floor/:floorNb', floorController.delete);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose, { mongo } from "mongoose";
 
 const maintenanceSchema = new mongoose.Schema({
   roomNumber: { type: String, required: true },
@@ -8,4 +8,5 @@ const maintenanceSchema = new mongoose.Schema({
   resolutionDate: { type: Date },
 });
 
-module.exports = mongoose.model("Maintenance", maintenanceSchema);
+const Maintenance = mongoose.model('Maintenance', maintenanceSchema);
+export default Maintenance;

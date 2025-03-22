@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const feed_backSchema = new mongoose.Schema({
     guestId:{type: mongoose.Schema.Types.ObjectId, ref:'Guest'},
@@ -8,4 +8,5 @@ const feed_backSchema = new mongoose.Schema({
     date : {type:Date}
 });
 
-module.exports = mongoose.model('feed_back', feed_backSchema);
+const Feed_back = mongoose.model('Feed_back', feed_backSchema);
+export default Feed_back;

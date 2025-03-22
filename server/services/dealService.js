@@ -1,6 +1,4 @@
-import Deal from '../models/Deal';
-
-export class DealService{
+export default class DealService{
 
     constructor(dealModels){
         this.dealModels = dealModels;
@@ -24,5 +22,3 @@ export class DealService{
     }
 }
 
-const dealServices = new DealService(Deal);
-export default dealServices;

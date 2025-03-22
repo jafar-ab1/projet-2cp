@@ -1,11 +1,13 @@
-export class tarifController{
+import tarifService from "../services/tarifService.js";
+
+export default class TarifController{
   constructor(tarifService){
     this.tarifService = tarifService;
   }
 
   async getAll(req, res){
     try {
-      const tarifs = await this.tarifService.find();
+      const tarifs = await this.tarifService.findAll();
       res.status(200).json(tarifs);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -15,7 +17,7 @@ export class tarifController{
   async get(req, res){
     try {
       const { roomType, price } = req.params; 
-      const tarif = await this.tarifService.findOne({roomType, price});
+      const tarif = await this.tarifService.find(roomType, price);
       if (!tarif) return res.status(404).json({ message: 'Tarif non trouvé' });
       res.status(200).json(tarif);
     } catch (error) {
@@ -36,7 +38,7 @@ export class tarifController{
   async update(req, res){
     try {
       const { roomType, price } = req.body; 
-      const tarif = await this.tarifService.findOneAndUpdate({roomType, price}, req.body, { new: true });
+      const tarif = await this.tarifService.update(roomType, price, req.body);
       if (!tarif) return res.status(404).json({ message: 'Tarif non trouvé' });
       res.status(200).json(tarif);
     } catch (error) {
@@ -47,7 +49,7 @@ export class tarifController{
   async delete(req, res){
     try {
       const { roomType, price } = req.body; 
-      const tarif = await this.tarifService.findOneAndDelete({roomType, price});
+      const tarif = await this.tarifService.delete(roomType, price);
       if (!tarif) return res.status(404).json({ message: 'Tarif non trouvé' });
       res.status(200).json({ message: 'Tarif supprimé' });
     } catch (error) {

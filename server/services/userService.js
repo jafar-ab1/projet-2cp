@@ -1,6 +1,4 @@
-import user from '../models/User';
-
-export class UserService{
+export default class UserService{
     constructor(userModel){
         this.userModel = userModel;
     }
@@ -27,5 +25,4 @@ export class UserService{
     }
 }
 
-const userService = new UserService(user);
-export default userService;
+

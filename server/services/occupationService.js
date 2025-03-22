@@ -1,6 +1,4 @@
-import occupation from '../models/Occupation';
-
-export class OccupationService{
+export default class OccupationService{
     constructor(occupationModel){
         this.occupationModel = occupationModel;
     }
@@ -26,6 +24,3 @@ export class OccupationService{
         return this.occupationModel.findOneAndDelete({month})
     }
 }
-
-const occupancyService = new OccupationService(occupation);
-export default occupancyService;

@@ -1,4 +1,6 @@
-export class guestController{
+import guestService from "../services/guestService.js";
+
+export default class GuestController{
 
     constructor(guestService){
         this.guestService = guestService;
@@ -6,7 +8,7 @@ export class guestController{
 
     async getAll(req, res){
         try {
-            const guests = await this.guestService.find();
+            const guests = await this.guestService.findAll();
             res.status(200).json(guests);
           } catch (error) {
             res.status(500).json({ 
@@ -44,7 +46,7 @@ export class guestController{
 
     async update(req, res){
         try{
-            const guest = await this.guestService.findByIdAndUpdate(req.params.id, req.body, {new:true});
+            const guest = await this.guestService.update(req.params.id, req.body);
             if(!guest) return res.status(404).json({message:'client non trouve'});
             res.status(200).json(guest);
         }
@@ -57,7 +59,7 @@ export class guestController{
 
     async delete(req, res){
         try{
-            const guest = await this.guestService.findByIdAndDelete(req.params.id);
+            const guest = await this.guestService.delete(req.params.id);
             if(!guest) return res.status(404).json({message : 'client non trouve'});
             res.status(200).json({message : 'guest supprimé'});
          }

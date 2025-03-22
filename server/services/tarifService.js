@@ -1,6 +1,4 @@
-import tarif from '../models/Tarif';
-
-export class TarifService{
+export default class TarifService{
     constructor(tarifModel){
         this.tarifModel = tarifModel;
     }
@@ -27,5 +25,3 @@ export class TarifService{
     }
 }
 
-const tarifService = new TarifService(tarif);
-export default tarifService;

@@ -1,11 +1,9 @@
-import Room from '../Models/Room'
-
-export class RoomService {
+export default class RoomService {
     constructor(roomModel) {
         this.roomModel = roomModel;
     }
 
-    async findAll() {
+    async find() {
         return this.roomModel.find();
     }
 
@@ -13,7 +11,7 @@ export class RoomService {
         return this.roomModel.findById(id);
     }
 
-    async findByroomType(type) {
+    async findByType(type) {
         return this.roomModel.find({type})
     }
 
@@ -23,13 +21,11 @@ export class RoomService {
     }
 
     async update(id, updateRoomDto) {
-        return this.roomModel.findByIdAndUpdate(id, updateRoomDto);
+        return this.roomModel.findByIdAndUpdate(id, updateRoomDto, {new: true});
     }
 
-    async remove(id) {
+    async delete(id) {
         return this.roomModel.findByIdAndDelete(id);
     }
-}
+};
 
-const roomService = new RoomService(Room);
-export default roomService;

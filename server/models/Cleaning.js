@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const cleaningSchema = new mongoose.Schema({
   roomNumber: { type: String, required: true },
@@ -7,4 +7,5 @@ const cleaningSchema = new mongoose.Schema({
   nextCleaning: { type: Date },
 });
 
-module.exports = mongoose.model("Cleaning", cleaningSchema);
+const Cleaning = mongoose.model('Cleaning', cleaningSchema);
+export default Cleaning;

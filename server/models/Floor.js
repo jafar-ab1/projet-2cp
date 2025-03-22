@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const FloorSchema = new mongoose.Schema({
   floorNb: { type: Number, required: true },
@@ -6,4 +6,5 @@ const FloorSchema = new mongoose.Schema({
   status: { type: String, enum: ["Complété", "À compléter"], default: "À compléter" }
 });
 
-module.exports = mongoose.model('Floor', FloorSchema);
+const Floor = mongoose.model('Floor', FloorSchema);
+export default Floor;

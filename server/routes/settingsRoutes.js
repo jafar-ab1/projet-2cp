@@ -1,11 +1,18 @@
-const express = require('express');
+import express from 'express';
+
+import Settings from '../models/Settings.js';
+import SettingsService from '../services/settingsService.js';
+import SettingsController from'../controllers/settingsControl.js';
+
+const settingsService = new SettingsService(Settings);
+const settingsController = new SettingsController(settingsService);
+
 const router = express.Router();
-const settingsController = require('../controllers/settingsControl');
 
 // Récupérer les paramètres globaux
-router.get('/', settingsController.getSettings);
+router.get('/', settingsController.get);
 
 // Mettre à jour les paramètres globaux
-router.put('/', settingsController.updateSettings);
+router.put('/', settingsController.update);
 
-module.exports = router;
+export default router;

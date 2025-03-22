@@ -1,17 +1,24 @@
-const express = require('express');
+import express from 'express';
+
+import Deal from '../models/Deal.js';
+import DealService from '../services/dealService.js';
+import  DealController from '../controllers/dealControl.js';
+
+const dealService = new DealService(Deal);
+const dealController = new DealController(dealService);
+
 const router = express.Router();
-const dealController = require('../controllers/dealControl');
 
 // Récupérer tous les deals
-router.get('/', dealController.getAllDeals);
+router.get('/', dealController.getAll);
 
 // Récupérer un deal par son nom
-router.get('/:dealName', dealController.getDealByName);
+router.get('/:dealName', dealController.getByName);
 
 // Créer un nouveau deal
-router.post('/', dealController.createDeal);
+router.post('/', dealController.create);
 
 // Supprimer un deal
-router.delete('/:dealName', dealController.suppFeed_back);
+router.delete('/:dealName', dealController.delete);
 
-module.exports = router;
+export default router;

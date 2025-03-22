@@ -1,6 +1,4 @@
-import floor from '../models/Floor';
-
-export class FloorService{
+export default class FloorService{
     constructor(floorModel){
         this.floorModel = floorModel;
     }
@@ -26,6 +24,3 @@ export class FloorService{
         return this.floorModel.findOneAndDelete({floorNb});
     }
 }
-
-const floorService = new FloorService(floor);
-export default floorService;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const guestSchema = new mongoose.Schema({
     guestId:{type: Number, default: () => new mongoose.Types.ObjectId()},
@@ -8,5 +8,5 @@ const guestSchema = new mongoose.Schema({
     feedback: { type: String }, 
     reservations: [{ type: mongoose.Schema.Types.ObjectId, ref: "Reservation" }],
 })
-
-module.exports = mongoose.model('Guest', guestSchema)
+const Guest = mongoose.model('Guest', guestSchema);
+export default Guest;

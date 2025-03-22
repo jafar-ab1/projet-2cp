@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const occupationSchema = new mongoose.Schema({
     month: {type:String, required:true},
@@ -8,4 +8,5 @@ const occupationSchema = new mongoose.Schema({
     availbleRooms: {type:Number, required:true}
 })
 
-module.exports = mongoose.model('Occupation', occupationSchema);
+const Occupation = mongoose.model('Occupation', occupationSchema);
+export default Occupation;

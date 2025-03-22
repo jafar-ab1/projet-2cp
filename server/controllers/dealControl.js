@@ -1,4 +1,6 @@
-export class dealController{
+import dealService from "../services/dealService.js";
+
+export default class DealController{
 
     constructor(dealService){
         this.dealService = dealService;
@@ -6,7 +8,7 @@ export class dealController{
 
     async getAll(req, res){
         try{
-            const deals = await this.dealService.find();
+            const deals = await this.dealService.findAll();
             res.status(200).json(deals);
          }
          catch(error){
@@ -20,7 +22,7 @@ export class dealController{
         try{
             const dealName = req.params.dealName;
     
-            const deal = await this.dealService.findOne({dealName});
+            const deal = await this.dealService.findByName({dealName});
             if(!deal) return res.status(404).json({Message:'deals  non trouvé'});
             res.status(200).json(deal);
         }
@@ -49,7 +51,7 @@ export class dealController{
         const {dealName} = req.params;
     
     try{
-        const deal =await this.dealService.findOneAndDelete({dealName});
+        const deal =await this.dealService.Delete({dealName});
         if(!deal) return res.status(404).json({message: 'commentaire non trouvé'});
         res.status(200).json({message: 'deal supprime'});
     }

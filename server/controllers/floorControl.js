@@ -1,4 +1,6 @@
-export class floorController {
+import floorService from "../services/floorService.js";
+
+export default class FloorController {
 
   constructor(floorService){
     this.floorService= floorService;
@@ -7,7 +9,7 @@ export class floorController {
 
   async getAll(req, res){
     try {
-      const floors = await this.floorService.find();
+      const floors = await this.floorService.findAll();
       res.status(200).json(floors);
     } catch (error) {
       res.status(500).json({ 
@@ -19,7 +21,7 @@ export class floorController {
   async getByFloorNb(req, res){
     const {floorNb}= req.params; 
     try {
-      const floor = await this.floorService.findOne( {floorNb} );
+      const floor = await this.floorService.find( floorNb );
       if (!floor) return res.status(404).json({ message: 'Étage non trouvé' });
       res.status(200).json(floor);
     } catch (error) {
@@ -44,7 +46,7 @@ export class floorController {
   async update(req, res){
     const {floorNb}= req.params; 
   try {
-    const floor = await this.floorService.findOneAndUpdate({floorNb}, req.body, { new: true });
+    const floor = await this.floorService.update(floorNb, req.body);
     if (!floor) return res.status(404).json({ message: 'Étage non trouvé' });
     res.status(200).json(floor);
   } catch (error) {
@@ -57,7 +59,7 @@ export class floorController {
   async delete(req, res){
     const {floorNb}= req.params; 
   try {
-    const floor = await this.floorService.findOneAndDelete({floorNb});
+    const floor = await this.floorService.delete(floorNb);
     if (!floor) return res.status(404).json({ message: 'Étage non trouvé' });
     res.status(200).json({ message: 'Étage supprimé' });
   } catch (error) {

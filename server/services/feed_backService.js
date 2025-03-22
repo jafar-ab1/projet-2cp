@@ -1,15 +1,13 @@
-import feed_back from '../models/feed_back';
-
-export class Feed_back{
+export default class Feed_backService{
     constructor(feed_backModel){
         this.feed_backModel = feed_backModel;
     }
 
-    async getAll(){
+    async findAll(){
         return this.feed_backModel.find();
     }
 
-    async get(userId, roomId){
+    async find(userId, roomId){
         return this.feed_backModel.findOne({userId, roomId});
     }
 
@@ -23,5 +21,3 @@ export class Feed_back{
     }
 }
 
-const feed_backService = new Feed_back(feed_back);
-export default feed_backService;

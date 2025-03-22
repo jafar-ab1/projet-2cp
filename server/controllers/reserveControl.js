@@ -1,4 +1,6 @@
-export class reservationConrtoller{
+import reservationService from "../services/reservationService.js";
+
+export default class ReservationConrtoller{
 
     constructor(reservationService){
         this.reservationService= reservationService;
@@ -6,7 +8,7 @@ export class reservationConrtoller{
 
     async getAll(req, res){
         try {
-            const reservation = await this.reservationService.find();
+            const reservation = await this.reservationService.findAll();
             res.status(200).json(reservation);
           } catch (error) {
             res.status(500).json({ message: error.message });
@@ -15,7 +17,7 @@ export class reservationConrtoller{
 
     async getById(req, res){
         try {
-            const reservation = await this.reservationService.findById(req.params.id).populate('guestId roomId');
+            const reservation = await this.reservationService.findById(req.params.id);
         
             if (!reservation) return res.status(404).json({ message: 'reservation non trouvé'});
             res.status(200).json(reservation);
@@ -38,7 +40,7 @@ export class reservationConrtoller{
 
     async update(req, res){
         try{
-            const reservation = await this.reservationService.findByIdAndUpdate(req.params.id, req.body, {new:true});
+            const reservation = await this.reservationService.update(req.params.id, req.body);
             if (!reservation) return res.status(404).json({message:'reservation non trouvé'});
             res.status(200).json(reservation);
         }
@@ -49,7 +51,7 @@ export class reservationConrtoller{
 
     async delete(req, res){
         try{
-            const reservation =await  this.reservationService.findByIdAndDelete(req.params.id);
+            const reservation =await  this.reservationService.delete(req.params.id);
             if (!reservation) return res.status(404).json({message: 'reservation non trouvé'});
             res.status(200).json({message: 'reservation supprime'});
         }

@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
-const ReservationSchema = new mongoose.Schema({
+const reservationSchema = new mongoose.Schema({
     reservationId: { type: String, required: true, unique: true },
     guestId: { type: mongoose.Schema.Types.ObjectId, ref: "Guest", required: true },
     roomId: { type: mongoose.Schema.Types.ObjectId, ref: "Room", required: true },
@@ -10,4 +10,5 @@ const ReservationSchema = new mongoose.Schema({
     status: { type: String, enum: ["pending", "confirmed", "cancelled"], default: "pending" }
 });
 
-module.exports = mongoose.model('Reservation', ReservationSchema);
+const Reservation = mongoose.model('Reservation', reservationSchema);
+export default Reservation;

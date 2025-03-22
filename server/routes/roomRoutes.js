@@ -1,18 +1,25 @@
-const express = require('express');
+import express from 'express';
+
+import Room from '../models/Room.js';
+import RoomService from '../services/roomService.js';
+import RoomController from '../controllers/roomControl.js';
+
+const roomService = new RoomService(Room);
+const roomController = new RoomController(roomService);
+
+
 const router = express.Router();
-const roomController = require('../controllers/roomControl');
 
+router.get('/', roomController.getAll);
 
-router.get('/', roomController.getAllRooms);
+router.get('/:id', roomController.getById);
 
-router.get('/:id', roomController.getRoomById);
+router.get('/Room/:type', roomController.getByType);
 
-router.get('/Room/:type', roomController.getRoomsType);
+router.post('/', roomController.create);
 
-router.post('/', roomController.creatRoom);
+router.put('/:id', roomController.update);
 
-router.put('/:id', roomController.modifyRoom);
+router.delete('/:id', roomController.delete);
 
-router.delete('/:id', roomController.suppRoom);
-
-module.exports = router;
+export default router;

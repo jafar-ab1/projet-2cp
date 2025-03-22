@@ -1,9 +1,18 @@
-const express = require('express');
+import express from 'express';
+
+import Payment from '../models/Payments.js';
+import PaymentService from '../services/paymentsService.js';
+import PaymentController from'../controllers/paymentControl.js';
+
+const paymentService = new PaymentService(Payment);
+const paymentController = new PaymentController(paymentService);
+
 const router = express.Router();
-const paymentControllers = require('../controllers/paymentControl');
 
-router.get('/', paymentControllers.getPayment);
+router.get('/', paymentController.getAll);
 
-router.put('/', paymentControllers.getPayment);
+router.get('/Guest/:id', paymentController.getByGuestId);
 
-module.exports = router;
+router.put('/', paymentController.create);
+
+export default router;

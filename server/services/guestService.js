@@ -1,6 +1,4 @@
-import guest from '../models/Guest';
-
-export class GuestService{
+export default class GuestService{
     constructor(guestModel){
         this.guestModel = guestModel;
     }
@@ -26,6 +24,3 @@ export class GuestService{
         return this.guestModel.findByIdAndDelete(id)
     }
 }
-
-const guestService = new GuestService(guest);
-export default guestService;

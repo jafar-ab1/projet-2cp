@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const PaymentSchema = new mongoose.Schema({
     guestId: { type: mongoose.Schema.Types.ObjectId, ref: "Guest", required: true },
@@ -8,4 +8,5 @@ const PaymentSchema = new mongoose.Schema({
     paymentMethod: { type: String, enum: ["credit_card", "paypal", "cash"], required: true }
 });
 
-module.exports = mongoose.model('Payment', PaymentSchema);
+const Payment = mongoose.model('Payment', PaymentSchema);
+export default Payment;

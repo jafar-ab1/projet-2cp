@@ -1,4 +1,6 @@
-export class UserController {
+import userService from "../services/userService.js";
+
+export default class UserController {
 
     constructor(userService){
         this.userService = userService;
@@ -6,7 +8,7 @@ export class UserController {
 
     async getAll(req, res){
         try {
-            const users = await this.userService.find();
+            const users = await this.userService.findAll();
             res.status(200).json(users);
           } catch (error) {
             res.status(500).json({ 
@@ -44,7 +46,7 @@ export class UserController {
 
     async update(req, res){
         try{
-            const user = await this.userService.findByIdAndUpdate(req.params.id, req.body, {new:true});
+            const user = await this.userService.update(req.params.id, req.body);
             if(!user) return res.status(404).json({message:'client non trouve'});
             res.status(200).json(user);
         }
@@ -55,7 +57,7 @@ export class UserController {
     
     async delete(req, res){
         try{
-            const user = await this.userService.findByIdAndDelete(req.params.id);
+            const user = await this.userService.delete(req.params.id);
             if(!user) return res.status(404).json({message : 'client non trouve'});
             res.status(200).json({message : 'user supprimé'});
          }

@@ -1,20 +1,27 @@
-const express = require('express');
+import express from 'express';
+
+import Occupation from '../models/Occupation.js';
+import OccupationService from '../services/occupationService.js';
+import OccupancyController from'../controllers/occupationControl.js';
+
+const occupationService = new OccupationService(Occupation);
+const occupationController = new OccupancyController(occupationService);
+
 const router = express.Router();
-const occupancyController = require('../controllers/occupationControl');
 
 // Récupérer toutes les statistiques d'occupation
-router.get('/', occupancyController.getAllOccupancies);
+router.get('/', occupationController.getAll);
 
 // Récupérer une statistique d'occupation par son ID
-router.get('/', occupancyController.getOccupancyByMonth);
+router.get('/', occupationController.getByMonth);
 
 // Ajouter une nouvelle statistique d'occupation
-router.post('/', occupancyController.createOccupancy);
+router.post('/', occupationController.create);
 
 // Mettre à jour une statistique d'occupation
-router.put('/', occupancyController.updateOccupancy);
+router.put('/', occupationController.update);
 
 // Supprimer une statistique d'occupation
-router.delete('/', occupancyController.deleteOccupancy);
+router.delete('/', occupationController.delete);
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
 
 const dealSchema = new mongoose.Schema({
   dealName: { type: String, required: true },
@@ -8,4 +8,5 @@ const dealSchema = new mongoose.Schema({
   status: { type: String, enum: ["active", "inactive", "finished"], default: "active" },
 });
 
-module.exports = mongoose.model("Deal", dealSchema);
+const Deal = mongoose.model('Deal', dealSchema);
+export default Deal;

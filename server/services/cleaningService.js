@@ -1,6 +1,4 @@
-import Cleaning from '../models/Cleaning';
-
-export class CleaningService{
+export default class CleaningService{
 
     constructor(cleaningModel){
         this.cleaningModel = cleaningModel;
@@ -22,8 +20,4 @@ export class CleaningService{
     async delete(roomNumber){
         return this.cleaningModel.findOneAndDelete({roomNumber});
     }
-}
-
-
-const cleaningService = new CleaningService(Cleaning);
-export default cleaningService;
+};
