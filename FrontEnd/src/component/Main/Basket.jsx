@@ -1,4 +1,3 @@
-"use client"
 
 import { useState, useEffect } from "react"
 import "./Basket.css"
@@ -9,7 +8,7 @@ function Basket() {
   const [totalPrice, setTotalPrice] = useState(0)
   
 
-  // Function to calculate total price
+
   const calculateTotalPrice = (rooms) => {
     if (!rooms || rooms.length === 0) return 0
     return rooms.reduce((sum, room) => sum + Number.parseFloat(room.price || 0), 0)

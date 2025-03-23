@@ -1,0 +1,29 @@
+[
+    {
+        "id":1,
+        "Branch":"Algiers",
+        "Description":" Guarantee Policy In order to guarantee your reservation, a deposit of the entire room and tax is due at the time of booking. Cancel Policy Cancel within five days of arrival to avoid penalty.",
+        "checkin":"after 3:30 pm", 
+        "checkout":"before 11:00 am"
+
+
+    },
+    {
+        "id":2,
+        "Branch":"Oran",
+        "Description":" Guarantee Policy In order to guarantee your reservation, a deposit of the entire room and tax is due at the time of booking. Cancel Policy Cancel within five days of arrival to avoid penalty.",
+        "checkin":"after 2:30 pm", 
+        "checkout":"before 12:00 am"
+
+
+    },
+    {
+        "id":3,
+        "Branch":"Annaba",
+        "Description":" Guarantee Policy In order to guarantee your reservation, a deposit of the entire room and tax is due at the time of booking. Cancel Policy Cancel within five days of arrival to avoid penalty.",
+        "checkin":"after 4:30 pm", 
+        "checkout":"before 13:00 am"
+
+
+    }
+]

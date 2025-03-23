@@ -51,7 +51,7 @@ function Booking3() {
             </div>
           ))}
         </div>
-        <button className="CheckOut"  onClick={() => navigate("/Payment")}>Check Out</button>
+        <button className="CheckOut"  onClick={() => navigate("/CheckOut")}>Check Out</button>
       </div>
     </>
   );

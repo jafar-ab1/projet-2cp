@@ -128,11 +128,10 @@ function Booking() {
     if (calendarType === "checkIn") {
       updateFormData("checkInDate", selectedDate);
       setShowCheckInCalendar(false);
-      console.log("Check-in Date Set:", selectedDate);  // Debugging log
     } else {
       updateFormData("checkOutDate", selectedDate);
       setShowCheckOutCalendar(false);
-      console.log("Check-out Date Set:", selectedDate);  // Debugging log
+      
     }
   };
   

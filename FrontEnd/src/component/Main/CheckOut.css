@@ -1,0 +1,229 @@
+.checkout-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f2efe5;
+    color: #4a4a4a;
+  }
+  
+  h1 {
+    font-size: 20px;
+    font-weight: normal;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    color: #333;
+  }
+  
+  
+  
+  .section {
+    margin-bottom: 30px;
+    background-color: #e9e6dd;
+    padding: 20px;
+    border-radius: 2px;
+  }
+  
+  h2 {
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 15px;
+    color: #333;
+    position: relative;
+  }
+  
+  .section:first-of-type h2::after {
+    content: "Required*";
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .contact-form,
+  .address-form,
+  .payment-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .contact-form input,
+  .address-form input,
+  .address-form select,
+  .payment-form input {
+    padding: 12px;
+    border: none;
+    background-color: #d9d6cc;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .contact-form input::placeholder,
+  .address-form input::placeholder,
+  .address-form select::placeholder,
+  .payment-form input::placeholder {
+    color: #666;
+  }
+  
+  .address-form input[name="Address"],
+  .payment-form input[name="Card"] {
+    grid-column: span 2;
+  }
+  
+  .contact-form {
+    position: relative;
+  }
+  
+  .contact-form::after {
+    content: "This is the email we will send the confirmation to";
+    position: absolute;
+    bottom: -20px;
+    right: 0;
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .payment-form {
+    border: 1px solid #ccc;
+    padding: 15px;
+    position: relative;
+  }
+
+  
+  .payment-icons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .payment-icons img {
+    height: 24px;
+  }
+  
+  input:required::placeholder,
+  select:required::placeholder {
+    position: relative;
+  }
+  
+  input:required::placeholder::after,
+  select:required::placeholder::after {
+    content: "*";
+    color: #ff0000;
+  }
+  
+  .checkout-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #333;
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .checkout-btn:hover {
+    background-color: #444;
+  }
+  
+  /* Policies Section 
+  .policies-section p {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+  }
+    */
+    /* Policies section styling */
+.policies-section {
+    background-color: #e9e6dd;
+    padding: 20px;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    color: #4a4a4a;
+  }
+  
+  .policies-section h2 {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  /* Check-in/Check-out times */
+  .check-times {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .check-time {
+    flex: 1;
+  }
+  
+  .check-label {
+ 
+    margin: 0;
+  }
+  
+  .check-value {
+    margin: 0;
+
+  }
+  
+  /* Room information */
+  .room-info {
+    margin-bottom: 15px;
+  }
+  
+  .room-detail {
+    margin: 0 0 5px 0;
+    color: #4a4a4a;
+    font-size: 14px;
+  }
+  
+  
+  .policy-details {
+    margin-top: 15px;
+  }
+  
+  .guarantee-title, .cancel-title {
+    
+    margin: 10px 0 5px 0;
+    font-size: 14px;
+  }
+  
+  .guarantee-text, .cancel-text {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .acknowledgement-section {
+    background-color: #e9e6dd;
+    padding: 20px;
+    border-radius: 2px;
+    font-size: 14px;
+  }
+  
+  .terms-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .terms-container input {
+    width: 16px;
+    height: 16px;
+    accent-color: #333;
+  }
+  
+  .terms-container label {
+    color: #4a4a4a;
+    font-size: 14px;
+  }
+  
+  .terms-container p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #333;
+  }
+  
