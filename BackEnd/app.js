@@ -30,7 +30,7 @@ mongoose.connect(config.mongodb)
     console.log(" Connecté à MongoDB");
     // Démarrer le serveur uniquement après la connexion réussie
     app.listen(port, () => {
-      console.log("✅ Serveur démarré sur http://localhost:${port}");
+      console.log(`✅ Serveur démarré sur http://localhost:${port}`);
     });
   })
   .catch(err => {
@@ -39,6 +39,7 @@ mongoose.connect(config.mongodb)
   });
 
 // Importation des routes
+const authRoutes = require("./server/routes/authRoutes");
 const roomRoutes = require('./server/routes/roomRoutes');
 const feedBackRoutes = require('./server/routes/feed_backRoutes');
 const floorRoutes = require('./server/routes/floorRoutes');
@@ -52,6 +53,7 @@ const dealRoutes = require('./server/routes/dealRoutes');
 const cleaningRoutes = require('./server/routes/cleaningRoutes');
 
 // Utilisation des routes
+app.use("/auth", authRoutes);
 app.use('/rooms', roomRoutes);
 app.use('/feed_backs', feedBackRoutes);
 app.use('/floor', floorRoutes);

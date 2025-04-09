@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
     if(userExistName) return res.status(400).json({message:'ce user name est deja utilisé '});
 
     const userExistEmail = await User.findOne({ email });
-    if (userExist) {
+    if (userExistEmail) {
       return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
     }
 
