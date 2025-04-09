@@ -1,4 +1,3 @@
-import roomsData from "../../rooms.json";
 import "./Booking31.css"
 import { useState } from "react"
 import { useEffect } from "react";

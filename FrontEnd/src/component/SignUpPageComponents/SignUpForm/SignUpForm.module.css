@@ -1,0 +1,29 @@
+.footer > p, a {
+    color: white;
+}
+
+.footer > p > a {
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+.footer {
+    margin-bottom: 20px;
+}
+
+.separator {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.separator > div {
+    flex: 1;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.separator > p {
+    color: white;
+}
