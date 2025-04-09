@@ -11,8 +11,11 @@ import Page9 from "./Page9.jsx";
 import Page10 from "./Page1-0.jsx";
 import Booking from "./component/Main/Booking.jsx"
 import Page12 from "./Page12.jsx"
+import SignInPage from "./pages/SignIn/SignIn-page.jsx"
 
 import Page13 from "./Page13.jsx"
+import SignUpPage from "./pages/SignUp/SignUp-page.jsx";
+import SignPageLayout from "./layouts/SignPageLayout/Sign-page.layout.jsx";
 
 function App() {
   return (
@@ -30,6 +33,10 @@ function App() {
       <Route path="/Book" element={<Booking/>}/>
       <Route path="/Choose" element={<Page12/>}/>
       <Route path="/CheckOut" element={<Page13/>}/>
+      <Route path="/" element={<SignPageLayout />} >
+        <Route path="/sign-in" element={<SignInPage />} />
+        <Route path="/sign-up" element={<SignUpPage />} />
+      </Route>
     </Routes>
   );
 }

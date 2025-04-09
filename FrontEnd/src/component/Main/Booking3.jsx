@@ -1,4 +1,4 @@
-import roomsData from "../../rooms.json";
+import roomsData from "../../data/room"
 import "./Booking3.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; 
