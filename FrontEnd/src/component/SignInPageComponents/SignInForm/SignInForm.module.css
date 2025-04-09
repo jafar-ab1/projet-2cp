@@ -1,0 +1,33 @@
+.inputWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rememberMe {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.rememberMe > a  {
+    text-decoration: none;
+    color: white;
+}
+
+.footer > p, a {
+    color: white;
+}
+
+.footer > p > a {
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+.footer {
+    margin-bottom: 20px;
+}
+

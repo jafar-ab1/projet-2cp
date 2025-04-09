@@ -1,0 +1,41 @@
+.container {
+    padding: 8px 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid white;
+    border-radius: 30px;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+    padding: 3px 10px;
+    border: 0px;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    font-size: 22px;
+    line-height: 40px;
+    letter-spacing: 0px;
+    font-weight: 400;
+}
+
+.input::placeholder {
+    color: #ddd;
+}
+
+.button {
+    background-color: transparent;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0px;
+    cursor: pointer;
+}
+
+.sideIcon {
+    color: white;
+}
