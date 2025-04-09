@@ -34,7 +34,7 @@ export default function SignInForm() {
 
     return(
         <Form>
-            <FormHeader text="Sign in"/>
+            <FormHeader text="Sign up"/>
             <Button
                 onClick={handleSignWithGoogleClick}
                 text="continue with Google"
