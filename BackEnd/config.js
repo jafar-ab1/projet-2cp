@@ -1,7 +1,17 @@
 const config = {
-    mongodb: "mongodb+srv://yzamri:spDn6oyqXSEh9dQv@cluster0.kr5su.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-    port: 3000,
-  };
+    db: {
+    username: "yzamri",      
+    password: "spDn6oyqXSEh9dQv",
+    connectionString: "mongodb+srv://yzamri:spDn6oyqXSEh9dQv@cluster.mongodb.net/dbname"
+  },
+
+  port: 3000,
+  jwt: {
+    keys: {
+      secret: "Jonas_jonas_younes_younes_", 
+      expiresIn: '1h'
+    }
+  },
+};
 
 module.exports= config;
-

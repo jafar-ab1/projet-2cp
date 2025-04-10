@@ -18,18 +18,20 @@ const dealRoutes = require('./server/routes/dealRoutes');
 const cleaningRoutes = require('./server/routes/cleaningRoutes');
 
 const app = express();
-const port = 3000;
+const port = config.db.port;
 dotenv.config();
 
 app.use(cors());
 app.use(express.json());
 
 // Connexion à MongoDB
-mongoose.connect('mongodb+srv://yzamri:<spDn6oyqXSEh9dQv>@cluster0.14egf.mongodb.net/', {
+mongoose.connect(config.db.connectionString, {
   
 })  
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Failed to connect to MongoDB', err));
+
+
 
 // Utilisation des routes
 app.use('/auth', authRoutes); 
