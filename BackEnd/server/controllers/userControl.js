@@ -20,19 +20,6 @@ exports.getUserById = async (req,res)=>{
     }
 }
 
-exports.creatUser = async(req, res) => {
-    const {username, email, password} = req.body;
-    try{
-        const newUser = new User({username, email, password});
-        await newUser.save();
-        res.status(201).json(newUser);
-    }
-    catch(error)
-    {
-        res.status(500).json({ message: error.message }); // Renvoyer le message d'erreur réel
-    }
-}
-
 exports.modifyUser = async(req, res)=> {
     try{
         const user = await User.findByIdAndUpdate(req.params.id, req.body, {new:true});
