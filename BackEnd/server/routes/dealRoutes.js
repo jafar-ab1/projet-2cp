@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const dealController = require('../controllers/dealControl');
+const { createDealSchema, deleteDealSchema } = require('../validation/dealValidation');
+const validate = require('../middealwear/validation.midellwear');
 
 // Récupérer tous les deals
 router.get('/', dealController.getAllDeals);
@@ -9,9 +11,9 @@ router.get('/', dealController.getAllDeals);
 router.get('/:dealName', dealController.getDealByName);
 
 // Créer un nouveau deal
-router.post('/', dealController.createDeal);
+router.post('/', validate(createDealSchema), dealController.createDeal);
 
 // Supprimer un deal
-router.delete('/:dealName', dealController.suppFeed_back);
+router.delete('/:dealName', validate(deleteDealSchema), dealController.deleteDeal);
 
 module.exports = router;

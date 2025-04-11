@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const floorController= require ('../controllers/floorControl');
+const validate = require('../middealwear/validation.midellwear');
+const {floorNumberSchema, createFloorSchema, updateFloorSchema} = require('../validation/floorValidation')
 
 router.get('/', floorController.getAllFloors);
 
-router.get('/Floor/:floorNb', floorController.getFloorByFloorNb);
+router.get('/:floorNumber',[validate(floorNumberSchema)], floorController.getFloorByFloorNb);
 
-router.post('/', floorController.createFloor);
+router.post('/',[validate(createFloorSchema)], floorController.createFloor);
 
-router.put('/Floor/:floorNb', floorController.updateFloor);
+router.put('/:floorNumber', [validate(updateFloorSchema)],floorController.updateFloor);
 
-router.delete('/Floor/:floorNb', floorController.deleteFloor);
+router.delete('/:floorNumber',[validate(floorNumberSchema)], floorController.deleteFloor);
 
 module.exports = router;

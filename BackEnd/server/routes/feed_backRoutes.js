@@ -1,17 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const feedbackController = require('../controllers/feed_backControl');
+const validate = require('../middealwear/validation.midellwear');
+const {createSchema, idSchema} = require('../validation/feedBackValidation')
+
 
 // Récupérer tous les feedbacks
 router.get('', feedbackController.getAllFeed_backs);
 
 // Récupérer un feedback par son ID
-router.get('/Guest/:guestId/Room/:roomId', feedbackController.getFeed_back);
+router.get('/:userId/:roomId',validate(idSchema), feedbackController.getFeed_back);
 
 // Ajouter un nouveau feedback
-router.post('/', feedbackController.creatFeed_back);
+router.post('/',validate(createSchema), feedbackController.creatFeed_back);
 
 // Supprimer un feedback
-router.delete('/Guest/:guestId/Room/:roomId', feedbackController.suppFeed_back);
+router.delete('/:userId/:roomId',validate(idSchema), feedbackController.suppFeed_back);
 
 module.exports = router;

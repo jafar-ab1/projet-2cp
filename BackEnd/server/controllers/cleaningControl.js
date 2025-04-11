@@ -1,9 +1,10 @@
 const Cleaning = require('../models/Cleaning');
 
-exports.getAllDeals = async (req,res) => {
+
+exports.getAllCleaning = async (req,res) => {
     try{
         const cleanings = await Cleaning.find();
-        res.statuts(200).json(cleanings);
+        res.status(200).json(cleanings);
      }
      catch(error){
         res.status(500).json({message: error.message});
@@ -12,7 +13,7 @@ exports.getAllDeals = async (req,res) => {
 
 exports.getCleaningByRoomNb = async(req, res) => {
     try{
-        const roomNumber = req.params.roomNumber;
+        const {roomNumber} = req.params;
 
         if (!roomNumber) {
             return res.status(400).json({ message: 'roomNumber is required' });
@@ -28,14 +29,9 @@ exports.getCleaningByRoomNb = async(req, res) => {
 }
 
 exports.createCleaning = async(req, res) => {
-    const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
-    
-    if (!roomNumber || !status || !lastCleaned || !nextCleaning) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
     try{
-        const newCleaning = new Cleaning({roomNumber, status, lastCleaned, nextCleaning});
+        const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
+        const newCleaning = new Cleaning(req.body);
         await newCleaning.save();
         res.status(201).json(newCleaning);
     }
@@ -45,16 +41,13 @@ exports.createCleaning = async(req, res) => {
 }
 
 exports.suppCleaning = async (req, res) => {
-    const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
-    
-    if (!roomNumber || !status || !lastCleaned || !nextCleaning) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
     try{
-        const cleaning = Cleaning.findOne({roomNumber, status, lastCleaned, nextCleaning});
-        if(!cleaning) return res.status(404).json({message: 'commentaire non trouvé'});
-        await cleaning.deleteOne();
+        const {roomNumber}= req.params;
+
+        const cleaning = await Cleaning.findOne({roomNumber});
+        if(!cleaning) return res.status(404).json({message: 'cleaning non trouvé'});
+        
+        await cleaning.deleteOne({roomNumber});
         res.status(200).json({message: 'cleaning supprime'});
     }
     catch(error){

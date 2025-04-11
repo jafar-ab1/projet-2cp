@@ -1,9 +1,10 @@
 const Deal = require('../models/Deal');
 
+
 exports.getAllDeals = async (req,res) => {
     try{
         const deals = await Deal.find();
-        res.satuts(200).json(deals);
+        res.status(200).json(deals);
      }
      catch(error){
         res.status(500).json({message: error.message});
@@ -28,14 +29,9 @@ exports.getDealByName = async(req, res) => {
 }
 
 exports.createDeal = async(req, res) => {
-    const {dealName, reservationsLeft, endDate, roomType, status} = req.body;
-    
-    if (!dealName || !reservationsLeft || !endDate || !roomType || !status) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
     try{
-        const newDeal = new Deal({dealName, reservationsLeft, endDate, roomType, status});
+        const {dealName, reservationsLeft, endDate, roomType, status} = req.body; 
+        const newDeal = new Deal(req.body);
         await newDeal.save();
         res.status(201).json(newDeal);
     }
@@ -44,16 +40,12 @@ exports.createDeal = async(req, res) => {
     }
 }
 
-exports.suppFeed_back = async (req, res) => {
-    const {dealName, reservationsLeft, endDate, roomType, status} = req.params;
-    if (!dealName || !reservationsLeft || !endDate || !roomType || !status) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-
+exports.deleteDeal = async (req, res) => {
     try{
-        const deal = Deal.findOne({dealName, reservationsLeft, endDate, roomType, status});
-        if(!deal) return res.status(404).json({message: 'commentaire non trouvé'});
-        await deal.deleteOne();
+        const {dealName}= req.params;
+        const deal =await Deal.findOne({dealName});
+        if(!deal) return res.status(404).json({message: 'deal non trouvé'});
+        await deal.deleteOne({dealName});
         res.status(200).json({message: 'deal supprime'});
     }
     catch(error){

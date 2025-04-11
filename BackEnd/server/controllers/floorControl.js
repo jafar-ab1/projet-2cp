@@ -11,9 +11,9 @@ exports.getAllFloors = async (req, res) => {
 
 exports.getFloorByFloorNb = async (req, res) => {
   
-  const {floorNb}= req.params; 
+  const {floorNumber}= req.params; 
   try {
-    const floor = await Floor.findOne( {floorNb} );
+    const floor = await Floor.findOne( {floorNumber} );
     if (!floor) return res.status(404).json({ message: 'Étage non trouvé' });
     res.status(200).json(floor);
   } catch (error) {
@@ -35,9 +35,9 @@ exports.createFloor = async (req, res) => {
 
 
 exports.updateFloor = async (req, res) => {
-  const {floorNb}= req.params; 
+  const {floorNumber}= req.params; 
   try {
-    const floor = await Floor.findOneAndUpdate({floorNb}, req.body, { new: true });
+    const floor = await Floor.findOneAndUpdate({floorNumber}, req.body, { new: true });
     if (!floor) return res.status(404).json({ message: 'Étage non trouvé' });
     res.status(200).json(floor);
   } catch (error) {
@@ -47,9 +47,9 @@ exports.updateFloor = async (req, res) => {
 
 
 exports.deleteFloor = async (req, res) => {
-  const {floorNb}= req.params; 
   try {
-    const floor = await Floor.findOneAndDelete({floorNb});
+    const {floorNumber}= req.params; 
+    const floor = await Floor.findOneAndDelete({floorNumber});
     if (!floor) return res.status(404).json({ message: 'Étage non trouvé' });
     res.status(200).json({ message: 'Étage supprimé' });
   } catch (error) {
