@@ -6,8 +6,6 @@ router.get('/', userController.getAllUsers);
 
 router.get('/:id', userController.getUserById);
 
-
-
 router.put('/:id', userController.modifyUser);
 
 router.delete('/:id', userController.suppUser);

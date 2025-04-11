@@ -21,9 +21,9 @@ exports.getGuestById = async (req,res)=>{
 }
 
 exports.creatGuest = async(req, res) => {
-    const {guestname, roomnumber,checkInDate, checkOutDate, feedback} = req.body;
+    const {guestname, checkInDate, checkOutDate, feedback} = req.body;
     try{
-        const newGuest = new Guest({guestname, roomnumber,checkInDate, checkOutDate, feedback});
+        const newGuest = new Guest({guestname,checkInDate, checkOutDate, feedback});
         await newGuest.save();
         res.status(201).json(newGuest);
     }
