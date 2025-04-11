@@ -1,17 +1,13 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const config = require("../../config.js")
 
 // Inscription
 exports.register = async (req, res) => {
   try {
     const {username, email, password } = req.body;
 
-    if (!username || !email || !password) {
-      return res.status(400).json({ message: 'Email,  mot de passe, name requis.' });
-    }
-
     // Vérifier si l'utilisateur existe déjà
-
     const userExistName = await User.findOne({username});
     if(userExistName) return res.status(400).json({message:'ce user name est deja utilisé '});
 
@@ -25,12 +21,13 @@ exports.register = async (req, res) => {
     await user.save();
 
     // Générer un token JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, config.jwt.keys.secret, {
       expiresIn: '1h',
     });
 
     res.status(201).json({ token });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Erreur lors de l\'inscription.', error });
   }
 };
@@ -40,10 +37,6 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.status(400).json({ message: 'Email et mot de passe requis.' });
-    }
-
     // Vérifier si l'utilisateur existe
     const user = await User.findOne({ email });
     if (!user) {
@@ -51,13 +44,13 @@ exports.login = async (req, res) => {
     }
 
     // Vérifier le mot de passe
-    const passwordUser = await user.comparePassword(password);
-    if (!passwordUser) {
+    const iscorrect = await user.comparePassword(password);
+    if (!iscorrect) {
       return res.status(400).json({ message: 'Email ou mot de passe incorrect.' });
     }
 
     // Générer un token JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, config.jwt.keys.secret, {
       expiresIn: '1h',
     });
 
