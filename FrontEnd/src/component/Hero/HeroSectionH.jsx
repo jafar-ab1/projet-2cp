@@ -9,15 +9,14 @@ function HeroSectionH() {
  
   return (
     <div className="hero-container">
-      {/* Navigation Bar */}
+      
       <div className="Navigation-Bar">
         <div className="left-section">
           <p>HOTEL<br />NAME</p>
         </div>
         
         <ul className="middle-section">
-            {/* ✅ Use <Link> instead of <a> */}
-           <li> <Link to="/Accommodation">Accommodation</Link>
+            <li> <Link to="/Accommodation">Accommodation</Link>
           </li>
           <li><Link to="/Occasions">Occasions</Link></li>
           <li><Link to="/Events">Events</Link></li>
@@ -31,7 +30,7 @@ function HeroSectionH() {
         </div>
       </div>
 
-      {/* Hero Section Content */}
+    
       
       <div className="par">
         <p className="par1">Where Every Moment<br />
@@ -41,7 +40,6 @@ function HeroSectionH() {
         </p>
       </div>
 
-      {/* Buttons */}
       <div className="buttons">
         <button className="Booking" onClick={() => navigate("/Book")}>Book now</button>
         <button className="More">Learn more &gt;</button>

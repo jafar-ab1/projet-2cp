@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 function Booking() {
   const navigate = useNavigate();
-  // Single formData state for all booking-related data
   const [formData, setFormData] = useState({
     checkInDate: null,
     checkOutDate: null,
@@ -14,8 +13,7 @@ function Booking() {
     children: 2,
   })
 
-  // UI-related states remain separate
-  const [showCheckInCalendar, setShowCheckInCalendar] = useState(false)
+   const [showCheckInCalendar, setShowCheckInCalendar] = useState(false)
   const [showCheckOutCalendar, setShowCheckOutCalendar] = useState(false)
   const [showBranchDropdown, setShowBranchDropdown] = useState(false)
   const [showGuestSelector, setShowGuestSelector] = useState(false)
@@ -27,10 +25,24 @@ function Booking() {
 
 
   const handleCheckAvailability = () => {
-    localStorage.setItem("bookingData", JSON.stringify(formData)); 
-//waiting for a function from backend to make api calls
-    navigate("/Choose")
+    const { checkInDate, checkOutDate, selectedBranch, adults, children } = formData;
+  
+    // Basic validation
+    if (
+      !checkInDate ||
+      !checkOutDate ||
+      selectedBranch === "choose your branch" ||
+      adults < 1
+    ) {
+      setSubmitMessage("Please fill in all booking details before continuing.");
+      return;
+    }
+  
+    setSubmitMessage(""); // Clear previous message
+    localStorage.setItem("bookingData", JSON.stringify(formData));
+    navigate("/Choose");
   };
+  
   
   <button className="CheckAvailability" >
     Check Availability
@@ -298,11 +310,11 @@ function Booking() {
         attractions, our hotel offers the ideal blend of comfort and convenience.
       </p>
 
-      {submitMessage && <p className="SubmitMessage">{submitMessage}</p>}
-
       <button className="CheckAvailability"  onClick={handleCheckAvailability} >
         Check Availability
       </button>
+      {submitMessage && <p className="SubmitMessage">{submitMessage}</p>}
+
     </div>
   )
 }

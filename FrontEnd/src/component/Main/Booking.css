@@ -265,4 +265,7 @@
     background: #8a6548;
   }
   
-  
+  .SubmitMessage {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;}
