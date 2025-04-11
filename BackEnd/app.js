@@ -10,7 +10,6 @@ const authRoutes = require('./server/routes/authRoutes');
 const roomRoutes = require('./server/routes/roomRoutes');
 const feedBackRoutes = require('./server/routes/feed_backRoutes');
 const floorRoutes = require('./server/routes/floorRoutes');
-const guestRoutes = require('./server/routes/guestRoutes');
 const occupationRoutes = require('./server/routes/occupationRoutes');
 const paymentRoutes = require('./server/routes/paymentRoutes');
 const reservationRoutes = require('./server/routes/reservationRoutes');
@@ -27,9 +26,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connexion à MongoDB
-mongoose.connect(config.db.connectionString, {
-  
-})  
+mongoose.connect(config.db.connectionString)
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Failed to connect to MongoDB', err));
 
@@ -40,7 +37,6 @@ app.use('/auth', authRoutes);
 app.use('/rooms', roomRoutes);
 app.use('/feed_backs', feedBackRoutes);
 app.use('/floor', floorRoutes);
-app.use('/guest', guestRoutes);
 app.use('/occupation', occupationRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/reservation', reservationRoutes);
@@ -52,6 +48,11 @@ app.use('/cleaning', cleaningRoutes);
 app.use((req, res) => {
   res.status(404).json({ message: 'Route non trouvée' });
 });
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.status(500).json({ message: "internal server error" });
+})
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

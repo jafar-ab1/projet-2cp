@@ -22,23 +22,23 @@ exports.getRoomById = async(req, res) => {
 
 exports.getByType = async(req, res) => {
     const {type} = req.params;
+
     if (!type) {
         return res.status(400).json({ message: 'type pas trouvé' });
     }
+    
     try{
-        const rooms = await Room.findByOne({type});
-        if (!rooms) return res.status(404).json({message : 'type non trouvé'});
+        const rooms = await Room.find({type});
         res.status(200).json(rooms);
-    }
-    catch(error){
+    } catch(error) {
         res.status(500).json({ message: error.message });
     }
 }
 
 exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type, status, price, floor} = req.body;
+    const {roomNumber, type, bedType, status, price, floor} = req.body;
     try{
-        const newRoom= new Room({roomNumber, type, status, price, floor});
+        const newRoom= new Room({roomNumber, type, bedType, status, price, floor});
         await newRoom.save();
         res.status(201).json(newRoom);
     }
