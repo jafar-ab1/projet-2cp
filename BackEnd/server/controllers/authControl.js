@@ -1,13 +1,17 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const config = require("../../config.js")
 
 // Inscription
 exports.register = async (req, res) => {
   try {
     const {username, email, password } = req.body;
+<<<<<<< HEAD
   
-    // Vérifier si l'utilisateur existe déjà
+=======
 
+>>>>>>> 4b203ab9495f15ae9a33adebd112bacfe609fecf
+    // Vérifier si l'utilisateur existe déjà
     const userExistName = await User.findOne({username});
     if(userExistName) return res.status(400).json({message:'ce user name est deja utilisé '});
 
@@ -21,12 +25,13 @@ exports.register = async (req, res) => {
     await user.save();
 
     // Générer un token JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, config.jwt.keys.secret, {
       expiresIn: '1h',
     });
 
     res.status(201).json({ token });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Erreur lors de l\'inscription.', error });
   }
 };
@@ -43,13 +48,13 @@ exports.login = async (req, res) => {
     }
 
     // Vérifier le mot de passe
-    const passwordUser = await user.comparePassword(password);
-    if (!passwordUser) {
+    const iscorrect = await user.comparePassword(password);
+    if (!iscorrect) {
       return res.status(400).json({ message: 'Email ou mot de passe incorrect.' });
     }
 
     // Générer un token JWT
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, config.jwt.keys.secret, {
       expiresIn: '1h',
     });
 

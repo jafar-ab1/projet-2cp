@@ -1,32 +1,53 @@
 import roomsData from "../../data/room"
-import "./Booking3.css";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; 
-
+import "./Booking3.css"
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import BookingHeader from "../Hero/BookingHeader.jsx"
+import Booking31 from "./Booking31.jsx"
+import MiniBasket from "./MiniBasket.jsx"
 
 function Booking3() {
-  const [rooms, setRooms] = useState(roomsData);
-  const [reserveRooms, setReserveRooms] = useState([]);
-  const navigate = useNavigate();
+  const [rooms, setRooms] = useState(roomsData)
+  const [reserveRooms, setReserveRooms] = useState(() => {
+    const stored = localStorage.getItem("ReserveRooms")
+    return stored ? JSON.parse(stored) : []
+  })
+  const [showBasket, setShowBasket] = useState(false)
+  const navigate = useNavigate()
+
   useEffect(() => {
-    localStorage.setItem("ReserveRooms", JSON.stringify(reserveRooms));
-  }, [reserveRooms]);
+    localStorage.setItem("ReserveRooms", JSON.stringify(reserveRooms))
+  }, [reserveRooms])
 
   const addToBasket = (room) => {
-     
-    const newRoom = { ...room }; 
-
-    setReserveRooms((prevRooms) => [...prevRooms, newRoom]); 
-  };
+    const newRoom = { ...room }
+    setReserveRooms((prevRooms) => [...prevRooms, newRoom])
+  }
 
   return (
     <>
+      <div className="Top">
+        <BookingHeader
+          hotelName="Your Hotel"
+          cartItems={reserveRooms.length}
+          onCartClick={() => setShowBasket((prev) => !prev)}
+        />
+        <Booking31 />
+      </div>
+
+      {showBasket && (
+        <div className="BasketPopup">
+          <MiniBasket reserveRooms={reserveRooms} setReserveRooms={setReserveRooms} />
+          <button className="ClosePopup" onClick={() => setShowBasket(false)} >✖</button>
+        </div>
+      )}
+
       <div className="RoomsWrapper">
         <div className="AvailableRooms">
           {rooms.map((room) => (
             <div key={room.id} className="RoomContainer">
               <div className="Room image">
-                <img src={room.image_url} alt={room.title} />
+                <img src={room.image_url || "/placeholder.svg"} alt={room.title} />
               </div>
               <div className="Description">
                 <div className="Descriptopn1">
@@ -51,10 +72,12 @@ function Booking3() {
             </div>
           ))}
         </div>
-        <button className="CheckOut"  onClick={() => navigate("/CheckOut")}>Check Out</button>
+        <button className="CheckOut" onClick={() => navigate("/CheckOut")}>
+          Check Out
+        </button>
       </div>
     </>
-  );
+  )
 }
 
-export default Booking3;
+export default Booking3

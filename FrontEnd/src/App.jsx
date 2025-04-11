@@ -33,8 +33,8 @@ function App() {
       <Route path="/Book" element={<Booking/>}/>
       <Route path="/Choose" element={<Page12/>}/>
       <Route path="/CheckOut" element={<Page13/>}/>
-      <Route path="/" element={<SignPageLayout />} >
-        <Route path="/sign-in" element={<SignInPage />} />
+      <Route path="/" element={<SignPageLayout/>} >
+      <Route path="/sign-in" element={<SignInPage />} />
         <Route path="/sign-up" element={<SignUpPage />} />
       </Route>
     </Routes>

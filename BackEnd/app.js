@@ -26,9 +26,13 @@ app.use(cors());
 app.use(express.json());
 
 // Connexion à MongoDB
+<<<<<<< HEAD
 mongoose.connect(config.db.connectionString, {
   
 })  
+=======
+mongoose.connect(config.db.connectionString)
+>>>>>>> 4b203ab9495f15ae9a33adebd112bacfe609fecf
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('Failed to connect to MongoDB', err));
 
@@ -50,6 +54,11 @@ app.use('/cleaning', cleaningRoutes);
 app.use((req, res) => {
   res.status(404).json({ message: 'Route non trouvée' });
 });
+
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.status(500).json({ message: "internal server error" });
+})
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
