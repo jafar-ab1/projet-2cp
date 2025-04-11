@@ -41,7 +41,6 @@ app.use('/auth', authRoutes);
 app.use('/rooms', roomRoutes);
 app.use('/feed_backs', feedBackRoutes);
 app.use('/floor', floorRoutes);
-app.use('/guest', guestRoutes);
 app.use('/occupation', occupationRoutes);
 app.use('/payment', paymentRoutes);
 app.use('/reservation', reservationRoutes);
