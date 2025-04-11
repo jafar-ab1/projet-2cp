@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const roomScehma = new mongoose.Schema({
-    roomId:{ type : mongoose.Schema.Types.ObjectId},
     roomNumber: {type:Number, unique:true, required:true},
     type:{type:String, enum:['Standard', 'Deluxe', 'Suite'], required:true},
     bedType: { type: String, required: true ,  enum: ['Simple', 'Double']},

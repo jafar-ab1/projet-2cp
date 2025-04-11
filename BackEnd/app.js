@@ -10,7 +10,6 @@ const authRoutes = require('./server/routes/authRoutes');
 const roomRoutes = require('./server/routes/roomRoutes');
 const feedBackRoutes = require('./server/routes/feed_backRoutes');
 const floorRoutes = require('./server/routes/floorRoutes');
-const guestRoutes = require('./server/routes/guestRoutes');
 const occupationRoutes = require('./server/routes/occupationRoutes');
 const paymentRoutes = require('./server/routes/paymentRoutes');
 const reservationRoutes = require('./server/routes/reservationRoutes');
