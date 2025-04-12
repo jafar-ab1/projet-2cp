@@ -24,7 +24,7 @@ function Basket() {
   };
 
   useEffect(() => {
-    const storedRooms = localStorage.getItem("ReserveRooms");
+    const storedRooms = localStorage.getItem("reservedRooms");
     const storedData = localStorage.getItem("bookingData");
     
     if (storedRooms) {
@@ -74,37 +74,37 @@ function Basket() {
     : 0;
 
   return (
-    <div className="BasketWrapper">
-      <h1>Price Details</h1>
-      {reservedRooms.length === 0 ? (
-        <p>No rooms added to the basket.</p>
-      ) : (
-        <div className="BasketContainer">
-          {reservedRooms.map((room, index) => (
-            <div key={index} className="RoomItem">
-              <h2 className="RoomNumber">Room {index + 1}</h2>
-              <div className="PDetail">
+      <div className="BasketWrapper">
+        <h1>Price Details</h1>
+        {reservedRooms.length === 0 ? (
+          <p>No rooms added to the basket.</p>
+        ) : (
+          <div className="BasketContainer">
+            {reservedRooms.map((room, index) => (
+              <div key={index} className="RoomItem">
+                <h2 className="RoomNumber">Room {index + 1}</h2>
+                <div className="PDetail">
+                  <p>
+                    {retrievedData?.selectedBranch}, {room.title}
+                  </p>
+                  <p> Dzd {(room.price * nights).toFixed(2)}</p>
+                </div>
                 <p>
-                  {retrievedData?.selectedBranch}, {room.title}
+                  {formatDate(retrievedData?.checkInDate)} - {formatDate(retrievedData?.checkOutDate)}
+                  {nights > 0 && ` (${nights} ${nights === 1 ? 'night' : 'nights'})`}
                 </p>
-                <p> Dzd {(room.price * nights).toFixed(2)}</p>
+                <p>
+                  {retrievedData?.adults} Adults and {retrievedData?.children} children
+                </p>
               </div>
-              <p>
-                {formatDate(retrievedData?.checkInDate)} - {formatDate(retrievedData?.checkOutDate)}
-                {nights > 0 && ` (${nights} ${nights === 1 ? 'night' : 'nights'})`}
-              </p>
-              <p>
-                {retrievedData?.adults} Adults and {retrievedData?.children} children
-              </p>
-            </div>
-          ))}
+            ))}
+          </div>
+        )}
+        <div className="Total">
+          <p>Total for {nights} {nights === 1 ? 'night' : 'nights'}</p>
+          <p>Dzd {totalPrice.toFixed(2)}</p>
         </div>
-      )}
-      <div className="Total">
-        <p>Total for {nights} {nights === 1 ? 'night' : 'nights'}</p>
-        <p>Dzd {totalPrice.toFixed(2)}</p>
       </div>
-    </div>
   );
 }
 

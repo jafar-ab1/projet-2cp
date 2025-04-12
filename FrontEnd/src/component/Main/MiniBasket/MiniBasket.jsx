@@ -4,7 +4,6 @@ import BasketRoom from "./BasketRoom/BasketRoom";
 
 function MiniBasket({ 
   reservedRooms, 
-  onClose, 
   setReservedRooms,
   bookingData
 }) {
@@ -17,7 +16,6 @@ function MiniBasket({
     const endDate = new Date(checkOutDate);
     return Math.round(Math.abs((endDate - startDate) / oneDay));
   };
-
   
   const calculateTotalPrice = (rooms, checkInDate, checkOutDate) => {
     if (!rooms || rooms.length === 0) return 0;
@@ -45,13 +43,13 @@ function MiniBasket({
     : 0;
 
   useEffect(() => {
+    localStorage.setItem("reservedRooms", JSON.stringify(reservedRooms));
     return setTotalPrice(calculateTotalPrice(reservedRooms, bookingData.checkInDate, bookingData.checkOutDate));
-  }, [bookingData, reservedRooms])
+  }, [bookingData, reservedRooms]);
 
     return (
     <div className="BasketOverlay">
       <div className="BasketWrapper">
-        <button className="CloseButton" onClick={onClose}>✖</button>
         <h1>Price Details</h1>
         {reservedRooms.length === 0 ? (
           <p>No rooms added to the basket.</p>

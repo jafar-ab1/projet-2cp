@@ -9,8 +9,8 @@ function Page13() {
   return (
     <div className="App">
         <div className="Contenent">
-        <CheckOut/>
-        <Basket/>
+          <CheckOut/>
+          <Basket/>
         </div>
     </div>
   );
