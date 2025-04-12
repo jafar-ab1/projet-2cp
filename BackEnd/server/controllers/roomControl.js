@@ -29,10 +29,6 @@ exports.getByType = async(req, res) => {
     
     try{
         const rooms = await Room.find({type});
-<<<<<<< HEAD
-        if (!rooms) return res.status(404).json({message : 'type non trouvé'});
-=======
->>>>>>> 4b203ab9495f15ae9a33adebd112bacfe609fecf
         res.status(200).json(rooms);
     } catch(error) {
         res.status(500).json({ message: error.message });

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cleaningController = require('../controllers/cleaningControl');
 const { createCleaningSchema, deleteCleaningSchema } = require('../validation/cleaningValidation');
-const validate = require('../middealwear/validation.midellwear');
+const validate = require('../middlewares/validation.middleware');
 
 // Récupérer toutes les opérations de nettoyage
 router.get('/', cleaningController.getAllCleaning);

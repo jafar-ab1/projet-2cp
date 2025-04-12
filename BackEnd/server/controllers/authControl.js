@@ -6,11 +6,6 @@ const config = require("../../config.js")
 exports.register = async (req, res) => {
   try {
     const {username, email, password } = req.body;
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> 4b203ab9495f15ae9a33adebd112bacfe609fecf
     // Vérifier si l'utilisateur existe déjà
     const userExistName = await User.findOne({username});
     if(userExistName) return res.status(400).json({message:'ce user name est deja utilisé '});

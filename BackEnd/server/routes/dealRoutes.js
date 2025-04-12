@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const dealController = require('../controllers/dealControl');
 const { createDealSchema, deleteDealSchema } = require('../validation/dealValidation');
-const validate = require('../middealwear/validation.midellwear');
+const validate = require('../middlewares/validation.middleware');
 
 // Récupérer tous les deals
 router.get('/', dealController.getAllDeals);

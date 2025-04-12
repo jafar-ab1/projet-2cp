@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const feedbackController = require('../controllers/feed_backControl');
-const validate = require('../middealwear/validation.midellwear');
+const validate = require("../middlewares/validation.middleware");
 const {createSchema, idSchema} = require('../validation/feedBackValidation')
 
 

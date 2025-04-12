@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const floorController= require ('../controllers/floorControl');
-const validate = require('../middealwear/validation.midellwear');
+const validate = require('../middlewares/validation.middleware.js');
 const {floorNumberSchema, createFloorSchema, updateFloorSchema} = require('../validation/floorValidation')
 
 router.get('/', floorController.getAllFloors);
