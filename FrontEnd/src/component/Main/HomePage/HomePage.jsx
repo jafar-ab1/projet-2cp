@@ -1,14 +1,13 @@
-import Image1 from "../../assets/pexels-pixabay-271639.jpg"
-import Image2 from "../../assets/pexels-mat-brown-150387-1395967.jpg"
-import Image3 from '../../assets/pexels-alfred-binne-bin-646217215-27138849.jpg'
-import Image4 from '../../assets/pexels-mark-angelo-sampan-738078-1587927.jpg'
-import Image5 from '../../assets/pexels-gabby-k-6781117.jpg'
-import Image7 from '../../assets/Frame18.png'
-import Image6 from '../../assets/pexels-reneterp-2504911.jpg' 
- 
-import { Link } from "react-router-dom"; 
+import Image1 from "../../../assets/pexels-pixabay-271639.jpg"
+import Image2 from "../../../assets/pexels-mat-brown-150387-1395967.jpg"
+import Image3 from '../../../assets/pexels-alfred-binne-bin-646217215-27138849.jpg'
+import Image4 from '../../../assets/pexels-mark-angelo-sampan-738078-1587927.jpg'
+import Image5 from '../../../assets/pexels-gabby-k-6781117.jpg'
+import Image6 from '../../../assets/pexels-reneterp-2504911.jpg' 
+
 import { useNavigate } from "react-router-dom";
 import "./HomePage.css"; 
+
 function HomePage(){
     const navigate = useNavigate();
     return(<>

@@ -1,4 +1,4 @@
-import "./Gourmet.css"; // Import the CSS file
+import "./Gourmet/Gourmet.css"; // Import the CSS file
 import Food from "../../assets/pexels-mikhail-nilov-6613045.jpg";
 import Chef from "../../assets/pexels-zoom-digital-studio-748466982-28760168.jpg";
 import Restaurant from "../../assets/pexels-igor-starkov-233202-1307698.jpg";

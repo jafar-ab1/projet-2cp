@@ -9,7 +9,7 @@ import Page7 from "./Page7.jsx";
 import Page8 from "./Page8.jsx";
 import Page9 from "./Page9.jsx";
 import Page10 from "./Page1-0.jsx";
-import Booking from "./component/Main/Booking.jsx"
+import Booking from "./component/Main/Booking/Booking.jsx"
 import Page12 from "./Page12.jsx"
 import SignInPage from "./pages/SignIn/SignIn-page.jsx"
 

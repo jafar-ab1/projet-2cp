@@ -11,9 +11,9 @@ const room = {
 
 const roomsData = [
     room,
-    room,
-    room,
-    room
+    { ...room, id: "2" },
+    { ...room, id: "3" },
+    { ...room, id: "4" },
 ];
 
 export default roomsData;

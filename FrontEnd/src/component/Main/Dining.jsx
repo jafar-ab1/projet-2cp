@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import GourmetImage from "../../assets/pexels-elevate-1267320.jpg";
 import GoldenImage from "../../assets/pexels-edwardeyer-687824.jpg";
 import CoffeeImage from "../../assets/pexels-lina-1813466.jpg";
-import "./Accommodation.css"; 
-import { Link } from "react-router-dom"; 
+import "./Accomodation/Accommodation.css"; 
+import { Link } from "react-router-dom";
 
 function Dining() {
   return (

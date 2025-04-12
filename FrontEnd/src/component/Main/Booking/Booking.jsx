@@ -1,4 +1,3 @@
-
 import { useState } from "react"
 import "./Booking.css"
 import { useNavigate } from "react-router-dom"; 
@@ -13,16 +12,13 @@ function Booking() {
     children: 2,
   })
 
-   const [showCheckInCalendar, setShowCheckInCalendar] = useState(false)
+  const [showCheckInCalendar, setShowCheckInCalendar] = useState(false)
   const [showCheckOutCalendar, setShowCheckOutCalendar] = useState(false)
   const [showBranchDropdown, setShowBranchDropdown] = useState(false)
   const [showGuestSelector, setShowGuestSelector] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(new Date(2025, 0)) // January 2025
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
-
-
-
 
   const handleCheckAvailability = () => {
     const { checkInDate, checkOutDate, selectedBranch, adults, children } = formData;
@@ -47,7 +43,6 @@ function Booking() {
   <button className="CheckAvailability" >
     Check Availability
   </button>
-
 
   // Function to update form data
   const updateFormData = (field, value) => {
@@ -146,7 +141,6 @@ function Booking() {
       
     }
   };
-  
 
   // Custom Calendar Component
   const CustomCalendar = ({ calendarType }) => {

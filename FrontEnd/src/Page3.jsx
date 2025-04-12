@@ -1,11 +1,7 @@
-
 import backgroundImage from './assets/pexels-keeganjchecks-19199133.jpg';
-
-
 import React from "react";
 
-
-import Hotels from "./component/Main/Hotels.jsx";
+import Hotels from "./component/Main/Hotels/Hotels.jsx";
 import Footer from "./component/Footer/Footer.jsx";
 import HeroSectionAlgiers from "./component/Hero/HeroSectionAlgiers.jsx";
 

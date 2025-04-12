@@ -1,12 +1,8 @@
-
-
-
 import React from "react";
 import "./Page13.css"
 
-import Basket from "./component/Main/Basket.jsx";
-
-import CheckOut from "./component/Main/CheckOut.jsx";
+import Basket from "./component/Main/Basket/Basket.jsx";
+import CheckOut from "./component/Main/CheckOut/CheckOut.jsx";
 
 
 function Page13() {
