@@ -13,8 +13,8 @@ exports.getAll = async(req,res) => {
 
 exports.getPayment = async (req, res) => {
     try {
-      const { guestId } = req.params; 
-      const payment = await Payments.findOne({ guestId });
+      const { userId } = req.params; 
+      const payment = await Payments.findOne({ userId });
       if (!payment) return res.status(404).json({ message: 'client non trouvé' });
       res.status(200).json(payment);
     } catch (error) {

@@ -18,6 +18,7 @@ const userRoutes = require('./server/routes/userRoutes');
 const dealRoutes = require('./server/routes/dealRoutes');
 const cleaningRoutes = require('./server/routes/cleaningRoutes');
 const tarifRoutes = require('./server/routes/tarifRoutes');
+const maintenaceRoutes = require('./server/routes/maitenanceRoutes');
 
 const app = express();
 const port = config.port;
@@ -50,6 +51,7 @@ app.use('/user', userRoutes);
 app.use('/deal', dealRoutes);
 app.use('/cleaning', cleaningRoutes);
 app.use('/tarif', tarifRoutes);
+app.use('/maintenance', maintenaceRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route non trouvée' });

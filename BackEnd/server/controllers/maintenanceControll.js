@@ -13,7 +13,7 @@ exports.getAllMaintenance = async (req, res) => {
 exports.getMaintenanceByroomNb = async (req, res) => {
   try {
     const { roomNumber } = req.params;
-    const maintenance = await Maintenance.findOne({ roomNumber });
+    const maintenance = await Maintenance.find({ roomNumber });
     if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
     res.status(200).json(maintenance);
   } catch (error) {

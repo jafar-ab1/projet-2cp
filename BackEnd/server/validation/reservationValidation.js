@@ -43,12 +43,12 @@ const createSchema = Joi.object({
 
 // Schéma pour la mise à jour
 const updateSchema = Joi.object({
-    userId: Joi.string().hex().length(24).required().messages({
+    userId: Joi.string().hex().length(24).messages({
         'string.hex': 'ID client invalide',
         'string.length': 'ID client doit contenir 24 caractères',
         'any.required': 'ID client est requis'
       }),
-      roomId: Joi.string().hex().length(24).required().messages({
+      roomId: Joi.string().hex().length(24).messages({
         'string.hex': 'ID chambre invalide',
         'string.length': 'ID chambre doit contenir 24 caractères',
         'any.required': 'ID chambre est requis'
@@ -68,7 +68,7 @@ const updateSchema = Joi.object({
   status: Joi.string().valid("pending", "confirmed", "cancelled")
 }).or('checkInDate', 'checkOutDate', 'totalPrice', 'status').messages({
   'object.missing': 'Au moins un champ doit être fourni'
-});
+}).min(1);
 
 module.exports = {
   idSchema,

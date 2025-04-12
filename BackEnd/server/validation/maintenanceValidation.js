@@ -24,8 +24,8 @@ const createSchema = Joi.object({
     'string.length': 'ID utilisateur doit contenir 24 caractères',
     'any.required': 'ID utilisateur est requis'
   }),
-  status: Joi.string().valid('in_progress', 'completed').default('pending').messages({
-    'any.only': 'Le statut doit être pending, in_progress ou completed'
+  status: Joi.string().valid("in-progress", "completed").default('pending').messages({
+    'any.only': 'Le statut doit être pending, in-progress ou completed'
   }),
   resolutionDate: Joi.date().greater('now').allow(null).messages({
     'date.base': 'Date de résolution invalide',
@@ -42,7 +42,7 @@ const updateSchema = Joi.object({
     'string.empty': 'La description du problème ne peut pas être vide',
     'string.min': 'La description doit contenir au moins 10 caractères'
   }),
-  status: Joi.string().valid('in_progress', 'completed'),
+  status: Joi.string().valid("in-progress", "completed"),
   resolutionDate: Joi.date().greater('now').allow(null)
 }).or('roomNumber', 'issueDescription', 'status', 'resolutionDate').messages({
   'object.missing': 'Au moins un champ doit être fourni pour la mise à jour'
