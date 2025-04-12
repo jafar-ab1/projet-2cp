@@ -5,7 +5,7 @@ const config = require("../../config.js")
 // Inscription
 exports.register = async (req, res) => {
   try {
-    const {username, email, password } = req.body;
+    const {username, email, password, userRole, telephone } = req.body;
     // Vérifier si l'utilisateur existe déjà
     const userExistName = await User.findOne({username});
     if(userExistName) return res.status(400).json({message:'ce user name est deja utilisé '});
@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
     }
 
     // Créer un nouvel utilisateur
-    const user = new User({username, email, password });
+    const user = new User({username, email, password, userRole, telephone });
     await user.save();
 
     // Générer un token JWT

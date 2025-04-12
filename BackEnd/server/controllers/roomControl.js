@@ -9,9 +9,14 @@ exports.getAllRooms = async (req, res) => {
     }
   };
 
-exports.getRoomById = async(req, res) => {
+exports.getRoomByNumber = async(req, res) => {
     try {
-    const rooms = await Room.findById(req.params.id);
+        const {roomNumber} = req.params;
+        if (!roomNumber) {
+            return res.status(400).json({ message: 'type pas trouvé' });
+        }
+
+    const rooms = await Room.findOne({roomNumber});
     if (!rooms) return res.status(404).json({ message: 'chambre non trouvé'});
     res.status(200).json(rooms);
     }
@@ -36,9 +41,9 @@ exports.getByType = async(req, res) => {
 }
 
 exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type, bedType, status, price, floor} = req.body;
+    const {roomNumber, type,facilities, bedType, status, price, floor} = req.body;
     try{
-        const newRoom= new Room({roomNumber, type, bedType, status, price, floor});
+        const newRoom= new Room({roomNumber,facilities, type, bedType, status, price, floor});
         await newRoom.save();
         res.status(201).json(newRoom);
     }
@@ -49,7 +54,13 @@ exports.creatRoom = async(req, res) =>{
 
 exports.modifyRoom = async(req, res) =>{
 try{
-    const room = await Room.findByIdAndUpdate(req.params.id, req.body, {new:true});
+
+    const {roomNumber} = req.params;
+    if (!roomNumber) {
+        return res.status(400).json({ message: 'type pas trouvé' });
+    }
+
+    const room = await Room.findOneAndUpdate({roomNumber}, req.body, {new:true});
     if (!room) return res.status(404).json({message:'chambre non trouvé'});
     res.status(200).json(room);
 }
@@ -60,7 +71,12 @@ catch(error){
 
 exports.suppRoom = async(req, res) => {
     try{
-        const room = await Room.findByIdAndDelete(req.params.id);
+        const {roomNumber} = req.params;
+        if (!roomNumber) {
+            return res.status(400).json({ message: 'type pas trouvé' });
+        };
+
+        const room = await Room.findOneAndDelete({roomNumber});
         if (!room) return res.status(404).json({message: 'chambre non trouvé'});
         res.status(200).json({message: 'room supprimer'});
     }

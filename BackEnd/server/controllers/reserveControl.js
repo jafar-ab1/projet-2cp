@@ -11,7 +11,7 @@ exports.getAllReservations = async (req, res) => {
 
 exports.getReservationById = async(req, res) => {
     try {
-    const reservation = await Reservation.findById(req.params.id).populate('guestId roomId');
+    const reservation = await Reservation.findById(req.params.id);
 
     if (!reservation) return res.status(404).json({ message: 'reservation non trouvé'});
     res.status(200).json(reservation);
@@ -22,11 +22,11 @@ exports.getReservationById = async(req, res) => {
 };
 
 exports.creatReservation = async(req, res) =>{
-    const {checkInDate, checkOutDate, totalPrice, status} = req.body;
+    const {userId, roomId, checkInDate, checkOutDate, totalPrice, status} = req.body;
     try{
-        const newReservation= new Reservation({checkInDate, checkOutDate, totalPrice, status});
+        const newReservation= new Reservation({userId, roomId, checkInDate, checkOutDate, totalPrice, status});
         await newReservation.save();
-        res.satuts(201).json(newReservation);
+        res.status(201).json(newReservation);
     }
     catch(error){
         res.status(500).json({ message: error.message });

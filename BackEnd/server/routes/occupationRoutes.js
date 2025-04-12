@@ -1,20 +1,24 @@
 const express = require('express');
 const router = express.Router();
 const occupancyController = require('../controllers/occupationControl');
+const validate = require('../middlewares/validation.middleware');
+const {monthSchema,
+    createSchema,
+    updateSchema} = require('../validation/occupationValidation');
 
-// Récupérer toutes les statistiques d'occupation
+
 router.get('/', occupancyController.getAllOccupancies);
 
-// Récupérer une statistique d'occupation par son ID
-router.get('/', occupancyController.getOccupancyByMonth);
 
-// Ajouter une nouvelle statistique d'occupation
-router.post('/', occupancyController.createOccupancy);
+router.get('/:month', validate(monthSchema, 'params'), occupancyController.getOccupancyByMonth);
 
-// Mettre à jour une statistique d'occupation
-router.put('/', occupancyController.updateOccupancy);
 
-// Supprimer une statistique d'occupation
-router.delete('/', occupancyController.deleteOccupancy);
+router.post('/',validate(createSchema), occupancyController.createOccupancy);
+
+
+router.put('/:month', validate(updateSchema), occupancyController.updateOccupancy);
+
+
+router.delete('/:month', validate(monthSchema, 'params'),occupancyController.deleteOccupancy);
 
 module.exports = router;

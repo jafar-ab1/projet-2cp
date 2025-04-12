@@ -1,18 +1,20 @@
 const express = require('express');
 const router = express.Router();
 const roomController = require('../controllers/roomControl');
+const validate = require('../middlewares/validation.middleware');
+const roomScehma = require('../validation/roomValidation');
 
 
 router.get('/', roomController.getAllRooms);
 
-router.get('/:type', roomController.getByType)
+router.get('/:type', validate(roomScehma.roomTypeSchema, 'params'),roomController.getByType)
 
-router.get('/:id', roomController.getRoomById);
+router.get('/number/:roomNumber',validate(roomScehma.roomNumberSchema, 'params'), roomController.getRoomByNumber);
 
-router.post('/', roomController.creatRoom);
+router.post('/',validate(roomScehma.createRoomSchema), roomController.creatRoom);
 
-router.put('/:id', roomController.modifyRoom);
+router.put('/:roomNumber', validate(roomScehma.updateRoomSchema), roomController.modifyRoom);
 
-router.delete('/:id', roomController.suppRoom);
+router.delete('/:roomNumber',validate(roomScehma.roomNumberSchema, 'params'),  roomController.suppRoom);
 
 module.exports = router;

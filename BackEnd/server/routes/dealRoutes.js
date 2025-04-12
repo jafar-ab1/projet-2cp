@@ -14,6 +14,6 @@ router.get('/:dealName', dealController.getDealByName);
 router.post('/', validate(createDealSchema), dealController.createDeal);
 
 // Supprimer un deal
-router.delete('/:dealName', validate(deleteDealSchema), dealController.deleteDeal);
+router.delete('/:dealName', validate(deleteDealSchema, 'params'), dealController.deleteDeal);
 
 module.exports = router;

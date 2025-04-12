@@ -6,12 +6,12 @@ const {floorNumberSchema, createFloorSchema, updateFloorSchema} = require('../va
 
 router.get('/', floorController.getAllFloors);
 
-router.get('/:floorNumber',[validate(floorNumberSchema)], floorController.getFloorByFloorNb);
+router.get('/:floorNumber',[validate(floorNumberSchema, 'params')], floorController.getFloorByFloorNb);
 
 router.post('/',[validate(createFloorSchema)], floorController.createFloor);
 
-router.put('/:floorNumber', [validate(updateFloorSchema)],floorController.updateFloor);
+router.put('/:floorNumber', validate(updateFloorSchema),floorController.updateFloor);
 
-router.delete('/:floorNumber',[validate(floorNumberSchema)], floorController.deleteFloor);
+router.delete('/:floorNumber',[validate(floorNumberSchema, 'params')], floorController.deleteFloor);
 
 module.exports = router;

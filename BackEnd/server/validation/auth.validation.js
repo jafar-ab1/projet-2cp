@@ -13,7 +13,20 @@ export const registerUserValidationSchema = Joi.object({
     password: Joi.string().min(8).required().messages({
         "string.min": "password min length is 8",
         "any.required": "password is required"
-    })
+    }),
+    userRole: Joi.string()
+        .valid('client', 'admin')
+        .default('client')
+        .messages({
+          'any.only': 'Le rôle doit être client, admin ou employé'
+        }),
+    
+    telephone: Joi.string()
+        .pattern(/^[0-9]{10}$/)
+        .required()
+        .messages({
+          'string.pattern.base': 'Le téléphone doit contenir 10 chiffres'
+        })
 });
 
 export const loginUserValidationSchema = Joi.object({

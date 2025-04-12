@@ -31,7 +31,7 @@ exports.getCleaningByRoomNb = async(req, res) => {
 exports.createCleaning = async(req, res) => {
     try{
         const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
-        const newCleaning = new Cleaning(req.body);
+        const newCleaning = new Cleaning({roomNumber, status, lastCleaned, nextCleaning});
         await newCleaning.save();
         res.status(201).json(newCleaning);
     }

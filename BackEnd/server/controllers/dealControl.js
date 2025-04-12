@@ -31,7 +31,7 @@ exports.getDealByName = async(req, res) => {
 exports.createDeal = async(req, res) => {
     try{
         const {dealName, reservationsLeft, endDate, roomType, status} = req.body; 
-        const newDeal = new Deal(req.body);
+        const newDeal = new Deal({dealName, reservationsLeft, endDate, roomType, status});
         await newDeal.save();
         res.status(201).json(newDeal);
     }

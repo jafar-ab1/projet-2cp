@@ -14,6 +14,6 @@ router.get('/:roomNumber', cleaningController.getCleaningByRoomNb);
 router.post('/', validate(createCleaningSchema), cleaningController.createCleaning);
 
 // Supprimer une opération de nettoyage
-router.delete('/:roomNumber', validate(deleteCleaningSchema),  cleaningController.suppCleaning);
+router.delete('/:roomNumber', validate(deleteCleaningSchema, 'params'),  cleaningController.suppCleaning);
 
 module.exports = router;
