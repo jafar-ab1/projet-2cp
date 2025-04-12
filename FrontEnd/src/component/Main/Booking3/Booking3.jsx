@@ -19,12 +19,22 @@ function Booking3() {
     if (storedData) {
       setBookingData(JSON.parse(storedData));
     }
+
+    const storedReservedRooms = localStorage.getItem("reservedRooms");
+    if(storedReservedRooms) {
+      const value = JSON.parse(storedReservedRooms);
+      if(value) setReservedRooms(value);
+    }
   }, []);
 
   const addToBasket = (room) => {
     const newRoom = { ...room }
     return setReservedRooms((prevRooms) => [...prevRooms, newRoom])
   }
+
+  useEffect(() => {
+    return localStorage.setItem("reservedRooms", JSON.stringify(reservedRooms));
+  }, [reservedRooms]);
 
   if (!bookingData) {
     return <p>Loading booking details...</p>;
