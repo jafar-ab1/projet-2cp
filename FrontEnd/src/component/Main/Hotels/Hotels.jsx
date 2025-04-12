@@ -1,8 +1,8 @@
-
-import Image1 from '../../assets/pexels-pixabay-271618.jpg'
-import Image2 from '../../assets/pexels-cottonbro-6466285.jpg'
-import Image3 from '../../assets/pexels-quang-nguyen-vinh-222549-14917460.jpg'
+import Image1 from '../../../assets/pexels-pixabay-271618.jpg'
+import Image2 from '../../../assets/pexels-cottonbro-6466285.jpg'
+import Image3 from '../../../assets/pexels-quang-nguyen-vinh-222549-14917460.jpg'
 import './Hotels.css';
+
 function Hotels(){
     return(<>
 <div className="container">

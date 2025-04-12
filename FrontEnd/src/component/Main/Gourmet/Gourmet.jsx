@@ -1,7 +1,7 @@
 import "./Gourmet.css"; // Import the CSS file
-import Food from "../../assets/pexels-idinarisk-3008740.jpg";
-import Chef from "../../assets/pexels-sebastian-coman-photography-1598188-3437689.jpg";
-import Restaurant from "../../assets/pexels-pixabay-262047.jpg";
+import Food from "../../../assets/pexels-idinarisk-3008740.jpg";
+import Chef from "../../../assets/pexels-sebastian-coman-photography-1598188-3437689.jpg";
+import Restaurant from "../../../assets/pexels-pixabay-262047.jpg";
 
 function Gourmet ()  {
   return (

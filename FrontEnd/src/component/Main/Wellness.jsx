@@ -1,7 +1,8 @@
 
 import Image1 from '../../assets/pexels-breakingpic-3188.jpg'
 import Image2 from '../../assets/danielle-cerullo-CQfNt66ttZM-unsplash.jpeg'
-import './Hotels.css'
+import './Hotels/Hotels.css'
+
 function Wellness(){
     return(<>
 <div className="container">

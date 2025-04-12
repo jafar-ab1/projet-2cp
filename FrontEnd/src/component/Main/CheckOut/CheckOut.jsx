@@ -1,8 +1,6 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import "./CheckOut.css"
-import PoliciesData from "../../Policies.json"
+import PoliciesData from "../../../Policies.json"
 import { useNavigate } from "react-router-dom"
 
 function CheckOut() {

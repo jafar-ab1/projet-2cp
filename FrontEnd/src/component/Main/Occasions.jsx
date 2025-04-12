@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import OccasionImage from "../../assets/pexels-fakhribagirov-13659421.jpg";
-import "./Accommodation.css"; 
+import "./Accomodation/Accommodation.css"; 
 
 function Occasions() {
   return (

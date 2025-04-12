@@ -1,14 +1,10 @@
-
 import backgroundImageH from './assets/pexels-manuel-barros-1263073-2403017.jpg';
-
 
 import React from "react";
 
-
 import Footer from "./component/Footer/Footer.jsx";
 import HeroSectionH from "./component/Hero/HeroSectionH.jsx";
-import HomePage from './component/Main/HomePage.jsx';
-import { color } from 'framer-motion';
+import HomePage from './component/Main/HomePage/HomePage.jsx';
 import { useNavigate } from "react-router-dom";
 
 

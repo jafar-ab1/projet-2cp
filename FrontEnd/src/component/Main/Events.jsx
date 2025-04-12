@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import EventsImage from "../../assets/pexels-maorattias-5191742.jpg";
-import "./Accommodation.css"; 
+import "./Accomodation/Accommodation.jsx"; 
 
 function Events() {
   return (
