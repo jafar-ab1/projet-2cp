@@ -6,7 +6,6 @@ import Booking31 from "./component/Main/Booking31/Booking31.jsx";
 function Page12() {
   return (
     <div className="App">
-      
         <Booking3/>
     </div>
   );

@@ -1,8 +1,7 @@
-/* *,body{
-    margin:0;
-    background-color: #F4F0E5;
+.App {
+  background-color: #e8e4d8;
 }
-*/
+
 .Contenent {
     display: flex;
     width: 100%;
