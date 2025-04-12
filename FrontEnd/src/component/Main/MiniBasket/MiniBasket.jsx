@@ -30,7 +30,14 @@ function MiniBasket({
 
   // Delete room function
   const deleteRoomFromBasket = (id) => {
-    return setReservedRooms(prev => prev.filter(room => room.id != id));
+    return setReservedRooms(prev => {
+      let i = 0;
+      while(i < prev.length) {
+        if(prev[i].id == id) break;
+        ++i; 
+      }
+      return prev.filter((room, index) => index != i);
+    });
   };
 
   const nights = bookingData
