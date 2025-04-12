@@ -10,6 +10,7 @@ import cn from "../../../utils/cn";
 //     sideIcon: JSX.Element;
 //     value: string;
 //     setValue: (value: string) => void;
+//     error: string
 // }
 
 export default function TextInput({
@@ -19,6 +20,7 @@ export default function TextInput({
     sideIcon, 
     value,
     setValue, 
+    error
 }) {
     const [isHidden, setIsHidden] = useState(canBeHidden ? true : false);
     const toggle = () => setIsHidden((prev) => !prev);
@@ -34,31 +36,40 @@ export default function TextInput({
     }
 
     return(
-        <div className={styles.container}>
-            <input 
-                type={isHidden ? "password" : "text"}
-                name={name} 
-                placeholder={placeholder}
-                onChange={handleChange}
-                className={styles.input}
-                value={value}
-            />
+        <div className={styles.outerContainer}>
             {
-                sideIcon !== null
+                error && error != ""
                 &&
-                <button
-                    type="button"
-                    onClick={handleClick}
-                    className={styles.button}
-                >
-                    {
-                        React.cloneElement(
-                            sideIcon, 
-                            { className: styles.sideIcon }
-                        )
-                    }
-                </button>
+                <div className={styles.error}>
+                    <p>{error}</p>
+                </div>
             }
+            <div className={styles.container}>
+                <input 
+                    type={isHidden ? "password" : "text"}
+                    name={name} 
+                    placeholder={placeholder}
+                    onChange={handleChange}
+                    className={styles.input}
+                    value={value}
+                />
+                {
+                    sideIcon !== null
+                    &&
+                    <button
+                        type="button"
+                        onClick={handleClick}
+                        className={styles.button}
+                    >
+                        {
+                            React.cloneElement(
+                                sideIcon, 
+                                { className: styles.sideIcon }
+                            )
+                        }
+                    </button>
+                }
             </div>
+        </div>
     )
 }

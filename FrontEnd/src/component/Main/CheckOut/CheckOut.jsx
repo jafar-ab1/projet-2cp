@@ -15,7 +15,7 @@ function CheckOut() {
   })
 
   useEffect(() => {
-    const storedRooms = localStorage.getItem("ReserveRooms")
+    const storedRooms = localStorage.getItem("reservedRooms")
     if (storedRooms) {
       setReservedRooms(JSON.parse(storedRooms))
     }
