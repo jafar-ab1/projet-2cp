@@ -1,0 +1,80 @@
+.par {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 350px;
+    margin-left: 100px;
+}
+
+.par1 {
+    text-align: center;
+    font-size: 68px;
+    font-weight:700;
+    margin: 0 auto;
+    color :white;
+}
+
+.par2 {
+    text-align: center;
+    font-size: 24px;
+    padding-left: 100px;
+    padding-right: 100px;
+    color:white;
+    padding-top: 2%;
+    font-weight:400;
+    line-height: 29.76px;
+    margin-bottom: 2%;
+}
+
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 0%;
+    margin-left: 15%;
+    margin-right: 15%;
+    align-content: center;
+}
+
+
+.booking {
+    padding: 12px 24px;
+    font-size: 25px;
+    border-radius: 10px;
+    margin: 5px;
+    margin-right: 5%;
+    cursor: pointer;
+    border:none;
+    background-color: white;
+    transition: 0.4s;
+}
+
+.booking a {
+    text-decoration: none;
+    color: black;
+}
+
+.more {
+    padding: 12px 24px;
+    font-size: 25px;
+    border-radius: 10px;
+    margin: 5px;
+    cursor: pointer; 
+    border:none;
+    color:white;
+    background: none;
+    transition: 0.5s;
+}
+
+.booking:hover{
+    background-color: rgb(214, 212, 212);
+    transform: scale(1.2);
+}
+
+.more:hover{
+    background-color:white;
+    color:black;
+    transform: scale(1.2);
+}

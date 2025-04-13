@@ -4,7 +4,7 @@ import React from "react";
 
 import Footer from "./component/Footer/Footer.jsx";
 import HeroSectionH from "./component/Hero/HeroSectionH.jsx";
-import HomePage from './component/Main/HomePage/HomePage.jsx';
+import HomePage from '../../component/Main/HomePage/HomePage.jsx';
 import { useNavigate } from "react-router-dom";
 
 

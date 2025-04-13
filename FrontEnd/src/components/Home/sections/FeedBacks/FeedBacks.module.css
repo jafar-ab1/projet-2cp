@@ -1,0 +1,79 @@
+.container {
+  min-height: 100lvh;
+  background-color: #f4f0e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-container {
+  position: relative;
+  width: 950px;
+  height: 540px;
+  background-color: #837453;
+}
+
+.feedback-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 900px;
+  height: 500px;
+  background-size: cover;
+  background-position: center 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: all 0.5s ease-in-out;
+}
+
+.feedback-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.feedback-container:hover::after {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.feedback-container:hover {
+  width: 950px;
+  height: 540px;
+}
+
+.feedback {
+  position: relative;
+  font-size: 32px;
+  color: white;
+  width: 70%;
+  font-weight: 700;
+  line-height: 47px;
+  z-index: 5;
+}
+
+.feedback-container:hover ~ .progress {
+  opacity: 0;
+}
+
+.progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.5s ease-in-out;
+}
+
+.circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+}

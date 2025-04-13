@@ -1,0 +1,63 @@
+.feature {
+    position: relative;
+    flex: 1;
+    height: 1000px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.feature > * {
+    z-index: 2;
+}
+
+.feature::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.feature:hover::after {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+.feature button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: 2px solid white; 
+    background-color: transparent; 
+    border-radius: 5px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.feature button:hover {
+    background: white;
+    scale: 105%;
+}
+
+.feature button:hover a {
+    color: black;
+}
+
+.feature button a {
+    color: white;
+}
+
+.feature p {
+    text-transform: capitalize;
+}

@@ -1,0 +1,56 @@
+.navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+}
+
+.left-section p {
+    font-size: 28px;
+    font-weight: 400;
+    color: white;
+    text-transform: uppercase;
+    line-height: 34.72px;
+}
+
+.middle-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+}
+
+.middle-section a {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 29.76px;
+    letter-spacing: 0;
+    text-transform: capitalize;
+    color:white;
+    text-decoration: none;
+}
+
+.right-section .sign-in {
+    background: white;
+    color: black;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.sign-in p {
+    font-size: 20px;
+    font-weight: 700;
+    padding-top: 19px;
+    padding-right: 32px;
+    padding-bottom: 19px;
+    padding-left: 32px;;
+}
+
+.right-section .sign-in:hover {
+    background: lightgray;
+} 
