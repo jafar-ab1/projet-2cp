@@ -11,7 +11,7 @@ export default function Hero() {
             </div>
             <div className={styles.buttons}>
                 <button className={styles.booking}>
-                    <Link to="/booking">
+                    <Link to="/Book">
                         Book now
                     </Link>
                 </button>
