@@ -14,7 +14,7 @@ import toast from "react-hot-toast"
 import Loading from "../../Loading/Loading"
 import { registerUserDataValidationSchema } from "../../../validation/auth/auth"
 
-export default function SignInForm() {
+export default function SignUpForm() {
     const { loading, err, actions: { register } } = useAuth();
 
     const [formData, setFormData] = useState({
