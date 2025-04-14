@@ -22,7 +22,11 @@ const useAuth = create((set, get) => ({
             set({ loading: true });
             try {
                 const res = await registerUser(registerUserData);
-                console.log(res);
+                const { user, token } = res.data;
+                set({
+                    user,
+                    accessToken: token                    
+                })
             } catch(err) { set({ err }) } 
             finally { set({ loading: false });}
         }

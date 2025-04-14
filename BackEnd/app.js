@@ -19,6 +19,7 @@ const dealRoutes = require('./server/routes/dealRoutes');
 const cleaningRoutes = require('./server/routes/cleaningRoutes');
 const tarifRoutes = require('./server/routes/tarifRoutes');
 const maintenaceRoutes = require('./server/routes/maitenanceRoutes');
+const User = require('./server/models/User');
 
 const app = express();
 const port = config.port;
@@ -27,13 +28,11 @@ const port = config.port;
 app.use(cors());
 app.use(express.json());
 
-// Connexion à MongoDB
-
-mongoose.connect(config.db.connectionString, {
-  
-})  
-mongoose.connect(config.db.connectionString)
-.then(() => console.log('Connected to MongoDB'))
+mongoose.connect(config.db.connectionString)  
+.then(() => {
+  User.syncIndexes().catch(() => console.log("failed to sync indices"));
+  return console.log('Connected to MongoDB');
+})
 .catch(err => console.error('Failed to connect to MongoDB', err));
 
 

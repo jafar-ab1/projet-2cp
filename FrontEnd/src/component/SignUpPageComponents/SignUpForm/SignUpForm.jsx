@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/auth/useAuth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import styles from "./SignUpForm.module.css";
 
@@ -15,19 +15,21 @@ import Loading from "../../Loading/Loading";
 import { registerUserDataValidationSchema } from "../../../validation/auth/auth";
 
 export default function SignUpForm() {
-    const { loading, err, actions: { register } } = useAuth();
+    const navigate = useNavigate();
+
+    const { loading, err, accessToken, actions: { register } } = useAuth();
 
     const [formData, setFormData] = useState({
         mobileNumber: "",
         fullName: "",
-        username: "",
+        email: "",
         password: "",
     });
 
     const [formDataError, setFormDataError] = useState({
         mobileNumber: "",
         fullName: "",
-        username: "",
+        email: "",
         password: "",
         form: ""
     });
@@ -35,7 +37,7 @@ export default function SignUpForm() {
     const clearErrors = () => setFormDataError({
         mobileNumber: "",
         fullName: "",
-        username: "",
+        email: "",
         password: "",
         form: ""
     });
@@ -44,8 +46,8 @@ export default function SignUpForm() {
         setFormData((prev) => ({ ...prev, mobileNumber: value }));
     const setFullName = (value) =>
         setFormData((prev) => ({ ...prev, fullName: value }));
-    const setUsername = (value) =>
-        setFormData((prev) => ({ ...prev, username: value }));
+    const setEmail = (value) =>
+        setFormData((prev) => ({ ...prev, email: value }));
     const setPassword = (value) =>
         setFormData((prev) => ({ ...prev, password: value }));
 
@@ -57,19 +59,19 @@ export default function SignUpForm() {
     };
 
     const handleSignUpButtonClick = async () => {
-        const validationResult = registerUserDataValidationSchema.safeParse(formData);
+        const registerUserData = formData;
+        const validationResult = registerUserDataValidationSchema.safeParse(registerUserData);
 
-        if (validationResult.success) {
-            await register(formData);
-            return;
+        const { success } = validationResult;
+        if (success) {
+            return await register(formData);
         }
 
         const fieldErrors = validationResult.error.formErrors.fieldErrors;
-
         setFormDataError({
             mobileNumber: fieldErrors?.mobileNumber?.[0] || "",
             fullName: fieldErrors?.fullName?.[0] || "",
-            username: fieldErrors?.username?.[0] || "",
+            email: fieldErrors?.email?.[0] || "",
             password: fieldErrors?.password?.[0] || "",
             form: "Please correct the highlighted fields."
         });
@@ -81,8 +83,18 @@ export default function SignUpForm() {
 
     useEffect(() => {
         if (!err) return;
-        toast.error("Invalid email or password");
+        const { status } = err;
+        if(status == 401) {
+            toast.error("Email already used");
+        } else {
+            toast.error("Internal server error");
+        }
     }, [err]);
+
+    useEffect(() => {
+        if(!accessToken) return;
+        navigate("/");
+    }, [accessToken])
 
     if (loading) return <Loading />;
 
@@ -103,7 +115,7 @@ export default function SignUpForm() {
                 <TextInput
                     canBeHidden={false}
                     name="mobileNumber"
-                    placeholder="Mobile number or email"
+                    placeholder="Mobile number"
                     sideIcon={null}
                     value={formData.mobileNumber}
                     setValue={handleChange(setMobileNumber)}
@@ -120,12 +132,12 @@ export default function SignUpForm() {
                 />
                 <TextInput
                     canBeHidden={false}
-                    name="username"
-                    placeholder="Username"
+                    name="email"
+                    placeholder="Email"
                     sideIcon={null}
-                    value={formData.username}
-                    setValue={handleChange(setUsername)}
-                    error={formDataError.username}
+                    value={formData.email}
+                    setValue={handleChange(setEmail)}
+                    error={formDataError.email}
                 />
                 <TextInput
                     canBeHidden={true}
