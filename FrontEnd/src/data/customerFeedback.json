@@ -1,0 +1,18 @@
+[
+    {
+      "name": "Alice Johnson",
+      "comment": "The room was clean and the staff were friendly.",
+      "room": "Deluxe Room"
+    },
+    {
+      "name": "Michael Smith",
+      "comment": "Great service, but the Wi-Fi was a bit slow.",
+      "room": "Suite"
+    },
+    {
+      "name": "Sophia Lee",
+      "comment": "Loved the breakfast and pool!",
+      "room": "Standard Room"
+    }
+  ]
+  

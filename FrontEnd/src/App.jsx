@@ -17,6 +17,7 @@ import SignUpPage from './pages/SignUp/SignUp-page.jsx';
 
 import LandingPageLayout from './layouts/LandingPageLayout/Landing-page.layout.jsx';
 import SignPageLayout from './layouts/SignPageLayout/Sign-page.layout.jsx';
+import Dashboard from './pages/Dashboard/Dashboard.jsx'
 
 import Home from './pages/Home/Home.jsx';
 
@@ -39,9 +40,12 @@ function App() {
         <Route path="/Book" element={<Booking />} />
         <Route path="/Choose" element={<Page12 />} />
         <Route path="/CheckOut" element={<Page13 />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/" element={<SignPageLayout />}>
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
+          
+          
         </Route>
       </Routes>
     </Router>

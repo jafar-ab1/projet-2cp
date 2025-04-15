@@ -1,0 +1,38 @@
+.room-card {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.deals {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #a3a284;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.room-card h4 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.room-card p {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.room-card p:last-child {
+  color: #a3a284;
+  font-weight: 500;
+  margin-top: 10px;
+}

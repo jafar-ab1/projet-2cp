@@ -1,0 +1,77 @@
+.overview {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.overview h3 {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats div strong {
+  font-size: 28px;
+  font-weight: 500;
+  color: #a3a284;
+  margin-bottom: 5px;
+}
+
+.stats div:nth-child(1) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(2) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(3) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(4) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(5) strong {
+  color: #a3a284;
+}
+
+.stats div span {
+  font-size: 14px;
+  color: #666;
+}
+
+.stats div:nth-child(1) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(2) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(3) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(4) strong {
+  color: #a3a284;
+}
+
+.stats div:nth-child(5) strong {
+  color: #a3a284;
+}
