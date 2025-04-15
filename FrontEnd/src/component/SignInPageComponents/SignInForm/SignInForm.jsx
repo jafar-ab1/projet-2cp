@@ -13,12 +13,13 @@ import CheckBoxInput from "../../sharedComponents/CheckBox-Input/CheckBox-Input"
 import Button from "../../sharedComponents/Button/Button"
 import Loading from "../../Loading/Loading"
 import toast from "react-hot-toast"
+import {  useNavigate } from "react-router-dom";
 
 import { loginUserDataValidationSchema } from "../../../validation/auth/auth"
 
 export default function SignInForm() {
-    const { loading, err, actions: { login } } = useAuth();
-
+    const navigate = useNavigate();
+    const { loading, err, accessToken, actions: { login } } = useAuth();
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -68,9 +69,18 @@ export default function SignInForm() {
 
     useEffect(() => {
         if(!err) return;
-        toast.error("Invalid email or password");
+        const {status}=err;
+        if (status == 401){
+            toast.error("Email or password incorrect")
+
+        }
     }, [err]);
 
+  
+    useEffect(() => {
+        if(!accessToken) return;
+        navigate("/");
+    }, [accessToken])
     if(loading) {
         return <Loading />
     }

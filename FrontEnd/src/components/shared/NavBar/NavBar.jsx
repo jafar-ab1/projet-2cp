@@ -1,9 +1,10 @@
 import styles from "./NavBar.module.css"
 
 import { Link } from "react-router-dom"
-
+import useAuth  from "../../../hooks/auth/useAuth"
 
 export default function NavBar() {
+    const { accessToken, actions: {logout}}=useAuth();
     return(
         <div className={styles.navbar}>
             <div className={styles["left-section"]}>
@@ -17,7 +18,13 @@ export default function NavBar() {
                 <li><Link to="/Dining">Dining</Link></li>
             </ul>
             <div className={styles["right-section"]}>
-                <button className={styles["sign-in"]}>Sign In</button>
+                {accessToken ? (
+                <button className={styles["sign-in"]} onClick ={logout}>logout</button>
+                ):(
+                    <Link to ="/sign-in">
+                        <button className={styles["sign-in"]}>Sign In</button>
+                    </Link>
+                )}
             </div>
             <button className={styles.button}>
                 <svg width="16" height="12" viewBox="0 0 16 12" fill="none" xmlns="http://www.w3.org/2000/svg" className={styles.burger}>
