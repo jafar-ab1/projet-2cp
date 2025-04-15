@@ -1,7 +1,7 @@
 .feature {
+    width: 100%;
+    aspect-ratio: 1/1.4;
     position: relative;
-    flex: 1;
-    height: 1000px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,6 +13,7 @@
     position: relative;
     background-size: cover;
     background-position: center;
+    background-repeat: no-repeat;
 }
 
 .feature > * {
@@ -32,7 +33,6 @@
 .feature:hover::after {
     background-color: rgba(0, 0, 0, 0.4);
 }
-
 
 .feature button {
     padding: 10px 20px;
@@ -60,4 +60,37 @@
 
 .feature p {
     text-transform: capitalize;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .feature {
+        aspect-ratio: 1/2.2;
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .feature {
+        font-size: 2rem;
+    }
+
+    .feature button {
+        font-size: 1.6rem;
+    }
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
+    .feature {
+        max-height: 1200px;
+    }
 }

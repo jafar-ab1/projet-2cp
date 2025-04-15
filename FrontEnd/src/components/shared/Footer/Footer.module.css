@@ -1,17 +1,40 @@
 .container {
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;  
+  justify-content: center;
   align-items: center;
   background-color: #837453;
-  padding: 40px 20px;
+  margin-top: 100px;
+  padding: 30px 0px;
+  gap: 30px;
+}
+
+.inner-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;  
+  justify-content: space-between;
+  align-items: center;
+  background-color: #837453;
+  padding: 30px 0px;
+  gap: 30px;
+}
+
+.inner-container > div {
+  flex: 1;
 }
 
 .left {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;;
   color: white;
-  gap: 20px;
+  gap: 10px;
+}
+
+.left > p {
+  font-size: 1rem;
 }
 
 .center {
@@ -19,21 +42,22 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
   color: white;
 }
 
 .center > ul:last-child {
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .center > ul:last-child > li {
   list-style: none;
   text-transform: capitalize;
-  font-size: 24px;
+  font-size: 1rem;
 }
 
 .right {
@@ -43,7 +67,7 @@
 }
 
 .right > button {
-  padding: 15px 20px;
+  padding: 10px 10px;
   border-radius: 10px;
   outline: 0;
   border: 2px solid white;
@@ -53,5 +77,56 @@
 .right > button > a {
   color: white;
   text-transform: capitalize;
-  font-size: 20px;
+  font-size: 1rem;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .container {
+    justify-content: space-between;
+  }
+
+  .inner-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .left > p {
+    font-size: 1.2rem;
+  }
+
+  .center > ul:last-child > li {
+    font-size: 1.2rem;
+  }
+
+  .right > button > a {
+    font-size: 1.2rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .left > p {
+    font-size: 1.5rem;
+  }
+
+  .center > ul:last-child > li {
+    font-size: 1.5rem;
+  }
+
+  .right > button > a {
+    font-size: 1.5rem;
+  }
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
 }

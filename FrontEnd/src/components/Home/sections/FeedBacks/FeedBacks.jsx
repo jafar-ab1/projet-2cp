@@ -26,8 +26,8 @@ export default function FeedBacks() {
           style={{ backgroundImage: `url(${image})` }}
         >
           <p className={styles.feedback}>
-            "Had an amazing stay! The rooms were clean and <br />
-            cozy, and the staff was super friendly. <br />
+            "Had an amazing stay! The rooms were clean and
+            cozy, and the staff was super friendly.
             Would love to come back again!"
           </p>
         </div>

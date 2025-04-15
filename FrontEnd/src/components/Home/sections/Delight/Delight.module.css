@@ -1,53 +1,50 @@
 .container {
+  background-color: #F4F0E5;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100lvh;
-  padding: 0px 40px;
-  background-color: #f4f0e5;
+  flex-direction: column;
+  padding: 100px 0px;
+  gap: 40px;
 }
 
 .container > div {
   width: 100%;
   max-width: 1276px;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .right-side {
+  background-color: #F4F0E5;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   gap: 20px;
-  left: -30px;
+  padding: 20px 30px;
+  position: relative;
+  top: -30px;
+  z-index: 3;
 }
 
 .title {
   font-weight: 700;
-  font-size: 1.5rem;
-  line-height: 51.25px;
-  letter-spacing: 0;
+  font-size: 1.3rem;
   color: #494444;
   text-transform: capitalize;
-}
-
-@media (max-width: 1100px) {
-  .title {
-    font-size: 1.2rem;
-  }
 }
 
 .gourmet-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  list-style: none;
 }
 
 .gourmet-list > li > p {
-  font-size: 1.1em;
+  font-size: 1.1rem;
   font-weight: 400;
-  line-height: 34.17px;
   letter-spacing: 0;
   color: #494444;
   text-transform: capitalize;
@@ -61,37 +58,31 @@
 }
 
 .gourmet-list > li:hover > p {
-  transform: translateX(50px);
+  transform: translateX(20px);
 }
 
 .link {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 41px;
-  font-size: 28px;
+  padding: 10px 10px;
+  font-size: 1rem;
   font-weight: 400;
   line-height: 34px;
   letter-spacing: 0;
   text-transform: capitalize;
-  border-color: #837453;
-  background-color: #837453;
-  border: 0;
   border-radius: 7px;
+  border: 0px;
   cursor: pointer;
   width: 100%;
   max-width: 331px;
-  transition: all 0.3s ease;
-  color: #837453;
-}
-
-.link:hover {
-  color: #f4f0e5;
-}
-
-.link:hover {
+  color: #F4F0E5;
   background-color: #837453;
-  border-color: #f4f0e5;
+  transition: all 0.3s ease;
+
+}
+
+.link:hover {
   scale: 105%;
 }
 
@@ -100,46 +91,107 @@
 }
 
 .left-side {
-  display: grid;
-  place-content: center;
   transition: all 0.5s ease;
   cursor: pointer;
+  z-index: 1;
 }
 
 .left-side img {
-  position: relative;
-  z-index: 2;
-  width: 500px;
-  height: 500px;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1/1;
   transition: all 0.5s ease;
 }
 
-.left-side:hover {
-    box-shadow: -30px 30px  0px #837453;
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
 }
 
-@media (min-width: 1024px) and (max-width: 1440px) {
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .container {
+      padding: 100px 0px;
+    }
+
+    .container > div {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .left-side img {
+        width: 300px;
+        aspect-ratio: 1/1;
+    }
+
+    .right-side {
+      top: 0px;
+    }
+    
+    .left-side:hover {
+      box-shadow: 20px 20px 1px #837453;
+      transform: translate(20px, 20px);
+    }
+
+    .left-side:hover img {
+      transform: translateX(-2rem) translateY(-2rem);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
   .left-side img {
-    width: 370px;
-    height: 370px;
+    width: 350px;
+  } 
+  
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .gourmet-list > li > p {
+    font-size: 1.3rem;
+  }
+
+  .link {
+    font-size: 1.3rem;
   }
 }
 
-@media (max-width: 1024px) {
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .container {
+      padding: 200px 0px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .gourmet-list > li > p {
+    font-size: 1.5rem;
+  }
+
+  .link {
+    font-size: 1.5rem;
+  }
+
   .left-side img {
-    width: 400px;
-    height: 400px;
+    width: 400px; 
   }
 }
 
-@media (max-width: 1024px) {
-  .right-side img,
-  .left-side img {
-    width: 400px;
-    height: 400px;
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
+  .title {
+    font-size: 2.3rem;
+  }
+
+  .gourmet-list > li > p {
+    font-size: 1.8rem;
+  }
+
+  .link {
+    padding: 20px 0px;
+    font-size: 1.8rem;
   }
 }
 
-.left-side:hover img {
-  transform: translateX(3rem) translateY(-3rem);
-}

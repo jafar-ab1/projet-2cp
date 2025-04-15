@@ -1,20 +1,21 @@
+:root {
+    --image-width: 200px;
+}
+
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
+    width: var(--image-width);
+    aspect-ratio: 2.4/1;
     position: relative;
+    overflow: hidden;
 }
 
-.par3 {
-    text-align: center;
-    width: 400px;
-    font-size: 1rem;
-    font-weight: 400;
-    color: black;
+.container > img {
+    position: absolute;
+    top: calc(var(--image-width) / -3.33);
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
 }
-
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
@@ -22,28 +23,27 @@
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    .par3 {
-        width: 600px;
-        font-size: 1.3rem;
+    :root {
+        --image-width: 250px;
     }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
-    .par3 {
-        width: 700px;
-        font-size: 1.5rem;
+    :root {
+        --image-width: 300px;
     }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-    .par3 {
-        width: 1000px;
-        font-size: 1.8rem;
+    :root {
+        --image-width: 350px;
     }
 }
 
 /* Extra extra large devices (very large screens, 1400px and up) */
 @media (min-width: 1400px) {
 }
+
+
