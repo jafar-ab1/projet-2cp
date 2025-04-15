@@ -1,4 +1,4 @@
-import styles from './Home.module.css';
+import styles from "./Home.module.css"
 import backgroundImageH from '../../assets/pexels-manuel-barros-1263073-2403017.jpg';
 
 import HeroWrapper from '../../components/shared/HeroWrapper/HeroWrapper.jsx';
@@ -9,11 +9,9 @@ import Features from '../../components/Home/sections/Features/Features.jsx';
 import Delight from '../../components/Home/sections/Delight/Delight.jsx';
 import FeedBacks from '../../components/Home/sections/FeedBacks/FeedBacks.jsx';
 
-import Landing from '../../layouts/LandingPageLayout/Landing-page.layout.jsx';
-
 function Home() {
   return (
-    <div>
+    <div className={styles.container}>
       <HeroWrapper backgroundImage={backgroundImageH}>
         <NavBar />
         <Hero />

@@ -3,11 +3,12 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 40px;
+    line-height: 100%;
+    padding: 26px 45px;
 }
 
 .left-section p {
-    font-size: 28px;
+    font-size: 1rem;
     font-weight: 400;
     color: white;
     text-transform: uppercase;
@@ -18,11 +19,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
+    display: none;
+    list-style: none;
 }
 
 .middle-section a {
-    font-size: 24px;
+    font-size: 1rem;
     font-weight: 400;
     line-height: 29.76px;
     letter-spacing: 0;
@@ -31,11 +34,15 @@
     text-decoration: none;
 }
 
+.right-section {
+    display: none;
+}
+
 .right-section .sign-in {
     background: white;
     color: black;
     padding: 10px 20px;
-    font-size: 18px;
+    font-size: 1rem;
     border-radius: 5px;
     border: none;
     cursor: pointer;
@@ -43,7 +50,7 @@
 }
 
 .sign-in p {
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: 700;
     padding-top: 19px;
     padding-right: 32px;
@@ -53,4 +60,54 @@
 
 .right-section .sign-in:hover {
     background: lightgray;
-} 
+}
+
+.button {
+    width: fit-content;
+    background-color: transparent;
+    outline: none;
+    border: 0px;
+}
+
+.burger {
+    width:  30px;
+    height: 30px;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .middle-section {
+        display: flex;
+    }
+
+    .right-section {
+        display: block;
+    }
+
+    .button {
+        display: none;
+    }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1024px) {
+    .left-section p {
+        font-size: 1.3rem;
+    }
+
+    .middle-section a {
+        font-size: 1.3rem;
+    }
+
+    .right-section .sign-in {
+        font-size: 1.2rem;
+    }
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
+}

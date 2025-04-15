@@ -1,20 +1,51 @@
-.head {
-    display:flex;
+.container {
+    display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    padding-top: 100px;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.image-container {
+    width: calc(100px* 2.4);
+    height: calc(100px * 1.8);
+    position: relative;
+    overflow: hidden;
+}
+
+.image-container > img {
+    position: absolute;
+    top: -100px;
+    object-fit: cover;
+    object-position: center;
+    width: 100%;
 }
 
 .par3 {
-    padding-right: 15%;
-    padding-left: 15%;
-    padding-bottom: 200px;
-    font-size:32px;
-    font-Weight:400;
-    margin: 0 auto;
+    font-size: 1rem;
+    font-weight: 400;
     color :rgb(0, 0, 0);
-    height: 418px;
-    align-items: center;
     text-align: center;
+}
+
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
 }
