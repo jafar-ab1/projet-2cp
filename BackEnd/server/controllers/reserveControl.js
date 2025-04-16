@@ -21,7 +21,68 @@ exports.getReservationById = async(req, res) => {
     }
 };
 
+exports.getCheck_in = async (req,res) => {
+    try{
+        const todayDate = new Date();
+        const startDay = new Date(todayDate);
+        startDay.setHours(0,0,0,0);
+        const endDay = new Date(todayDate);
+        endDay.setHours(23, 59, 59, 999);
+
+        const count = await Reservation.countDocuments({
+            checkInDate: {
+                $gte: startDay,
+                $lte: endDay
+            }
+        })
+        
+        res.status(200).json(
+            
+            count
+        )
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+exports.getCheck_out = async (req,res) => {
+    try{
+        const todayDate = new Date();
+        const startDay = new Date(todayDate);
+        startDay.setHours(0,0,0,0);
+        const endDay = new Date(todayDate);
+        endDay.setHours(23, 59, 59, 999);
+
+        const count = await Reservation.countDocuments({
+            checkInDate: {
+                $gte: startDay,
+                $lte: endDay
+            }
+        })
+        
+        res.status(200).json(
+            count
+        )
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+
 exports.creatReservation = async(req, res) =>{
+    
+try {
+    await Reservation.collection.dropIndex("reservationId_1");
+} catch (e) {
+    console.log("Index déjà supprimé ou inexistant");
+}
+    
     const {userId, roomId, checkInDate, checkOutDate, totalPrice, status} = req.body;
     try{
         const newReservation= new Reservation({userId, roomId, checkInDate, checkOutDate, totalPrice, status});

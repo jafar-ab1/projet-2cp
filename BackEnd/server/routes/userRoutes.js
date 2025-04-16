@@ -4,7 +4,7 @@ const userController = require('../controllers/userControl');
 const validate = require('../middlewares/validation.middleware');
 const userSchema = require('../validation/userValidation');
 
-router.get('/',validate(userSchema.userSchema), userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 router.get('/:id', userController.getUserById);
 

@@ -58,7 +58,7 @@ const updateRoomSchema = Joi.object({
         'number.min': 'Le prix ne peut pas être négatif',
         'any.required': 'Le prix est obligatoire'
       }),
-    status: Joi.string().optional().valid('Occupied', 'Available', 'dirty', 'inspected'),
+    status: Joi.string().optional().valid('Occupied', 'Available', 'dirty', 'inspected', 'clean'),
     floor: Joi.string().optional()
   })
   .min(1) // Au moins un champ doit être fourni
@@ -85,9 +85,28 @@ const roomNumberSchema = Joi.object({
       })
 });
 
+const roomStatusSchema = Joi.object({
+  status : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
+});
+
+const roomTypeCountSchema = Joi.object({
+  type : Joi.string().valid('Standard', 'Deluxe', 'Suite').required()
+});
+
+const roomTypeAndStatusCountSchema = Joi.object({
+  type : Joi.string().valid('Standard', 'Deluxe', 'Suite').required(),
+  status : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
+
+})
+
+
+
 module.exports = {
   createRoomSchema,
   updateRoomSchema,
   roomTypeSchema,
-  roomNumberSchema
+  roomNumberSchema,
+  roomStatusSchema,
+  roomTypeCountSchema,
+  roomTypeAndStatusCountSchema
 };
