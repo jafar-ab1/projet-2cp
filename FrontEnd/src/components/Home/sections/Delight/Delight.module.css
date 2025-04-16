@@ -1,10 +1,10 @@
 .container {
-  background-color: #F4F0E5;
+  background-color: #f4f0e5;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 100px 0px;
+  padding-top: 50px;
   gap: 40px;
 }
 
@@ -18,7 +18,7 @@
 }
 
 .right-side {
-  background-color: #F4F0E5;
+  background-color: #f4f0e5;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -76,10 +76,9 @@
   cursor: pointer;
   width: 100%;
   max-width: 331px;
-  color: #F4F0E5;
+  color: #f4f0e5;
   background-color: #837453;
   transition: all 0.3s ease;
-
 }
 
 .link:hover {
@@ -109,40 +108,40 @@
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-    .container {
-      padding: 100px 0px;
-    }
+  .container {
+    padding: 50px 0px;
+  }
 
-    .container > div {
-        flex-direction: row;
-        justify-content: space-around;
-    }
+  .container > div {
+    flex-direction: row;
+    justify-content: space-around;
+  }
 
-    .left-side img {
-        width: 300px;
-        aspect-ratio: 1/1;
-    }
+  .left-side img {
+    width: 300px;
+    aspect-ratio: 1/1;
+  }
 
-    .right-side {
-      top: 0px;
-    }
-    
-    .left-side:hover {
-      box-shadow: 20px 20px 1px #837453;
-      transform: translate(20px, 20px);
-    }
+  .right-side {
+    top: 0px;
+  }
 
-    .left-side:hover img {
-      transform: translateX(-2rem) translateY(-2rem);
-    }
+  .left-side:hover {
+    box-shadow: 20px 20px 1px #837453;
+    transform: translate(20px, 20px);
+  }
+
+  .left-side:hover img {
+    transform: translateX(-2rem) translateY(-2rem);
+  }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .left-side img {
     width: 350px;
-  } 
-  
+  }
+
   .title {
     font-size: 1.8rem;
   }
@@ -158,10 +157,6 @@
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-  .container {
-      padding: 200px 0px;
-  }
-
   .title {
     font-size: 2rem;
   }
@@ -175,7 +170,7 @@
   }
 
   .left-side img {
-    width: 400px; 
+    width: 400px;
   }
 }
 
@@ -194,4 +189,3 @@
     font-size: 1.8rem;
   }
 }
-

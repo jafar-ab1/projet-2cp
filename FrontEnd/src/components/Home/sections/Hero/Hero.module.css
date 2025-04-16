@@ -80,8 +80,6 @@
 }
 
 .more:hover{
-    background-color:white;
-    color:black;
     transform: scale(105%);
 }
 

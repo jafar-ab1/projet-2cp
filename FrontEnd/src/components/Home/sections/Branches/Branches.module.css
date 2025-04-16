@@ -1,11 +1,11 @@
 .container {
-    background-color: #F4F0E5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 100px 0px;
-    gap: 40px;
+  background-color: #f4f0e5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+  padding-top: 50px;
 }
 
 /* Small devices (landscape phones, 576px and up) */
@@ -14,11 +14,11 @@
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
-     .container {
-          padding: 100px 0px;
-          height: fit-content;
-          gap: 100px;
-     }
+  .container {
+    padding: 50px 0px;
+    height: fit-content;
+    gap: 100px;
+  }
 }
 
 /* Large devices (desktops, 992px and up) */
@@ -27,9 +27,6 @@
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
-     .container {
-          padding: 200px 0px;
-     }
 }
 
 /* Extra extra large devices (very large screens, 1400px and up) */
