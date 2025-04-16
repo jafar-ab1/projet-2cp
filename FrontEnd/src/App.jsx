@@ -18,6 +18,7 @@ import SignUpPage from './pages/SignUp/SignUp-page.jsx';
 import LandingPageLayout from './layouts/LandingPageLayout/Landing-page.layout.jsx';
 import SignPageLayout from './layouts/SignPageLayout/Sign-page.layout.jsx';
 import Dashboard from './pages/Dashboard/Dashboard.jsx'
+import Accomodation from './pages/Accomodation/Accomodation.jsx';
 
 import Home from './pages/Home/Home.jsx';
 
@@ -28,7 +29,7 @@ function App() {
         <Route path="/" element={<LandingPageLayout />}>
           <Route index element={<Home />} />
         </Route>
-        <Route path="/Accommodation" element={<Page2 />} />
+        <Route path="/accomodation" element={<Page2 />} />
         <Route path="/Algiers" element={<Page3 />} />
         <Route path="/Dining" element={<Page4 />} />
         <Route path="/Gourmet" element={<Page5 />} />
@@ -41,11 +42,10 @@ function App() {
         <Route path="/Choose" element={<Page12 />} />
         <Route path="/CheckOut" element={<Page13 />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/test" element={<Accomodation />} />
         <Route path="/" element={<SignPageLayout />}>
           <Route path="/sign-in" element={<SignInPage />} />
           <Route path="/sign-up" element={<SignUpPage />} />
-          
-          
         </Route>
       </Routes>
     </Router>

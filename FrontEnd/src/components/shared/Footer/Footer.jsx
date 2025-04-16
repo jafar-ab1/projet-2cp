@@ -1,5 +1,5 @@
-import image from "../../../assets/9em7.png"
-import MainLogo from "../MainLogo/MainLogo";
+import image from '../../../assets/9em7.png';
+import MainLogo from '../static/MainLogo/MainLogo';
 
 import styles from './Footer.module.css';
 
@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className={styles.container}>
       <MainLogo width={200} isfooter={true} />
-      <div className={styles["inner-container"]}>
+      <div className={styles['inner-container']}>
         <div className={styles.left}>
           <p>035878709</p>
           <p>hotelname@gmail.com</p>

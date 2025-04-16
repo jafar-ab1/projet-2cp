@@ -1,7 +1,6 @@
 import styles from "./NavBar.module.css"
-
 import { Link } from "react-router-dom"
-import useAuth  from "../../../hooks/auth/useAuth"
+import useAuth from "../../../../hooks/auth/useAuth";
 
 export default function NavBar() {
     const { accessToken, actions: {logout}}=useAuth();

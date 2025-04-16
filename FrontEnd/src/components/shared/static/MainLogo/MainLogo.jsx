@@ -1,5 +1,5 @@
-import image from "../../../assets/9am7_akhor.png"
-import image2 from "../../../assets/9em7.png"
+import image from "../../../../assets/9am7_akhor.png"
+import image2 from "../../../../assets/9em7.png"
 
 import styles from "./MainLogo.module.css"
 

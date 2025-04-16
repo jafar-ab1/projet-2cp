@@ -1,0 +1,161 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 30px;
+}
+
+.par {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.par1 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 auto;
+  color: white;
+}
+
+.par2 {
+  text-align: center;
+  font-size: 0.8rem;
+  color: white;
+  font-weight: 400;
+}
+
+.buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+}
+
+.booking {
+  padding: 19px 32px;
+  font-size: minmax(1rem, 20px);
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  background-color: white;
+  transition: 0.3s;
+}
+
+.booking a {
+  text-decoration: none;
+  color: black;
+}
+
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 19px 32px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: none;
+  color: white;
+  background: none;
+  transition: 0.3s;
+}
+
+.more > p {
+  font-size: 1rem;
+}
+
+.more > svg {
+  width: 1.2rem;
+}
+
+.booking:hover {
+  background-color: rgb(214, 212, 212);
+  transform: scale(105%);
+}
+
+.more:hover {
+  transform: scale(105%);
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  .par1 {
+    font-size: 3rem;
+  }
+
+  .par2 {
+    font-size: 0.9rem;
+  }
+
+  .buttons {
+    justify-content: center;
+    gap: 20px;
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .par1 {
+    font-size: 3.8rem;
+  }
+
+  .par2 {
+    font-size: 1.2rem;
+  }
+
+  .booking {
+    font-size: 1.2rem;
+  }
+
+  .more > p {
+    font-size: 1.2rem;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .par1 {
+    max-width: 900px;
+    font-size: 4.3rem;
+  }
+
+  .par2 {
+    font-size: 1.4rem;
+  }
+
+  .booking {
+    font-size: 1.3rem;
+  }
+
+  .more > p {
+    font-size: 1.3rem;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+  .par1 {
+    max-width: 1100px;
+    font-size: 4.8rem;
+  }
+
+  .par2 {
+    max-width: 900px;
+    font-size: 1.5rem;
+  }
+
+  .buttons {
+    max-width: 900px;
+    justify-content: space-around;
+  }
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
+}
