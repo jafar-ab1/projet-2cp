@@ -29,7 +29,7 @@ function NavigationDiv() {
         </Link>
       </button>
       <button type="button">
-        <Link to="/Algiers">
+        <Link to="/">
           learn more
           <svg
             xmlns="http://www.w3.org/2000/svg"
