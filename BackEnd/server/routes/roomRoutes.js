@@ -11,12 +11,6 @@ router.get('/:type', validate(roomScehma.roomTypeSchema, 'params'),roomControlle
 
 router.get('/number/:roomNumber', validate(roomScehma.roomNumberSchema, 'params'), roomController.getRoomByNumber);
 
-router.get('/countStatus/:status', validate(roomScehma.roomStatusSchema, 'params'), roomController.countRoomsByStatus);
-
-router.get('/countType/:type', validate(roomScehma.roomTypeCountSchema, 'params'), roomController.countRoomsByType);
-
-router.get('/count/:status/:type', validate(roomScehma.roomTypeAndStatusCountSchema, 'params'), roomController.countRoomsByTypeAndStatus);
-
 router.post('/',validate(roomScehma.createRoomSchema), roomController.creatRoom);
 
 router.put('/:roomNumber', validate(roomScehma.updateRoomSchema), roomController.modifyRoom);
