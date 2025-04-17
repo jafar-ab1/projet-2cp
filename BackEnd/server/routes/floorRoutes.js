@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const floorController= require ('../controllers/floorControl');
 const validate = require('../middlewares/validation.middleware.js');
-const {floorNumberSchema, createFloorSchema, updateFloorSchema} = require('../validation/floorValidation')
+const {floorNumberSchema, createFloorSchema, updateFloorSchema, statusSchema} = require('../validation/floorValidation')
 
 router.get('/', floorController.getAllFloors);
 
 router.get('/:floorNumber',[validate(floorNumberSchema, 'params')], floorController.getFloorByFloorNb);
+
+router.get('/status/:status', validate(statusSchema, 'params'), floorController.countFloorStatus);
 
 router.post('/',[validate(createFloorSchema)], floorController.createFloor);
 

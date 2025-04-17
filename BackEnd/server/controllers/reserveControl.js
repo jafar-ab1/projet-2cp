@@ -57,7 +57,7 @@ exports.getCheck_out = async (req,res) => {
         endDay.setHours(23, 59, 59, 999);
 
         const count = await Reservation.countDocuments({
-            checkInDate: {
+            checkOutDate: {
                 $gte: startDay,
                 $lte: endDay
             }

@@ -21,6 +21,28 @@ exports.getFloorByFloorNb = async (req, res) => {
   }
 };
 
+exports.countFloorStatus = async (req, res) => {
+  try{
+    const {status} = req.params;
+    const { id } = req.params;
+    
+    const countStatus = await Floor.countDocuments({status});
+    const rommCount = await Floor.countDocuments({id});
+
+    const moyenne = (countStatus*100)/rommCount;
+    const roundedMoynne = Math.round(moyenne*100)/100;
+    res.status(200).json({
+      status,
+      countStatus,
+      moyenne, 
+      roundedMoynne
+    });
+  }
+  catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.createFloor = async (req, res) => {
   const { floorNumber, status } = req.body;

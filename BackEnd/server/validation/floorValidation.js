@@ -26,8 +26,16 @@ const updateFloorSchema = Joi.object({
   })
 }).or('floorNumber', 'status'); 
 
+const statusSchema = Joi.object({
+  status: Joi.string().valid('Complété', 'À compléter').messages({
+    'any.only': 'Le statut doit être actif, inactif ou maintenance'
+  })
+})
+
+
 module.exports = {
   floorNumberSchema,
   createFloorSchema,
-  updateFloorSchema
+  updateFloorSchema,
+  statusSchema
 };
