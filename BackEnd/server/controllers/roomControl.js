@@ -1,4 +1,3 @@
-const { RunCommandCursor } = require('mongodb');
 const Room = require('../models/Room');
 
 exports.getAllRooms = async (req, res) => {
@@ -40,52 +39,6 @@ exports.getByType = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-
-exports.countRoomsByStatus = async (req, res) => {
-    try {
-        const {status} = req.params;
-        const statusCounts = await Room.countDocuments({status});
-        res.status(200).json({ 
-        status,
-        statusCounts
-    });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-exports.countRoomsByType = async (req, res) => {
-    try {
-        const {type} = req.params;
-        const TypeCount = await Room.countDocuments({type});
-        res.status(200).json({ 
-        type,
-        TypeCount
-    });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-}
-
-exports.countRoomsByTypeAndStatus = async (req, res) => {
-    try {
-        const { type, status } = req.params;
-        const count = await Room.countDocuments({
-            type, status
-        });
-
-        res.status(200).json({
-            type,
-            status, 
-            count
-        });
-
-    } catch (error) {
-        res.status(500).json({
-            error: error.message
-        });
-    }
-};
 
 exports.creatRoom = async(req, res) =>{
     const {roomNumber, type,facilities, bedType, status, price, floor} = req.body;

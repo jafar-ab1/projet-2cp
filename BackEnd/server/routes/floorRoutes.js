@@ -8,8 +8,6 @@ router.get('/', floorController.getAllFloors);
 
 router.get('/:floorNumber',[validate(floorNumberSchema, 'params')], floorController.getFloorByFloorNb);
 
-router.get('/status/:status', validate(statusSchema, 'params'), floorController.countFloorStatus);
-
 router.post('/',[validate(createFloorSchema)], floorController.createFloor);
 
 router.put('/:floorNumber', validate(updateFloorSchema),floorController.updateFloor);

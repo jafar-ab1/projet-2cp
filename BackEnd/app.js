@@ -19,7 +19,7 @@ const dealRoutes = require('./server/routes/dealRoutes');
 const cleaningRoutes = require('./server/routes/cleaningRoutes');
 const tarifRoutes = require('./server/routes/tarifRoutes');
 const maintenaceRoutes = require('./server/routes/maitenanceRoutes');
-const User = require('./server/models/User');
+const dashRoutes = require('./server/routes/dashRoutes');
 
 const app = express();
 const port = config.port;
@@ -38,6 +38,7 @@ mongoose.connect(config.db.connectionString)
 
 
 // Utilisation des routes
+app.use('/dash', dashRoutes);
 app.use('/auth', authRoutes); 
 app.use('/rooms', roomRoutes);
 app.use('/feed_backs', feedBackRoutes);
