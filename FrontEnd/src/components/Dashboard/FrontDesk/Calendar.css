@@ -1,0 +1,178 @@
+.content-area {
+    padding: 20px;
+    font-family: sans-serif;
+  }
+  
+  .content-title {
+    font-size: 18px;
+    margin-bottom: 16px;
+    color: #2d3748;
+  }
+  
+  .status-filters {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .filter-button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    color: white;
+  }
+  
+  .filter-due-in {
+    background-color: #e0c770;
+  }
+  
+  .filter-checked-out {
+    background-color: #94a3b8;
+  }
+  
+  .filter-due-out {
+    background-color: #f28b82;
+  }
+  
+  .filter-checked-in {
+    background-color: #9db485;
+  }
+  
+  .booking-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .room-search-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .room-search-input {
+    padding: 6px 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 6px;
+    width: 220px;
+    font-size: 14px;
+  }
+  
+  .create-booking-button {
+    background-color: #9db485;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .month-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  
+  .month-tab {
+    flex: 1;
+    padding: 8px 0;
+    font-size: 14px;
+    color: #4a5568;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: none;
+  }
+  
+  .month-tab:hover {
+    background-color: #f1f5f9;
+  }
+  
+  .month-tab-selected {
+    background-color: #dbeafe;
+    color: #1e40af;
+    font-weight: 600;
+    border-radius: 6px 6px 0 0;
+  }
+  
+  .day-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  
+  .day-tab {
+    flex: 1;
+    padding: 4px 0;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #4a5568;
+  }
+  
+  .day-tab-selected {
+    background-color: #60a5fa;
+    color: white;
+    font-weight: 500;
+    border-radius: 9999px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto;
+  }
+  
+  .calendar-container {
+    position: relative;
+    margin-top: 20px;
+  }
+  
+  .calendar-grid {
+    position: relative;
+    height: 400px;
+    padding-top: 16px;
+  }
+  
+  .grid-lines {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .grid-line {
+    flex: 1;
+    border-left: 1px solid #e2e8f0;
+  }
+  
+  .booking-item {
+    position: absolute;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 13px;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Booking colors */
+  .booking-amber {
+    background-color: #e0c770;
+  }
+  
+  .booking-blue {
+    background-color: #94a3b8;
+  }
+  
+  .booking-olive {
+    background-color: #9db485;
+  }
+  
+  .booking-rose {
+    background-color: #f28b82;
+  }
+  

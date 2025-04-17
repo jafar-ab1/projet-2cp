@@ -1,10 +1,10 @@
-import "./Overview.css"
+import styles from "./Overview.module.css"
 
 const Overview = () => {
   return (
-    <section className="overview">
+    <section className={styles.overview}>
       <h3>Overview</h3>
-      <div className="stats">
+      <div className={styles.stats}>
         <div>
           <strong>23</strong>
           Today's <span>check-in</span>

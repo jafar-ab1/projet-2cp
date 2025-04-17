@@ -1,12 +1,12 @@
-import Sidebar from "../../components/shared/DashBoard/SideBar/SideBar.jsx"
-import Header from "../../components/shared/DashBoard/Header/Header.jsx"
-import Overview from "../../components/Dashboard/Overview/Overview.jsx"
-import RoomCard from "../../components/Dashboard/RoomCard/RoomCard.jsx"
-import RoomStatus from "../../components/Dashboard/RoomStatus/RoomStatus.jsx"
-import FloorStatus from "../../components/Dashboard/Floor/FloorStatus.jsx"
-import OccupancyStatistics from "../../components/Dashboard/OccupancyStatistic/OccupancyStatistic.jsx"
-import CustomerFeedback from "../../components/Dashboard/CustomerFeedback/CustomerFeedBack.jsx"
-import "./Dashboard.css"
+import Sidebar from "../../../components/shared/DashBoard/SideBar/SideBar.jsx"
+import Header from "../../../components/shared/DashBoard/Header/Header.jsx"
+import Overview from "../../../components/Dashboard/Overview/Overview.jsx"
+import RoomCard from "../../../components/Dashboard/RoomCard/RoomCard.jsx"
+import RoomStatus from "../../../components/Dashboard/RoomStatus/RoomStatus.jsx"
+import FloorStatus from "../../../components/Dashboard/Floor/FloorStatus.jsx"
+import OccupancyStatistics from "../../../components/Dashboard/OccupancyStatistic/OccupancyStatistic.jsx"
+import CustomerFeedback from "../../../components/Dashboard/CustomerFeedback/CustomerFeedBack.jsx"
+import "./Dashboard.module.css"
 
 const Dashboard = () => {
   return (

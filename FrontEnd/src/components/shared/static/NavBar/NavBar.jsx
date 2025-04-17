@@ -10,11 +10,11 @@ export default function NavBar() {
                 <p>HOTEL<br />NAME</p>
             </div>
             <ul className={styles["middle-section"]}>
-                <li><Link to="/Accommodation">Accommodation</Link></li>
-                <li><Link to="/Occasions">Occasions</Link></li>
-                <li><Link to="/Events">Events</Link></li>
-                <li><Link to="/Wellness">Wellness</Link></li>
-                <li><Link to="/Dining">Dining</Link></li>
+                <li><Link to="/accomodation">Accommodation</Link></li>
+                <li><Link to="/occasions">Occasions</Link></li>
+                <li><Link to="/events">Events</Link></li>
+                <li><Link to="/wellness">Wellness</Link></li>
+                <li><Link to="/dining">Dining</Link></li>
             </ul>
             <div className={styles["right-section"]}>
                 {accessToken ? (
