@@ -3,6 +3,7 @@ import styles from './Accomodation.module.css';
 
 import Hero from '../../components/shared/static/Hero/Hero';
 import Branches from '../../components/Accomodation/sections/Branches/Branches';
+import Footer from "../../components/shared/Footer/Footer"
 
 export default function Accomodation() {
   return (
@@ -14,6 +15,7 @@ export default function Accomodation() {
         hasButtons={false}
       />
       <Branches />
+      <Footer />
     </div>
   );
 }
