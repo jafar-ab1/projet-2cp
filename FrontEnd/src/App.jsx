@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Page2 from './Page2.jsx';
 import Page3 from './Page3.jsx';
 import Page4 from './Page4.jsx';
 import Page5 from './Page5.jsx';
@@ -32,7 +31,7 @@ function App() {
         {/* Landing layout for main pages */}
         <Route path="/" element={<LandingPageLayout />}>
           <Route index element={<Home />} />
-          <Route path="accomodation" element={<Page2 />} />
+          <Route path="accomodation" element={<Accomodation />} />
           <Route path="algiers" element={<Page3 />} />
           <Route path="dining" element={<Page4 />} />
           <Route path="gourmet" element={<Page5 />} />
