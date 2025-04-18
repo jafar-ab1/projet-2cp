@@ -1,0 +1,44 @@
+.app-container {
+    display: flex;
+    font-family: Arial, sans-serif;
+  }
+  
+  .sidebar {
+    width: 220px;
+    background: #f4f4ed;
+    padding: 20px;
+  }
+  
+  .sidebar h2 {
+    margin-bottom: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .sidebar li {
+    margin: 10px 0;
+    cursor: pointer;
+  }
+  
+  .sidebar li.active {
+    font-weight: bold;
+    color: #666;
+  }
+  
+  .main-content {
+    padding: 20px;
+    flex: 1;
+  }
+  
+  .actions {
+    margin-bottom: 10px;
+  }
+  
+  .actions .btn {
+    margin-right: 10px;
+    padding: 5px 10px;
+  }
+  

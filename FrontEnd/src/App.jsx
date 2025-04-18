@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import Page2 from './Page2.jsx';
 import Page3 from './Page3.jsx';
 import Page4 from './Page4.jsx';
 import Page5 from './Page5.jsx';
@@ -14,8 +15,10 @@ import Page13 from './Page13.jsx';
 import SignInPage from './pages/SignIn/SignIn-page.jsx';
 import SignUpPage from './pages/SignUp/SignUp-page.jsx';
 import FrontDesk from './pages/Dashboard/FrontDesk/FrontDesk.jsx';
-import Calendar from './components/Dashboard/FrontDesk/Calendar.jsx';
-
+import Guests from './pages/Dashboard/Guests/Guests.jsx';
+import Deals from './pages/Dashboard/Deals/Deals.jsx';
+import Rooms from './pages/Dashboard/Rooms/Rooms.jsx';
+import Rates from './pages/Dashboard/Rates/Rates.jsx';
 import LandingPageLayout from './layouts/LandingPageLayout/Landing-page.layout.jsx';
 import SignPageLayout from './layouts/SignPageLayout/Sign-page.layout.jsx';
 
@@ -31,7 +34,7 @@ function App() {
         {/* Landing layout for main pages */}
         <Route path="/" element={<LandingPageLayout />}>
           <Route index element={<Home />} />
-          <Route path="accomodation" element={<Accomodation />} />
+          <Route path="accomodation" element={<Page2 />} />
           <Route path="algiers" element={<Page3 />} />
           <Route path="dining" element={<Page4 />} />
           <Route path="gourmet" element={<Page5 />} />
@@ -49,6 +52,10 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
       <Route path="/front-desk" element={<FrontDesk/>} />
         <Route path="/test" element={<Accomodation />} />
+        <Route path="/guest" element={<Guests />} />
+        <Route path="/deal" element={<Deals />} />
+        <Route path="/rooms" element={<Rooms />} />
+        <Route path="/rate" element={<Rates />} />
 
         {/* Sign in/up pages under their own layout */}
         <Route path="/auth" element={<SignPageLayout />}>
