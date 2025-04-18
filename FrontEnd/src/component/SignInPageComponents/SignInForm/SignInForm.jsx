@@ -122,7 +122,7 @@ export default function SignInForm() {
                 text="Sign in"
             />
             <div className={styles.footer}>
-                <p>Don't have an account? <Link to="/sign-up">register</Link></p>
+                <p>Don't have an account? <Link to="/auth/sign-up">register</Link></p>
             </div>
         </Form>
     )

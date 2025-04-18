@@ -1,24 +1,51 @@
 .badge {
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 12px;
-    color: white;
-  }
-  
-  .badge.clean {
-    background-color: #a0aec0;
-  }
-  
-  .badge.dirty {
-    background-color: #e29393;
-  }
-  
-  .badge.inspected {
-    background-color: #b2b58b;
-  }
-  
-  .badge.pick-up {
-    background-color: #eac66a;
-    color: black;
-  }
-  
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  min-width: 80px;
+}
+
+/* Room statuses */
+.available {
+  background-color: #7b8caa;
+}
+.booked {
+  background-color: #e27d7d;
+}
+.reserved {
+  background-color: #b6b49d;
+}
+.waitlist {
+  background-color: #c4ad66;
+}
+
+/* Deal statuses */
+.ongoing {
+  background-color: #7b8caa;
+}
+.full {
+  background-color: #e27d7d;
+}
+.new {
+  background-color: #b6b49d;
+}
+.inactive {
+  background-color: #e27d7d;
+}
+
+/* Guest statuses */
+.clean {
+  background-color: #99aab5;
+}
+.dirty {
+  background-color: #cd5c5c;
+}
+.inspected {
+  background-color: #b6b49d;
+}
+.pick-up {
+  background-color: #c4ad66;
+}

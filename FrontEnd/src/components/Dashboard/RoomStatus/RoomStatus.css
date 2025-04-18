@@ -3,46 +3,47 @@
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  height: 100%;
 }
 
 .room-status h3 {
   font-size: 18px;
-  font-weight: 500;
-  margin-top: 0;
-  margin-bottom: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
   color: #333;
 }
 
-.room-status > div {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 15px;
+.room-columns {
+  display: flex;
+  gap: 40px;
 }
 
-.room-status > div > div {
-  margin-bottom: 10px;
+.room-column {
+  flex: 1;
+}
+
+.room-header {
+  display: flex;
+  justify-content: space-between;
   font-size: 14px;
   color: #666;
+  margin-bottom: 15px;
 }
 
-.room-status > div > div:nth-child(1),
-.room-status > div > div:nth-child(2) {
-  margin-bottom: 20px;
-}
-
-.room-status strong {
-  display: block;
-  font-size: 20px;
-  font-weight: 500;
+.room-header strong {
+  font-size: 16px;
+  font-weight: 600;
   color: #333;
-  margin-bottom: 5px;
 }
 
-.room-status > div > div:nth-child(1) strong {
-  color: #a3a284;
+.room-detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 6px;
 }
 
-.room-status > div > div:nth-child(2) strong {
-  color: #a3a284;
+.room-detail strong {
+  font-weight: 600;
+  color: #333;
 }

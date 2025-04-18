@@ -30,7 +30,7 @@ export default function NavBar() {
             Logout
           </button>
         ) : (
-          <Link to="/sign-in">
+          <Link to="/auth/sign-in">
             <button className={styles['sign-in']}>Sign In</button>
           </Link>
         )}

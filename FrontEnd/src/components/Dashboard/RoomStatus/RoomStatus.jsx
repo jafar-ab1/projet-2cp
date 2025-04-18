@@ -4,16 +4,43 @@ const RoomStatus = () => {
   return (
     <section className="room-status">
       <h3>Rooms status</h3>
-      <div>
-        <div>
-          <strong>104</strong> occupied room
+      <div className="room-columns">
+        <div className="room-column">
+          <div className="room-header">
+            <span>occupied room</span>
+            <strong>104</strong>
+          </div>
+          <div className="room-detail">
+            <span>Clean</span>
+            <strong>90</strong>
+          </div>
+          <div className="room-detail">
+            <span>Dirty</span>
+            <strong>4</strong>
+          </div>
+          <div className="room-detail">
+            <span>Inspected</span>
+            <strong>60</strong>
+          </div>
         </div>
-        <div>
-          <strong>30</strong> available room
+        <div className="room-column">
+          <div className="room-header">
+            <span>available room</span>
+            <strong>30</strong>
+          </div>
+          <div className="room-detail">
+            <span>Clean</span>
+            <strong>20</strong>
+          </div>
+          <div className="room-detail">
+            <span>Dirty</span>
+            <strong>4</strong>
+          </div>
+          <div className="room-detail">
+            <span>Inspected</span>
+            <strong>20</strong>
+          </div>
         </div>
-        <div>Clean: 90 / 20</div>
-        <div>Dirty: 4 / 4</div>
-        <div>Inspected: 60 / 20</div>
       </div>
     </section>
   )

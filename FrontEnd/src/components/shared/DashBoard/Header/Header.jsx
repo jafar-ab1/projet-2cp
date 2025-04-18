@@ -1,12 +1,18 @@
+import React from "react"
 import "./Header.css"
 
 const Header = () => {
+  // Format the current date
+  const today = new Date()
+  const options = { weekday: "long", month: "long", day: "numeric", year: "numeric" }
+  const formattedDate = today.toLocaleDateString("en-US", options).toLowerCase()
+
   return (
     <header className="header">
       <div className="search-bar">
         <input type="text" placeholder="Search for rooms and offers" />
       </div>
-      <div className="date">friday,january 30,2025</div>
+      <div className="date">{formattedDate}</div>
       <div className="actions">
         <button className="notification">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
