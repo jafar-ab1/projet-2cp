@@ -8,10 +8,18 @@ const config = {
   port: 3000,
   jwt: {
     keys: {
-      secret: "Jonas_jonas_younes_younes_", 
+      secret: "ayzibceugfj-2023-freaesff-2026-jzhfjkfqkbf-G/:!!@", 
       expiresIn: '1h'
     }
   },
+  email: {
+    user: "nepasrepondre325@gmail.com",    
+    password: "eyqz oxlg nvlf zlcu", // wala motdepassPROJECT-2CP   
+    
+  },
+  
+  frontendUrl: "http://localhost:3000", // URL de votre frontend
+ 
 };
 
 module.exports= config;

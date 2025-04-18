@@ -20,6 +20,7 @@ const cleaningRoutes = require('./server/routes/cleaningRoutes');
 const tarifRoutes = require('./server/routes/tarifRoutes');
 const maintenaceRoutes = require('./server/routes/maitenanceRoutes');
 const dashRoutes = require('./server/routes/dashRoutes');
+const passwordRoutes = require('./server/routes/passwordRoutes');
 
 const app = express();
 const port = config.port;
@@ -29,16 +30,13 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(config.db.connectionString)  
-.then(() => {
-  User.syncIndexes().catch(() => console.log("failed to sync indices"));
-  return console.log('Connected to MongoDB');
-})
-.catch(err => console.error('Failed to connect to MongoDB', err));
-
+.then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
 
 
 // Utilisation des routes
 app.use('/dash', dashRoutes);
+app.use('/password', passwordRoutes);
 app.use('/auth', authRoutes); 
 app.use('/rooms', roomRoutes);
 app.use('/feed_backs', feedBackRoutes);
