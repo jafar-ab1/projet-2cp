@@ -1,6 +1,11 @@
+import { useEffect, useState } from 'react';
 import styles from './NavBar.module.css';
 import { Link } from 'react-router-dom';
 import useAuth from '../../../../hooks/auth/useAuth';
+import MenuButton from './MenuButton/MenuButton';
+import Links from './Links/Links';
+import LeftIcon from './LeftIcon/LeftIcon';
+import Menu from './Menu/Menu';
 
 export default function NavBar() {
   const {
@@ -8,58 +13,21 @@ export default function NavBar() {
     actions: { logout },
   } = useAuth();
 
+  const [isOpened, setIsOpened] = useState(false);
+  const toggle = () => setIsOpened((prev) => !prev);
+
+  useEffect(() => {
+    console.log(isOpened);
+  }, [isOpened]);
+
   return (
     <div className={styles.navbar}>
-      <div className={styles['left-section']}>
-        <p>
-          HOTEL
-          <br />
-          NAME
-        </p>
-      </div>
-      <ul className={styles['middle-section']}>
-        <li>
-          <Link to="/accomodation">Accommodation</Link>
-          <div className={styles['extra-links-container']}>
-            <div>
-              <Link to="/algiers">algiers</Link>
-            </div>
-            <div>
-              <Link to="/oran">oran</Link>
-            </div>
-            <div>
-              <Link to="/annaba">annaba</Link>
-            </div>
-          </div>
-        </li>
-        <li>
-          <Link to="/occasions">Occasions</Link>
-        </li>
-        <li>
-          <Link to="/events">Events</Link>
-        </li>
-        <li>
-          <Link to="/wellness">Wellness</Link>
-        </li>
-        <li>
-          <Link to="/dining">Dining</Link>
-          <div className={styles['extra-links-container']}>
-            <div>
-              <Link to="#">the gourmet spot</Link>
-            </div>
-            <div>
-              <Link to="#">the golden plate</Link>
-            </div>
-            <div>
-              <Link to="#">the coffee nook</Link>
-            </div>
-          </div>
-        </li>
-      </ul>
+      <LeftIcon />
+      <Links />
       <div className={styles['right-section']}>
         {accessToken ? (
           <button className={styles['sign-in']} onClick={logout}>
-            logout
+            Logout
           </button>
         ) : (
           <Link to="/sign-in">
@@ -67,21 +35,8 @@ export default function NavBar() {
           </Link>
         )}
       </div>
-      <button className={styles.button}>
-        <svg
-          width="16"
-          height="12"
-          viewBox="0 0 16 12"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className={styles.burger}
-        >
-          <path
-            d="M0 0H16V2H0V0ZM0 5H16V7H0V5ZM0 10H16V12H0V10Z"
-            fill="white"
-          />
-        </svg>
-      </button>
+      <MenuButton isOpened={isOpened} toggle={toggle} />
+      <Menu isOpened={isOpened} />
     </div>
   );
 }

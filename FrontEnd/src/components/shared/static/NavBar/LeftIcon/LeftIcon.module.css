@@ -1,0 +1,15 @@
+.container p {
+  font-size: 1rem;
+  font-weight: 400;
+  color: white;
+  text-transform: uppercase;
+  line-height: 34.72px;
+  position: relative;
+  z-index: 999;
+}
+
+@media (min-width: 1024px) {
+  .container p {
+    font-size: 1.3rem;
+  }
+}

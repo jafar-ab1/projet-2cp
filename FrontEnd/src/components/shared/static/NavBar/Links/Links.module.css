@@ -1,0 +1,121 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  display: none;
+  list-style: none;
+}
+
+.container > li > a {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 29.76px;
+  letter-spacing: 0;
+  text-transform: capitalize;
+  color: white;
+  text-decoration: none;
+}
+
+.container > li {
+  position: relative;
+}
+
+.extra-links-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: rgba(73, 68, 68, 0.56);
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  opacity: 0;
+  transform: translate(-50%, 0px);
+  transition: all 0.2s ease-in-out;
+  border-radius: 10px;
+}
+
+.extra-links-container > div {
+  padding: 20px 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100%;
+}
+
+.extra-links-container > div > a {
+  text-transform: capitalize;
+  color: white;
+  opacity: 71%;
+  font-size: 20px;
+}
+
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+  .container > li:hover > a ~ .extra-links-container {
+    opacity: 1;
+    transform: translate(-50%, 10px);
+  }
+
+  .extra-links-container > div:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 71%);
+  }
+}
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+  .container {
+    display: flex;
+  }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+  .container > li > a {
+    font-size: 1.3rem;
+  }
+}
+
+/* Extra large devices (large desktops, 1200px and up) */
+@media (min-width: 1024px) {
+  .container {
+    display: flex;
+  }
+
+  .extra-links-container:last-child > div:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 71%);
+    border-right: 0px;
+  }
+
+  .extra-links-container:last-child {
+    flex-direction: column;
+  }
+
+  .extra-links-container > div:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 71%);
+    border-bottom: 0px;
+  }
+
+  .extra-links-container {
+    flex-direction: row;
+  }
+
+  .extra-links-container > div {
+    padding: 20px 30px;
+  }
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
+  .extra-links-container:last-child > div:not(:last-child) {
+    border-right: 1px solid rgba(255, 255, 255, 71%);
+    border-bottom: 0px;
+  }
+
+  .extra-links-container:last-child {
+    flex-direction: row;
+  }
+}
