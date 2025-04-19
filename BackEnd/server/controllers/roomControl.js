@@ -41,9 +41,9 @@ exports.getByType = async(req, res) => {
 }
 
 exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type,facilities, bedType, status, price, floor} = req.body;
+    const {roomNumber, type,facilities, bedType, status0,status1, price, floor} = req.body;
     try{
-        const newRoom= new Room({roomNumber,facilities, type, bedType, status, price, floor});
+        const newRoom= new Room({roomNumber,facilities, type, bedType, status0,status1, price, floor});
         await newRoom.save();
         res.status(201).json(newRoom);
     }

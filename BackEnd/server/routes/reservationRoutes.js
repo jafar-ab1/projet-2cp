@@ -12,9 +12,6 @@ router.get('/', reservationController.getAllReservations);
 // Récupérer une réservation par son ID
 router.get('/:id',validate(idSchema, 'params'), reservationController.getReservationById);
 
-router.get('/today/in', reservationController.getCheck_in);
-
-router.get('/today/out', reservationController.getCheck_out);
 
 // Ajouter une nouvelle réservation
 router.post('/',validate(createSchema), reservationController.creatReservation);

@@ -36,7 +36,7 @@ const createSchema = Joi.object({
     'number.positive': 'Doit être positif',
     'any.required': 'Prix total est requis'
   }),
-  status: Joi.string().valid("pending", "confirmed", "cancelled").default('en attente').messages({
+  status: Joi.string().valid("Due in", "Checked out", "Due out", "Checked in").default('Due in').messages({
     'any.only': 'Statut invalide'
   })
 });
@@ -65,7 +65,7 @@ const updateSchema = Joi.object({
     'number.base': 'Doit être un nombre',
     'number.positive': 'Doit être positif'
   }),
-  status: Joi.string().valid("pending", "confirmed", "cancelled")
+  status: Joi.string().valid("Due in", "Checked out", "Due out", "Checked in")
 }).or('checkInDate', 'checkOutDate', 'totalPrice', 'status').messages({
   'object.missing': 'Au moins un champ doit être fourni'
 }).min(1);

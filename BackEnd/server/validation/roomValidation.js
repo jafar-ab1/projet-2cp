@@ -15,7 +15,10 @@ const createRoomSchema = Joi.object({
     'any.required': 'Le type de lit est obligatoire',
     'any.only': 'Le type de lit doit être Simple, Double'
   }),
-  status: Joi.string().valid('Occupied', 'Available','dirty','inspected').default('disponible').messages({
+  status0: Joi.string().valid('Occupied', 'Available','dirty','inspected').required().default('disponible').messages({
+    'any.only': 'Le statut doit être disponible, Occupied, Available, dirty ou inspected'
+  }),
+  status1: Joi.string().valid('available', 'booked','wailtelist').required().default('disponible').messages({
     'any.only': 'Le statut doit être disponible, Occupied, Available, dirty ou inspected'
   }),
   price: Joi.number().min(0).required().messages({
@@ -58,7 +61,8 @@ const updateRoomSchema = Joi.object({
         'number.min': 'Le prix ne peut pas être négatif',
         'any.required': 'Le prix est obligatoire'
       }),
-    status: Joi.string().optional().valid('Occupied', 'Available', 'dirty', 'inspected', 'clean'),
+    status0: Joi.string().optional().valid('Occupied', 'Available', 'dirty', 'inspected', 'clean'),
+    status1: Joi.string().valid('available', 'booked','wailtelist').default('disponible'),
     floor: Joi.string().optional()
   })
   .min(1) // Au moins un champ doit être fourni
@@ -85,17 +89,17 @@ const roomNumberSchema = Joi.object({
       })
 });
 
-const roomStatusSchema = Joi.object({
-  status : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
+const roomStatus0Schema = Joi.object({
+  status0 : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
 });
 
 const roomTypeCountSchema = Joi.object({
   type : Joi.string().valid('Standard', 'Deluxe', 'Suite').required()
 });
 
-const roomTypeAndStatusCountSchema = Joi.object({
+const roomTypeAndStatus0CountSchema = Joi.object({
   type : Joi.string().valid('Standard', 'Deluxe', 'Suite').required(),
-  status : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
+  status0 : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
 
 })
 
@@ -106,7 +110,7 @@ module.exports = {
   updateRoomSchema,
   roomTypeSchema,
   roomNumberSchema,
-  roomStatusSchema,
+  roomStatus0Schema,
   roomTypeCountSchema,
-  roomTypeAndStatusCountSchema
+  roomTypeAndStatus0CountSchema
 };

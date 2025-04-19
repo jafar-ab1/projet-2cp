@@ -14,7 +14,7 @@ const config = {
   },
   email: {
     user: "nepasrepondre325@gmail.com",    
-    password: "eyqz oxlg nvlf zlcu", // wala motdepassPROJECT-2CP   
+    password: "eyqz oxlg nvlf zlcu", //motdepassPROJECT-2CP ida bghit tdkhl f email   
     
   },
   

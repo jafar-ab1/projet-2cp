@@ -1,6 +1,7 @@
 const Floor = require('../models/Floor');
 const Reservation = require('../models/reservation');
 const Room = require('../models/Room');
+const User = require('../models/User');
 
 
 exports.countFloorStatus = async (req, res) => {
@@ -80,12 +81,12 @@ exports.getCheck_out = async (req,res) => {
 };
 
 
-exports.countRoomsByStatus = async (req, res) => {
+exports.countRoomsByStatus0 = async (req, res) => {
     try {
-        const {status} = req.params;
-        const statusCounts = await Room.countDocuments({status});
+        const {status0} = req.params;
+        const statusCounts = await Room.countDocuments({status0});
         res.status(200).json({ 
-        status,
+        status0,
         statusCounts
     });
     } catch (error) {
@@ -106,16 +107,16 @@ exports.countRoomsByType = async (req, res) => {
     }
 }
 
-exports.countRoomsByTypeAndStatus = async (req, res) => {
+exports.countRoomsByTypeAndStatus0 = async (req, res) => {
     try {
-        const { type, status } = req.params;
+        const { type, status0 } = req.params;
         const count = await Room.countDocuments({
-            type, status
+            type, status0
         });
 
         res.status(200).json({
             type,
-            status, 
+            status0, 
             count
         });
 
@@ -125,3 +126,28 @@ exports.countRoomsByTypeAndStatus = async (req, res) => {
         });
     }
 };
+
+exports.AddGuest = async (req, res) => {
+    try {
+        const {userId} = req.params;
+            
+        const reservation = await Reservation.findOne({userId});
+        if (!reservation) res.status(404).json({ message: 'reservation non trouvé' });
+
+        const userReserve = await User.findById(userId);
+        if (!userReserve) res.status(404).json({ message: 'user non trouvé' });
+
+        const roomReserve = await Room.findById(reservation.roomId);
+        if (!roomReserve) res.status(404).json({ message: 'room non trouvé' });
+        
+        
+        res.status(200).json({
+            reservation,
+            user: userReserve,
+            room:  roomReserve
+    });
+    }
+    catch(error){
+        res.status(500).json({ message: error.message })
+    }
+}

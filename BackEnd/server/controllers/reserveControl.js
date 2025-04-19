@@ -1,4 +1,10 @@
 const Reservation = require('../models/reservation');
+const User = require('../models/User');
+const Room = require('../models/Room')
+
+const nodemailer = require('nodemailer');
+const config = require('../../config');
+
 
 exports.getAllReservations = async (req, res) => {
     try {
@@ -21,76 +27,64 @@ exports.getReservationById = async(req, res) => {
     }
 };
 
-exports.getCheck_in = async (req,res) => {
-    try{
-        const todayDate = new Date();
-        const startDay = new Date(todayDate);
-        startDay.setHours(0,0,0,0);
-        const endDay = new Date(todayDate);
-        endDay.setHours(23, 59, 59, 999);
-
-        const count = await Reservation.countDocuments({
-            checkInDate: {
-                $gte: startDay,
-                $lte: endDay
-            }
-        })
-        
-        res.status(200).json(
-            
-            count
-        )
-    }
-    catch (error) {
-        res.status(500).json({
-            error: error.message
-        });
-    }
-};
-
-exports.getCheck_out = async (req,res) => {
-    try{
-        const todayDate = new Date();
-        const startDay = new Date(todayDate);
-        startDay.setHours(0,0,0,0);
-        const endDay = new Date(todayDate);
-        endDay.setHours(23, 59, 59, 999);
-
-        const count = await Reservation.countDocuments({
-            checkOutDate: {
-                $gte: startDay,
-                $lte: endDay
-            }
-        })
-        
-        res.status(200).json(
-            count
-        )
-    }
-    catch (error) {
-        res.status(500).json({
-            error: error.message
-        });
-    }
-};
-
 
 exports.creatReservation = async(req, res) =>{
-    
-try {
-    await Reservation.collection.dropIndex("reservationId_1");
-} catch (e) {
-    console.log("Index déjà supprimé ou inexistant");
-}
-    
     const {userId, roomId, checkInDate, checkOutDate, totalPrice, status} = req.body;
     try{
         const newReservation= new Reservation({userId, roomId, checkInDate, checkOutDate, totalPrice, status});
         await newReservation.save();
-        res.status(201).json(newReservation);
+    
+
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: config.email.user,
+          pass: config.email.password,
+        },
+      });
+
+      const reservationWithDetails = await Reservation.findById(newReservation._id);
+
+      const user = await User.findById(newReservation.userId);
+
+      const room = await Room.findById(newReservation.roomId);
+
+    const mailOptions = {
+      from: config.email.user,
+      to: user.email,
+      subject: 'Confirmation de votre réservation',
+      html: `
+        <h1>Confirmation de réservation</h1>
+        <p>Bonjour ${user.fullName},</p>
+        <p>Votre réservation a bien été enregistrée :</p>
+        <ul>
+          <li>Référence de reservation: ${newReservation._id}</li>
+          <li>numero de la Chambre: ${room.roomNumber}</li>
+          <li>Arrivée: ${new Date(checkInDate).toLocaleDateString()}</li>
+          <li>Départ: ${new Date(checkOutDate).toLocaleDateString()}</li>
+          <li>Prix total: ${totalPrice} €</li>
+        </ul>
+        <p>Merci pour votre confiance !</p>
+      `
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log("Email de confirmation envoyé");
+      } catch (emailError) {
+        console.error("Erreur d'envoi d'email:", emailError);
+        // Ne pas renvoyer d'erreur au client pour un échec d'email
+      }
+
+    res.status(201).json(newReservation);
+      
     }
     catch(error){
-        res.status(500).json({ message: error.message });
+        console.error("Erreur lors de la création:", error);
+    res.status(500).json({ 
+      message: "Erreur lors de la création de la réservation",
+      error: error.message 
+    });
     }
 }
 
