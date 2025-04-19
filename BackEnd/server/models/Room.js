@@ -1,9 +1,7 @@
 const { required } = require('joi');
 const mongoose = require('mongoose');
-const { nanoid } = require('nanoid');
 
 const roomScehma = new mongoose.Schema({
-    id: {type: String ,default: () => nanoid(8)},
     roomNumber: {type:Number, unique:true, required:true},
     type:{type:String, enum:['Standard', 'Deluxe', 'Suite'], required:true},
     bedType: { type: String, required: true ,  enum: ['Simple', 'Double']},

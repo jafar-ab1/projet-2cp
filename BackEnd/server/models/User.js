@@ -1,9 +1,7 @@
 const mongoose= require('mongoose');
 const bcrypt = require('bcryptjs');
-const { nanoid } = require('nanoid');
 
 const userSchema = new mongoose.Schema({
-    id: {type: String ,default: () => nanoid(8)},
     fullName: { type: String, required: true },  
     email : {type:String, required:true, unique:true},
     password : {type:String, required:true, minlength: 8},

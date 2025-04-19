@@ -129,13 +129,14 @@ exports.countRoomsByTypeAndStatus0 = async (req, res) => {
 
 exports.AddGuest = async (req, res) => {
     try {
-        const {userId} = req.params;
-            
-        const reservation = await Reservation.findOne({userId});
-        if (!reservation) res.status(404).json({ message: 'reservation non trouvé' });
+        const {email} = req.params;
 
-        const userReserve = await User.findById(userId);
-        if (!userReserve) res.status(404).json({ message: 'user non trouvé' });
+        const user = await User.findOne({email});
+        if (!user) res.status(404).json({ message: 'reservation non trouvé' });
+            
+        const reservation = await Reservation.findOne({ userId: user._id });
+        if (!reservation) res.status(404).json({ message: 'reservation non trouvé' });
+        if (reservation.status="Due in") return reservation.status = "Checked in";
 
         const roomReserve = await Room.findById(reservation.roomId);
         if (!roomReserve) res.status(404).json({ message: 'room non trouvé' });
@@ -143,7 +144,7 @@ exports.AddGuest = async (req, res) => {
         
         res.status(200).json({
             reservation,
-            user: userReserve,
+            user,
             room:  roomReserve
     });
     }
