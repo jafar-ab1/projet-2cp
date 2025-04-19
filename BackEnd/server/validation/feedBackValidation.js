@@ -7,7 +7,7 @@ const createSchema = Joi.object({
     'string.max': 'Le commentaire ne peut pas dépasser 500 caractères',
     'any.required': 'Le commentaire est obligatoire'
   }),
-  date: Joi.date().default(Date.now).messages({
+  date: Joi.date().required().messages({
     'date.base': 'Doit être une date valide'
   }),
   userId: Joi.string().hex().length(24).required().messages({

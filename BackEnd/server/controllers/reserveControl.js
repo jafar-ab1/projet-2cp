@@ -15,6 +15,7 @@ exports.getAllReservations = async (req, res) => {
     }
   };
 
+
 exports.getReservationById = async(req, res) => {
     try {
     const reservation = await Reservation.findById(req.params.id);
@@ -86,6 +87,7 @@ exports.creatReservation = async(req, res) =>{
     }
 }
 
+
 exports.modifyReservation = async(req, res) =>{
 try{
     const reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {new:true});
@@ -96,6 +98,7 @@ catch(error){
     res.status(500).json({ message: error.message });
 }
 }
+
 
 exports.suppReservation = async(req, res) => {
     try{

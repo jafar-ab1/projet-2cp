@@ -1,6 +1,7 @@
 const Feed_back = require('../models/feed_back');
 
 
+
 exports.getAllFeed_backs = async (req, res) => {
     try {
       const feed_back = await Feed_back.find();
@@ -12,7 +13,6 @@ exports.getAllFeed_backs = async (req, res) => {
 
 
 exports.getFeed_back = async(req, res) => {
-    
     try{
         const {userId, roomId}  =req.params;
         const feed_back = await Feed_back.findOne({userId, roomId}).populate('userId roomId');
@@ -24,6 +24,51 @@ exports.getFeed_back = async(req, res) => {
         res.status(500).json({message:'error page'});
     }
 }
+
+exports.getFeed_backCurrentMonth = async (req, res) => {
+    try {
+        const currentDate = new Date();
+        const firstDayOfMonth = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth(),
+            1
+        );
+          
+        const lastDayOfMonth = new Date(
+            currentDate.getFullYear(),
+            currentDate.getMonth() + 1,
+            0,
+            23, 59, 59
+        );
+
+
+        const feedbacks = await Feed_back.find({
+            createdAt: {
+                $gte: firstDayOfMonth,
+                $lte: lastDayOfMonth
+            }
+        })
+        .sort({ createdAt: -1 }) 
+        .populate('userId', 'name email');
+
+        res.status(200).json({
+            period: {
+                start: firstDayOfMonth,
+                end: lastDayOfMonth,
+                month: currentDate.toLocaleString('fr-FR', { month: 'long', year: 'numeric' })
+            },
+            data: feedbacks,
+            statistics: stats
+        });
+    } catch (error) {
+        console.error('Erreur:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erreur serveur',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
 
 exports.creatFeed_back = async(req, res) => {
     try{

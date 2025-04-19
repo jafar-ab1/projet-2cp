@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "date-fns": "^4.1.0",
     "express-validator": "^7.2.1",
     "joi": "^17.13.3",
     "mongodb": "5.5",
