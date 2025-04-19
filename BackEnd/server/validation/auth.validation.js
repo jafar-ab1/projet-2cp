@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 export const registerUserValidationSchema = Joi.object({
-    email: Joi.string().email().required().messages({
+    email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
         "string.email": "email must be of type Email",
         "any.required": "email is required"
     }),
@@ -25,8 +25,8 @@ export const registerUserValidationSchema = Joi.object({
 });
 
 export const loginUserValidationSchema = Joi.object({
-    email: Joi.string().email().required().messages({
-        "string.email": "email must be an email",
+    email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+        "string.email": "email must be of type Email",
         "any.required": "email is required"
     }),
     password: Joi.string().min(8).required().messages({

@@ -2,7 +2,7 @@
 const Joi = require('joi');
 
 const userSchema = Joi.object({
-    username: Joi.string()
+  fullName: Joi.string()
     .min(2)
     .max(50)
     .required()
@@ -12,13 +12,10 @@ const userSchema = Joi.object({
       'any.required': 'Le nom est obligatoire'
     }),
 
-  email: Joi.string()
-    .email()
-    .required()
-    .messages({
-      'string.email': 'Veuillez fournir un email valide',
-      'any.required': 'L\'email est obligatoire'
-    }),
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+          "string.email": "email must be of type Email",
+          "any.required": "email is required"
+      }),
 
   password: Joi.string()
     .min(6)
@@ -29,10 +26,10 @@ const userSchema = Joi.object({
     }),
 
     userRole: Joi.string()
-    .valid('client', 'admin')
-    .default('client')
+    .valid('Client', 'Admin')
+    .default('Client')
     .messages({
-      'any.only': 'Le rôle doit être client, admin ou employé'
+      'any.only': 'Le rôle doit être Client, Admin'
     }),
 
   telephone: Joi.string()

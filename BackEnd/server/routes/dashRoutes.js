@@ -23,10 +23,8 @@ router.get('/inHotel', dashConrtoll.inHotel);
 router.get('/countStatus/:status0', validate(roomScehma.roomStatus0Schema, 'params'), dashConrtoll.countRoomsByStatus0); //Available, Occupied
 
 
-
 //roomStatus
 router.get('/count/:status0/:type', validate(roomScehma.roomTypeAndStatus0CountSchema, 'params'), dashConrtoll.countRoomsByTypeAndStatus0);
-
 
 
 //rooms
