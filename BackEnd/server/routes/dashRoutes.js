@@ -18,6 +18,8 @@ router.get('/today/out', dashConrtoll.getCheck_out);
 
 router.get('/addGuest/:userId', dashConrtoll.AddGuest);
 
+router.get('/inHotel', dashConrtoll.inHotel);
+
 //room
 router.get('/countStatus/:status0', validate(roomScehma.roomStatus0Schema, 'params'), dashConrtoll.countRoomsByStatus0);
 
