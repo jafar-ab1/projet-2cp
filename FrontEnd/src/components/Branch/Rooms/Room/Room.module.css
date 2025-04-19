@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.image-container {
+  width: 100%;
+  height: 500px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.info-container {
+  position: relative;
+  top: -50px;
+  width: 90%;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--beige-background-color);
+}
+
+.city {
+  text-transform: capitalize;
+  font-size: 16px;
+}
+
+.room-type {
+  text-transform: capitalize;
+  font-size: 28px;
+  font-weight: bold;
+  color: #494444;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.details > p {
+  font-size: 20px;
+}
+
+.details > p > strong {
+  font-size: 20px;
+  color: black;
+  font-weight: bold;
+}
+
+.recommendation {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.info-container > button {
+  margin-top: 20px;
+  width: fit-content;
+  padding: 15px;
+  border: 2px solid #837453;
+  border-radius: 10px;
+  background-color: transparent;
+}
+
+.info-container > button > a {
+  color: #837453;
+  text-transform: capitalize;
+  font-size: 20px;
+}

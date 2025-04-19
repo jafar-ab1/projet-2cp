@@ -26,6 +26,7 @@ import Dashboard from './pages/Dashboard/HomePage/Dashboard.jsx';
 import Accomodation from './pages/Accomodation/Accomodation.jsx';
 
 import Home from './pages/Home/Home.jsx';
+import Branches from './pages/Branches/Branches.jsx';
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
         {/* Landing layout for main pages */}
         <Route path="/" element={<LandingPageLayout />}>
           <Route index element={<Home />} />
-          <Route path="accomodation" element={<Page2 />} />
+          <Route path="accomodation" element={<Accomodation />} />
           <Route path="algiers" element={<Page3 />} />
           <Route path="dining" element={<Page4 />} />
           <Route path="gourmet" element={<Page5 />} />
@@ -50,8 +51,8 @@ function App() {
 
         {/* Dashboard and FrontDesk pages (you can wrap in dashboard layout if needed) */}
         <Route path="/Dashboard" element={<Dashboard />} />
-      <Route path="/front-desk" element={<FrontDesk/>} />
-        <Route path="/test" element={<Accomodation />} />
+        <Route path="/front-desk" element={<FrontDesk />} />
+        <Route path="/test" element={<Branches />} />
         <Route path="/guest" element={<Guests />} />
         <Route path="/deal" element={<Deals />} />
         <Route path="/rooms" element={<Rooms />} />

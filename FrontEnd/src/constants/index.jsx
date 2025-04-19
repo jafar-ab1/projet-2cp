@@ -73,3 +73,6 @@ export const menuLinks = [
     ],
   },
 ];
+
+import { branches as branchList } from './branches';
+export const branches = branchList;
