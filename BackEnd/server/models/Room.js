@@ -6,8 +6,8 @@ const roomScehma = new mongoose.Schema({
     type:{type:String, enum:['Standard', 'Deluxe', 'Suite'], required:true},
     bedType: { type: String, required: true ,  enum: ['Simple', 'Double']},
     facilities: { type: [String], required: true },
-    status0: { type: String, enum: ['Occupied', 'Available','dirty','inspected','clean'], default:'available', required: true},
-    status1: { type: String, enum: ['available', 'booked','wailtelist'], default:'available', required: true},
+    status0: { type: String, enum: ['Occupied', 'Available','Dirty','Inspected','Clean'], default:'Available', required: true},
+    status1: { type: String, enum: ['Available', 'Booked','Wailtelist'], default:'Available', required: true},
     floor:{type:String, required: true},
     price: {type:Number, required: true}
 })

@@ -6,9 +6,10 @@ const createCleaningSchema = Joi.object({
     'any.required': 'Le numéro de chambre est obligatoire',
     'string.empty': 'Le numéro de chambre ne peut pas être vide'
   }),
-  status: Joi.string().required().messages({
+  status: Joi.string().valid("Clean", "Dirty", "Inspected").required().messages({
     'any.required': 'Le statut est obligatoire',
-    'string.empty': 'Le statut ne peut pas être vide'
+    'string.empty': 'Le statut ne peut pas être vide',
+    'any.only': 'le status doit etre Clean or Dirty or Inspected '
   }),
   lastCleaned: Joi.date().required().messages({
     'any.required': 'La date de dernier nettoyage est obligatoire',

@@ -37,7 +37,7 @@ const createSchema = Joi.object({
     'any.required': 'Prix total est requis'
   }),
   status: Joi.string().valid("Due in", "Checked out", "Due out", "Checked in").default('Due in').messages({
-    'any.only': 'Statut invalide'
+    'any.only': 'Statut doit être  Due in,  Checked out, Due out, Checked in'
   })
 });
 

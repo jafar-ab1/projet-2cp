@@ -43,8 +43,6 @@ exports.creatReservation = async(req, res) =>{
         },
       });
 
-      const reservationWithDetails = await Reservation.findById(newReservation._id);
-
       const user = await User.findById(newReservation.userId);
 
       const room = await Room.findById(newReservation.roomId);

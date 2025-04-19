@@ -25,8 +25,8 @@ const createPaymentSchema = Joi.object({
     'date.base': 'Date de paiement invalide',
     'any.required': 'La date de paiement est obligatoire'
   }),
-  paymentMethod: Joi.string().valid("credit_card", "paypal", "cash").required().messages({
-    'any.only': 'Méthode de paiement invalide',
+  paymentMethod: Joi.string().valid("Credit_card", "Paypal", "Cash").required().messages({
+    'any.only': 'Méthode de paiement invalide doit etre Credit_card, Paypal, Cash',
     'any.required': 'La méthode de paiement est obligatoire'
   })
 });

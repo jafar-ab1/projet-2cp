@@ -22,7 +22,7 @@ const updateFloorSchema = Joi.object({
     'string.empty': 'Le numéro d\'étage ne peut pas être vide'
   }),
   status: Joi.string().valid('Complété', 'À compléter').messages({
-    'any.only': 'Le statut doit être actif, inactif ou maintenance'
+    'any.only': 'Le statut doit être Complété, À compléter'
   })
 }).or('floorNumber', 'status'); 
 
