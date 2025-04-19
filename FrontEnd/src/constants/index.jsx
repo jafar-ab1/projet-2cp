@@ -76,3 +76,9 @@ export const menuLinks = [
 
 import { branches as branchList } from './branches';
 export const branches = branchList;
+
+import { spots as spotList } from './spots';
+export const spots = spotList;
+
+import { accomodationPageBranches } from './accomodation';
+export const accomodationBranches = accomodationPageBranches;

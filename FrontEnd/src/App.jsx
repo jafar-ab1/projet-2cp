@@ -26,6 +26,7 @@ import Accomodation from './pages/Accomodation/Accomodation.jsx';
 
 import Home from './pages/Home/Home.jsx';
 import Branches from './pages/Branches/Branches.jsx';
+import Dinning from './pages/Dinning/Dinning.jsx';
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
         {/* Dashboard and FrontDesk pages (you can wrap in dashboard layout if needed) */}
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/front-desk" element={<FrontDesk />} />
-        <Route path="/test" element={<Branches />} />
+        <Route path="/test" element={<Dinning />} />
         <Route path="/guest" element={<Guests />} />
         <Route path="/deal" element={<Deals />} />
         <Route path="/rooms" element={<Rooms />} />

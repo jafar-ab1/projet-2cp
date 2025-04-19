@@ -38,6 +38,7 @@
   color: white;
   font-weight: 400;
   font-size: 16px;
+  text-transform: capitalize;
 }
 
 .buttons-container {
@@ -61,6 +62,7 @@
 }
 
 .buttons-container > button > a {
+  text-transform: capitalize;
   width: fit-content;
   display: flex;
   justify-content: center;
