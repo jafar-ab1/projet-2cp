@@ -23,6 +23,7 @@
   font-weight: 700;
   margin: 0 auto;
   color: white;
+  text-transform: capitalize;
 }
 
 .par2 {
@@ -30,6 +31,7 @@
   font-size: 0.8rem;
   color: white;
   font-weight: 400;
+  text-transform: capitalize;
 }
 
 .buttons {

@@ -19,7 +19,6 @@ import Guests from './pages/Dashboard/Guests/Guests.jsx';
 import Deals from './pages/Dashboard/Deals/Deals.jsx';
 import Rooms from './pages/Dashboard/Rooms/Rooms.jsx';
 import Rates from './pages/Dashboard/Rates/Rates.jsx';
-import LandingPageLayout from './layouts/LandingPageLayout/Landing-page.layout.jsx';
 import SignPageLayout from './layouts/SignPageLayout/Sign-page.layout.jsx';
 
 import Dashboard from './pages/Dashboard/HomePage/Dashboard.jsx';
@@ -33,21 +32,19 @@ function App() {
     <Router>
       <Routes>
         {/* Landing layout for main pages */}
-        <Route path="/" element={<LandingPageLayout />}>
-          <Route index element={<Home />} />
-          <Route path="accomodation" element={<Accomodation />} />
-          <Route path="algiers" element={<Page3 />} />
-          <Route path="dining" element={<Page4 />} />
-          <Route path="gourmet" element={<Page5 />} />
-          <Route path="golden" element={<Page6 />} />
-          <Route path="nook" element={<Page7 />} />
-          <Route path="occasions" element={<Page8 />} />
-          <Route path="events" element={<Page9 />} />
-          <Route path="wellness" element={<Page10 />} />
-          <Route path="book" element={<Booking />} />
-          <Route path="choose" element={<Page12 />} />
-          <Route path="checkOut" element={<Page13 />} />
-        </Route>
+        <Route index element={<Home />} />
+        <Route path="accomodation" element={<Accomodation />} />
+        <Route path="branches" element={<Branches />} />
+        <Route path="dining" element={<Page4 />} />
+        <Route path="gourmet" element={<Page5 />} />
+        <Route path="golden" element={<Page6 />} />
+        <Route path="nook" element={<Page7 />} />
+        <Route path="occasions" element={<Page8 />} />
+        <Route path="events" element={<Page9 />} />
+        <Route path="wellness" element={<Page10 />} />
+        <Route path="book" element={<Booking />} />
+        <Route path="choose" element={<Page12 />} />
+        <Route path="checkOut" element={<Page13 />} />
 
         {/* Dashboard and FrontDesk pages (you can wrap in dashboard layout if needed) */}
         <Route path="/Dashboard" element={<Dashboard />} />
