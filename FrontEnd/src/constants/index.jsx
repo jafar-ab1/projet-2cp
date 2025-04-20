@@ -82,3 +82,6 @@ export const spots = spotList;
 
 import { accomodationPageBranches } from './accomodation';
 export const accomodationBranches = accomodationPageBranches;
+
+import { dinning } from './dinning';
+export const dinningList = dinning;

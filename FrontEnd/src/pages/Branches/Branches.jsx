@@ -1,15 +1,8 @@
-import { useLocation } from 'react-router-dom';
-
+import { useQuery } from '../../hooks/index';
 import { branches } from '../../constants/index';
 
 import NotFound from '../../pages/NotFound/NotFound';
 import Branch from '../../components/Branch/Branch';
-
-function useQuery() {
-  const location = useLocation();
-  const { search } = location;
-  return new URLSearchParams(search);
-}
 
 export default function Branches() {
   const query = useQuery();

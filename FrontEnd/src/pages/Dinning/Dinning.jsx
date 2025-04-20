@@ -1,11 +1,31 @@
-import backgroundImage from '../../assets/pexels-pixabay-262978.jpg';
+import { useQuery } from '../../hooks';
+
 import styles from './Dinning.module.css';
+import backgroundImage from '../../assets/pexels-pixabay-262978.jpg';
 
 import Hero from '../../components/shared/static/Hero/Hero';
 import Footer from '../../components/shared/Footer/Footer';
 import Spots from '../../components/Dinning/Spots/Spots';
 
+import { dinningList } from '../../constants';
+
+import DinningSpot from '../DinningSpot/DinningSpot';
+import NotFound from '../NotFound/NotFound';
+
 export default function Dinning() {
+  const query = useQuery();
+  const kind = query.get('spot');
+
+  const spot = dinningList.find((spot) => spot.name == kind);
+
+  if (spot) {
+    return <DinningSpot spot={spot} />;
+  }
+
+  if (spot !== null) {
+    return <NotFound />;
+  }
+
   return (
     <div className={styles.page}>
       <Hero

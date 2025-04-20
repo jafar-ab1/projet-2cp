@@ -6,6 +6,7 @@ import Branches from '../../components/Home/sections/Branches/Branches.jsx';
 import Features from '../../components/Home/sections/Features/Features.jsx';
 import Delight from '../../components/Home/sections/Delight/Delight.jsx';
 import FeedBacks from '../../components/Home/sections/FeedBacks/FeedBacks.jsx';
+import Footer from '../../components/shared/Footer/Footer';
 
 function Home() {
   return (
@@ -20,6 +21,7 @@ function Home() {
       <Features />
       <Delight />
       <FeedBacks />
+      <Footer />
     </div>
   );
 }

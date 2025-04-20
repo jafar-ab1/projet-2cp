@@ -36,7 +36,7 @@ function App() {
         <Route index element={<Home />} />
         <Route path="accomodation" element={<Accomodation />} />
         <Route path="branches" element={<Branches />} />
-        <Route path="dining" element={<Page4 />} />
+        <Route path="dinning" element={<Dinning />} />
         <Route path="gourmet" element={<Page5 />} />
         <Route path="golden" element={<Page6 />} />
         <Route path="nook" element={<Page7 />} />
