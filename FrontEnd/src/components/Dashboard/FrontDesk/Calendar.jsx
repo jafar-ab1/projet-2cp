@@ -29,8 +29,8 @@ export default function Calendar() {
   const bookings = [
     { id: 1, name: "Ahmed", month: "Mar", startDay: 2, endDay: 19, colorClass: "booking-amber" },
     { id: 2, name: "Mohammed", month: "Feb", startDay: 1, endDay: 28, colorClass: "booking-blue" },
-    { id: 3, name: "Khadija", month: "Feb", startDay: 4, endDay: 16, colorClass: "booking-olive" },
-    { id: 4, name: "Abdalhak", month: "Apr", startDay: 6, endDay: 7, colorClass: "booking-rose" },
+    { id: 3, name: "Jonas", month: "Feb", startDay: 4, endDay: 16, colorClass: "booking-olive" },
+    { id: 4, name: "Alya", month: "Apr", startDay: 6, endDay: 7, colorClass: "booking-rose" },
     { id: 5, name: "Zineb", month: "Feb", startDay: 7, endDay: 9, colorClass: "booking-olive" },
     { id: 6, name: "Rania", month: "Jun", startDay: 9, endDay: 10, colorClass: "booking-rose" },
     { id: 7, name: "Salim", month: "Feb", startDay: 2, endDay: 4, colorClass: "booking-amber" },
