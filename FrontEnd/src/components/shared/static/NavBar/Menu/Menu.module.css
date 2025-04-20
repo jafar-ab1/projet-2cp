@@ -1,5 +1,5 @@
 .menu {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -26,4 +26,31 @@
   justify-content: center;
   flex-direction: column;
   gap: 20px;
+}
+
+.button {
+  position: absolute;
+  bottom: 50px;
+  right: 50px;
+  padding: 10px 20px;
+  background-color: white;
+  border-radius: 10px;
+  border: 0px;
+  outline: 0px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.button > a {
+  color: black;
+  font-size: 20px;
+  text-transform: capitalize;
+}
+
+.button:hover {
+  transform: scale(105%);
+}
+
+.button:focus {
+  transform: scale(95%);
 }
