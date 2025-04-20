@@ -1,2 +1,2 @@
 # Hotel Management System
-better sales == good website == good team
+better sales == good website == good team.
