@@ -28,6 +28,7 @@ import Home from './pages/Home/Home.jsx';
 import Branches from './pages/Branches/Branches.jsx';
 import Dinning from './pages/Dinning/Dinning.jsx';
 import Occasions from './pages/Occasions/Occasions.jsx';
+import Events from './pages/Events/Events.jsx';
 
 function App() {
   return (
@@ -38,10 +39,7 @@ function App() {
         <Route path="accomodation" element={<Accomodation />} />
         <Route path="branches" element={<Branches />} />
         <Route path="dinning" element={<Dinning />} />
-        <Route path="gourmet" element={<Page5 />} />
-        <Route path="golden" element={<Page6 />} />
-        <Route path="nook" element={<Page7 />} />
-        <Route path="occasions" element={<Page8 />} />
+        <Route path="occasions" element={<Occasions />} />
         <Route path="events" element={<Page9 />} />
         <Route path="wellness" element={<Page10 />} />
         <Route path="book" element={<Booking />} />
@@ -51,7 +49,7 @@ function App() {
         {/* Dashboard and FrontDesk pages (you can wrap in dashboard layout if needed) */}
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/front-desk" element={<FrontDesk />} />
-        <Route path="/test" element={<Occasions />} />
+        <Route path="/test" element={<Events />} />
         <Route path="/guest" element={<Guests />} />
         <Route path="/deal" element={<Deals />} />
         <Route path="/rooms" element={<Rooms />} />
