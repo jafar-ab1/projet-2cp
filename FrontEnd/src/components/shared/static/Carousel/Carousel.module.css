@@ -12,6 +12,17 @@
   z-index: 2;
 }
 
+.inner-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
 .container {
   position: relative;
 }
@@ -36,9 +47,11 @@
 
 .inner-container > div > p {
   color: white;
-  font-weight: 400;
+  font-weight: bold;
   font-size: 16px;
   text-transform: capitalize;
+  position: relative;
+  z-index: 20;
 }
 
 .buttons-container {
@@ -98,10 +111,6 @@
 
   .inner-container {
     width: 700px;
-  }
-
-  .inner-container::after {
-    width: 150px;
   }
 
   .inner-container > div > p {
