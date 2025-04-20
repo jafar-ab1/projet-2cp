@@ -1,9 +1,31 @@
-import "./OccupancyStatistic.css"
+import { useEffect, useState } from "react";
+import { getOccupancyByMonth } from "../../../api/index"; // adjust the path as needed
+import "./OccupancyStatistic.css";
 
 const OccupancyStatistics = () => {
-  // Data from the image
-  const occupancyData = [60, 70, 100, 65, 95, 85, 95, 75, 65, 75, 85, 95]
-  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  const [occupancyData, setOccupancyData] = useState(Array(12).fill(0));
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  useEffect(() => {
+    const fetchAllMonths = async () => {
+      const data = [...occupancyData];
+
+      for (let i = 0; i < months.length; i++) {
+        try {
+          const res = await getOccupancyByMonth(months[i]);
+          data[i] = res.occupationRate;
+        } catch (error) {
+          console.warn(`No data for ${months[i]}`);
+          data[i] = 0; // fallback if data is missing
+        }
+      }
+
+      setOccupancyData(data);
+    };
+
+    fetchAllMonths();
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <section className="occupancy-statistics">
@@ -17,7 +39,7 @@ const OccupancyStatistics = () => {
         ))}
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default OccupancyStatistics
+export default OccupancyStatistics;

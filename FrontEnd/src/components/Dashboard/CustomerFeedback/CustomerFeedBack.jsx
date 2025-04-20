@@ -1,26 +1,47 @@
-import "./CustomerFeedback.css"
+import { useEffect, useState } from "react";
+import { getAllFeedbacks } from "../../../api/index"; // 👈 Adjust the path if needed
+import "./CustomerFeedback.css";
 
 const CustomerFeedback = () => {
-  const feedback = [
-    { name: "Ahmed", comment: "Food could be better", room: "A101" },
-    { name: "Mohammed", comment: "Cleaning could be better", room: "A90" },
-    { name: "Asmaa", comment: "I loved the SPA", room: "A104" },
-  ]
+  const [feedback, setFeedback] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const data = await getAllFeedbacks();
+        setFeedback(data);
+      } catch (error) {
+        console.error("Error fetching feedback:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFeedback();
+  }, []);
 
   return (
     <section className="customer-feedback">
       <h3>Customers feedback</h3>
-      <ul>
-        {feedback.map((item, index) => (
-          <li key={index}>
-            <strong>{item.name}</strong>
-            <span>{item.comment}</span>
-            <em>{item.room}</em>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
-}
 
-export default CustomerFeedback
+      {isLoading ? (
+        <p>Loading feedback...</p>
+      ) : feedback.length === 0 ? (
+        <p>No feedback available yet.</p>
+      ) : (
+        <ul>
+          {feedback.map((item, index) => (
+            <li key={index}>
+              <strong>{item.userId?.name || "Anonymous"}</strong>
+              <span>{item.comment}</span>
+              <em>{item.roomId?.number || "Unknown Room"}</em>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+};
+
+export default CustomerFeedback;

@@ -11,7 +11,8 @@ const useAuth = create((set) => {
   } catch (error) {
     console.error("Erreur lors du parsing de l'utilisateur :", error);
     savedUser = null;
-  }
+  } 
+
 
   return {
     user: savedUser,
