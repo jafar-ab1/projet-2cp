@@ -1,26 +1,55 @@
 const Joi = require('joi');
 
 // Schéma pour les paramètres d'URL
-const idSchema = Joi.object({
-  id: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID invalide',
-    'string.length': 'ID doit contenir 24 caractères',
-    'any.required': 'ID est requis'
-  })
+const emailSchema = Joi.object({
+   email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+            "string.email": "email must be of type Email",
+            "any.required": "email is required"
+        })
 });
+
+const emailAndRoomNumberSchema = Joi.object({
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+    "string.email": "email must be of type Email",
+    "any.required": "email is required"
+}), 
+roomNumber: Joi.array()
+        .items(
+          Joi.number().required().messages({
+              'string.empty': 'Le numéro de chambre est obligatoire',
+              'any.required': 'Le numéro de chambre est obligatoire'
+          })
+        )
+        .min(1)
+        .required()
+        .messages({
+          'array.base': 'Doit être un tableau',
+          'array.min': 'Au moins une chambre doit être spécifiée',
+          'any.required': 'Chambre(s) est/sont requise(s)'
+        })
+
+})
 
 // Schéma pour la création
 const createSchema = Joi.object({
-  userId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID client invalide',
-    'string.length': 'ID client doit contenir 24 caractères',
-    'any.required': 'ID client est requis'
-  }),
-  roomId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID chambre invalide',
-    'string.length': 'ID chambre doit contenir 24 caractères',
-    'any.required': 'ID chambre est requis'
-  }),
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+            "string.email": "email must be of type Email",
+            "any.required": "email is required"
+        }),
+  roomNumber: Joi.array()
+        .items(
+          Joi.number().required().messages({
+              'string.empty': 'Le numéro de chambre est obligatoire',
+              'any.required': 'Le numéro de chambre est obligatoire'
+          })
+        )
+        .min(1)
+        .required()
+        .messages({
+          'array.base': 'Doit être un tableau',
+          'array.min': 'Au moins une chambre doit être spécifiée',
+          'any.required': 'Chambre(s) est/sont requise(s)'
+        }),
   checkInDate: Joi.date().greater('now').required().messages({
     'date.base': 'Date invalide',
     'date.greater': 'La date d\'arrivée doit être dans le futur',
@@ -43,16 +72,22 @@ const createSchema = Joi.object({
 
 // Schéma pour la mise à jour
 const updateSchema = Joi.object({
-    userId: Joi.string().hex().length(24).messages({
-        'string.hex': 'ID client invalide',
-        'string.length': 'ID client doit contenir 24 caractères',
-        'any.required': 'ID client est requis'
-      }),
-      roomId: Joi.string().hex().length(24).messages({
-        'string.hex': 'ID chambre invalide',
-        'string.length': 'ID chambre doit contenir 24 caractères',
-        'any.required': 'ID chambre est requis'
-      }),
+    email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).messages({
+              "string.email": "email must be of type Email",
+              "any.required": "email is required"
+          }),
+    roomNumber: Joi.array()
+    .items(
+      Joi.number().required().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+      })
+    )
+    .min(1)
+    .messages({
+      'array.base': 'Doit être un tableau',
+      'array.min': 'Au moins une chambre doit être spécifiée',
+      'any.required': 'Chambre(s) est/sont requise(s)'
+    }),
   checkInDate: Joi.date().greater('now').messages({
     'date.base': 'Date invalide',
     'date.greater': 'Doit être dans le futur'
@@ -71,7 +106,8 @@ const updateSchema = Joi.object({
 }).min(1);
 
 module.exports = {
-  idSchema,
+  emailSchema,
   createSchema,
-  updateSchema
+  updateSchema, 
+  emailAndRoomNumberSchema
 };

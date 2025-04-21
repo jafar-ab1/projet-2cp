@@ -19,8 +19,8 @@ const createDealSchema = Joi.object({
     'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite',
     'any.required': 'Le type de chambre est requis'
   }),
-  status: Joi.string().valid('Active', 'Inactive').required().messages({
-    'any.only': 'Le statut doit être Active ou Inactive',
+  status: Joi.string().valid('Active', 'Inactive', 'Finished').required().messages({
+    'any.only': 'Le statut doit être Finished, Active ou Inactive',
     'any.required': 'Le statut est requis'
   })
 });

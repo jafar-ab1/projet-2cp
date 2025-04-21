@@ -19,11 +19,10 @@ const createSchema = Joi.object({
     'string.min': 'La description doit contenir au moins 10 caractères',
     'any.required': 'La description du problème est obligatoire'
   }),
-  userId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID utilisateur invalide',
-    'string.length': 'ID utilisateur doit contenir 24 caractères',
-    'any.required': 'ID utilisateur est requis'
-  }),
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+            "string.email": "email must be of type Email",
+            "any.required": "email is required"
+        }),
   status: Joi.string().valid("In-progress", "Completed").default('In-progress').messages({
     'any.only': 'Le statut doit être in-progress ou completed'
   }),

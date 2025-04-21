@@ -5,7 +5,7 @@ const occupationSchema = new mongoose.Schema({
     occupationRate: {type:Number, required:true},
     totalRooms: {type:Number, required:true},
     occupiedRooms: {type:Number, required:true},
-    availbleRooms: {type:Number, required:true}
+    availableRooms: {type:Number, required:true}
 })
 
 module.exports = mongoose.model('Occupation', occupationSchema);

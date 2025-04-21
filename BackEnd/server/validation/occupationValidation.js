@@ -31,7 +31,7 @@ const createSchema = Joi.object({
     'number.min': 'Ne peut pas être négatif',
     'any.required': 'Le nombre de chambres occupées est obligatoire'
   }),
-  availbleRooms: Joi.number().integer().min(0).required().messages({
+  availableRooms: Joi.number().integer().min(0).required().messages({
     'number.base': 'Doit être un nombre',
     'number.integer': 'Doit être un entier',
     'number.min': 'Ne peut pas être négatif',
@@ -39,7 +39,7 @@ const createSchema = Joi.object({
   })
 }).custom((value, helpers) => {
   // Validation croisée
-  if (value.occupiedRooms + value.availbleRooms !== value.totalRooms) {
+  if (value.occupiedRooms + value.availableRooms !== value.totalRooms) {
     return helpers.error('any.invalid');
   }
   
@@ -57,7 +57,7 @@ const updateSchema = Joi.object({
   totalRooms: Joi.number().integer().min(1),
   occupiedRooms: Joi.number().integer().min(0),
   availbleRooms: Joi.number().integer().min(0)
-}).or('month', 'occupancyRate', 'totalRooms', 'occupiedRooms', 'availbleRooms')
+}).min(1)
   .messages({
     'object.missing': 'Au moins un champ doit être fourni pour la mise à jour'
   });

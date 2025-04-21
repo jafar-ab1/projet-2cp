@@ -13,8 +13,8 @@ exports.getAllTarifs = async (req, res) => {
 
 exports.getTarif = async (req, res) => {
   try {
-    const { roomType, price } = req.params; 
-    const tarif = await Tarif.findOne({roomType, price});
+    const {roomType} = req.params; 
+    const tarif = await Tarif.findOne({roomType});
     if (!tarif) return res.status(404).json({ message: 'Tarif non trouvé' });
     res.status(200).json(tarif);
   } catch (error) {
@@ -37,8 +37,8 @@ exports.createTarif = async (req, res) => {
 
 exports.updateTarif = async (req, res) => {
   try {
-    const { roomType, price } = req.params; 
-    const tarif = await Tarif.findOneAndUpdate({roomType, price}, req.body, { new: true });
+    const {roomType} = req.params; 
+    const tarif = await Tarif.findOneAndUpdate({roomType}, req.body, { new: true });
     if (!tarif) return res.status(404).json({ message: 'Tarif non trouvé' });
     res.status(200).json(tarif);
   } catch (error) {
@@ -49,8 +49,8 @@ exports.updateTarif = async (req, res) => {
 
 exports.deleteTarif = async (req, res) => {
   try {
-    const { roomType, price } = req.params; 
-    const tarif = await Tarif.findOneAndDelete({roomType, price});
+    const {roomType} = req.params; 
+    const tarif = await Tarif.findOneAndDelete({roomType});
     if (!tarif) return res.status(404).json({ message: 'Tarif non trouvé' });
     res.status(200).json({ message: 'Tarif supprimé' });
   } catch (error) {

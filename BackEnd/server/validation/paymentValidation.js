@@ -1,21 +1,19 @@
 const Joi = require('joi');
 
 // Schéma pour les paramètres d'URL
-const userIdSchema = Joi.object({
-  userId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID client invalide',
-    'string.length': 'ID client doit contenir 24 caractères',
-    'any.required': 'ID client est requis dans l\'URL'
-  })
+const userEmailSchema = Joi.object({
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+            "string.email": "email must be of type Email",
+            "any.required": "email is required"
+        }),
 });
 
 // Schéma pour la création de paiement
 const createPaymentSchema = Joi.object({
-  userId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID client invalide',
-    'string.length': 'ID client doit contenir 24 caractères',
-    'any.required': 'ID client est requis dans l\'URL'
-  }),
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+            "string.email": "email must be of type Email",
+            "any.required": "email is required"
+        }),
   amount: Joi.number().positive().required().messages({
     'number.base': 'Le montant doit être un nombre',
     'number.positive': 'Le montant doit être positif',
@@ -32,6 +30,6 @@ const createPaymentSchema = Joi.object({
 });
 
 module.exports = {
-  userIdSchema,
+  userEmailSchema,
   createPaymentSchema
 };

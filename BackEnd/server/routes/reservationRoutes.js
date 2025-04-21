@@ -2,24 +2,38 @@ const express = require('express');
 const router = express.Router();
 const reservationController = require('../controllers/reserveControl');
 const validate = require('../middlewares/validation.middleware');
-const { idSchema,
+const { emailSchema, 
   createSchema,
-  updateSchema} = require('../validation/reservationValidation');
+  updateSchema,
+  emailAndRoomNumberSchema
+  } = require('../validation/reservationValidation');
 
-// Récupérer toutes les réservations
+
+
+  const convertRoomNumberToArray = (req, res, next) => {
+    if (req.params.roomNumber) {
+      // Rendre roomNumber compatible avec le schéma de validation
+      req.params.roomNumber = [parseInt(req.params.roomNumber)];
+    }
+    next();
+  };
+  
+
 router.get('/', reservationController.getAllReservations);
 
-// Récupérer une réservation par son ID
-router.get('/:id',validate(idSchema, 'params'), reservationController.getReservationById);
+
+router.get('/:email',validate(emailSchema, 'params'), reservationController.getReservationByEmail);
 
 
-// Ajouter une nouvelle réservation
+router.get('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.getReservationByEmailAndRoomNumber);
+
+
 router.post('/',validate(createSchema), reservationController.creatReservation);
 
-// Mettre à jour une réservation
-router.put('/:id',validate(updateSchema), reservationController.modifyReservation);
 
-// Supprimer une réservation
-router.delete('/:id',validate(idSchema, 'params'), reservationController.suppReservation);
+router.put('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.modifyReservation);
+
+
+router.delete('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.suppReservation);
 
 module.exports = router;

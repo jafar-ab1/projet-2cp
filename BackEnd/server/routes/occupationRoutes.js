@@ -16,7 +16,7 @@ router.get('/:month', validate(monthSchema, 'params'), occupancyController.getOc
 router.post('/',validate(createSchema), occupancyController.createOccupancy);
 
 
-router.put('/:month', validate(updateSchema), occupancyController.updateOccupancy);
+router.put('/:month', validate(updateSchema), validate(monthSchema, 'params'), occupancyController.updateOccupancy);
 
 
 router.delete('/:month', validate(monthSchema, 'params'),occupancyController.deleteOccupancy);

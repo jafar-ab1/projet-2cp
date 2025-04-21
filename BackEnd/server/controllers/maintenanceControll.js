@@ -1,4 +1,6 @@
 const Maintenance = require('../models/Maintenance');
+const Room = require('../models/Room');
+const User = require('../models/User');
 
 exports.getAllMaintenance = async (req, res) => {
   try {
@@ -13,6 +15,11 @@ exports.getAllMaintenance = async (req, res) => {
 exports.getMaintenanceByroomNb = async (req, res) => {
   try {
     const { roomNumber } = req.params;
+
+    const room = await Room.findOne({roomNumber});
+    if (!room) return res.status(404).json({message: "chambre non trouvé"});
+
+
     const maintenance = await Maintenance.find({ roomNumber });
     if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
     res.status(200).json(maintenance);
@@ -23,9 +30,16 @@ exports.getMaintenanceByroomNb = async (req, res) => {
 
 
 exports.createMaintenance = async (req, res) => {
-  const { roomNumber, issueDescription, userId, status, resolutionDate } = req.body;
+  const { roomNumber, issueDescription, email, status, resolutionDate } = req.body;
   try {
-    const newMaintenance = new Maintenance({ roomNumber, issueDescription, userId, status, resolutionDate });
+
+    const room = await Room.findOne({roomNumber});
+    if (!room) return res.status(404).json({message: "chambre non trouvé"});
+
+    const user = await User.findOne({email});
+    if (!user) return res.status(404).json({message: "user non trouvé"});
+
+    const newMaintenance = new Maintenance({ roomNumber, issueDescription, email, status, resolutionDate });
     await newMaintenance.save();
     res.status(201).json(newMaintenance);
   } catch (error) {
@@ -35,8 +49,12 @@ exports.createMaintenance = async (req, res) => {
 
 
 exports.updateMaintenance = async (req, res) => {
-    const { roomNumber } = req.params;
+    const { roomNumber, email } = req.params;
     try {
+
+      const room = await Room.findOne({roomNumber});
+      if (!room) return res.status(404).json({message: "chambre non trouvé"});
+
       const maintenance = await Maintenance.findOneAndUpdate({ roomNumber }, req.body, { new: true });
       if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
       res.status(200).json(maintenance);
@@ -46,13 +64,17 @@ exports.updateMaintenance = async (req, res) => {
   };
 
 
-  exports.deleteMaintenance = async (req, res) => {
+exports.deleteMaintenance = async (req, res) => {
     try {
-      const { roomNumber } = req.params;
+      const { roomNumber, email } = req.params;
+
+      const room = await Room.findOne({roomNumber});
+     if (!room) return res.status(404).json({message: "chambre non trouvé"});
+
       const maintenance = await Maintenance.findOneAndDelete({ roomNumber });
       if (!maintenance) return res.status(404).json({ message: 'Maintenance record not found' });
       res.status(200).json({ message: 'Maintenance record deleted' });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
-  };
+};

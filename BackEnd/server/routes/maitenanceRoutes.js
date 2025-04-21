@@ -6,6 +6,7 @@ const {
     createSchema,
     updateSchema
 } = require('../validation/maintenanceValidation');
+
 const validate = require('../middlewares/validation.middleware');
 
 // GET all maintenance records

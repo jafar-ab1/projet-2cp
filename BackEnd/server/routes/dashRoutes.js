@@ -20,19 +20,19 @@ router.get('/today/out', dashConrtoll.getCheck_out);
 
 router.get('/inHotel', dashConrtoll.inHotel);
 
-router.get('/countStatus/:status0', validate(roomScehma.roomStatus0Schema, 'params'), dashConrtoll.countRoomsByStatus0); //Available, Occupied
+router.get('/countStatus/:status1', validate(roomScehma.roomStatus1Schema, 'params'), dashConrtoll.countRoomsByStatus1); //Available, Occupied
 
 
 //roomStatus
-router.get('/count/:status0/:type', validate(roomScehma.roomTypeAndStatus0CountSchema, 'params'), dashConrtoll.countRoomsByTypeAndStatus0);
+router.get('/count/:status0/:status1', validate(roomScehma.roomStatus0AndStatus1CountSchema, 'params'), dashConrtoll.countRoomsByStatus0AndStatus1);
 
 
 //rooms
-router.get('/countType/:type', validate(roomScehma.roomTypeCountSchema, 'params'), dashConrtoll.countRoomsByType);
+router.get('/countTypeAvailable/:type', validate(roomScehma.roomTypeCountSchema, 'params'), dashConrtoll.countRoomsByTypeAndAvailable);
 
 
 //addGuest
-router.get('/addGuest/:userId', dashConrtoll.AddGuest);
+router.get('/addGuest/:email', dashConrtoll.AddGuest);
 
 
 module.exports = router;

@@ -10,27 +10,29 @@ const createSchema = Joi.object({
   date: Joi.date().required().messages({
     'date.base': 'Doit être une date valide'
   }),
-  userId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID utilisateur invalide',
-    'string.length': 'ID utilisateur doit avoir 24 caractères',
-    'any.required': 'ID utilisateur est requis'
-  }),
-  roomId: Joi.string().hex().length(24).required().messages({
-    'string.hex': 'ID chambre invalide',
-    'string.length': 'ID chambre doit avoir 24 caractères',
-    'any.required': 'ID chambre est requise'
-  })
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+            "string.email": "email must be of type Email",
+            "any.required": "email is required"
+        }),
+  roomNumber: Joi.number().required().messages({
+      'string.empty': 'Le numéro de chambre est obligatoire',
+      'any.required': 'Le numéro de chambre est obligatoire'
+    }),
 });
 
 // Schéma pour la récupération/suppression
-const idSchema = Joi.object({
-  userId: Joi.string().hex().length(24).required(),
-  roomId: Joi.string().hex().length(24).required()
-}).messages({
-  'any.required': 'Les IDs utilisateur et chambre sont requis'
+const emailAndRoomSchema = Joi.object({
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+    "string.email": "email must be of type Email",
+    "any.required": "email is required"
+}),
+  roomNumber: Joi.number().required().messages({
+      'string.empty': 'Le numéro de chambre est obligatoire',
+      'any.required': 'Le numéro de chambre est obligatoire'
+    })
 });
 
 module.exports = {
   createSchema,
-  idSchema
+  emailAndRoomSchema
 };

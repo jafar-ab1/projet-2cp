@@ -40,10 +40,26 @@ exports.getByType = async(req, res) => {
     }
 }
 
-exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type,facilities, bedType, status0,status1, price, floor} = req.body;
+
+exports.countAllRooms = async (req, res) => {
     try{
-        const newRoom= new Room({roomNumber,facilities, type, bedType, status0,status1, price, floor});
+        const {id} = req.params;
+        const countRooms = await Room.countDocuments({id});
+        res.status(200).json({
+            countRooms
+        })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        });
+    }
+};
+
+exports.creatRoom = async(req, res) =>{
+    const {roomNumber, type,facilities,status0,status1, price, floor} = req.body;
+    try{
+        const newRoom= new Room({roomNumber,facilities, type, status0,status1, price, floor});
         await newRoom.save();
         res.status(201).json(newRoom);
     }

@@ -1,4 +1,6 @@
 const Feed_back = require('../models/feed_back');
+const User = require('../models/User');
+const Room = require('../models/Room');
 
 
 
@@ -12,10 +14,17 @@ exports.getAllFeed_backs = async (req, res) => {
   };
 
 
-exports.getFeed_back = async(req, res) => {
+exports.getFeed_backByEmailAndRoomNumber = async(req, res) => {
     try{
-        const {userId, roomId}  =req.params;
-        const feed_back = await Feed_back.findOne({userId, roomId}).populate('userId roomId');
+        const {email, roomNumber}  =req.params;
+
+        const user = await User.findOne({email});
+        if (!user) return res.status(404).json({meesage: "user non trouvé"});
+
+        const room = await Room.findOne({roomNumber});
+        if (!room) return res.status(404).json({meesage: "room non trouvé"});
+
+        const feed_back = await Feed_back.findOne({email, roomNumber});
         if(!feed_back) return res.status(404).json({Message:'feed back  non trouvé'});
         res.status(200).json(feed_back);
     }
@@ -23,6 +32,22 @@ exports.getFeed_back = async(req, res) => {
     catch(error){
         res.status(500).json({message:'error page'});
     }
+}
+
+exports.getFeed_backByEmail = async(req, res) => {
+    try{
+    const {email} = req.params;
+
+    const user = await User.findOne({email});
+    if (!user) return res.status(404).json({meesage: "user non trouvé"});
+
+    const feed_back = await Feed_back.find({email});
+    if (!feed_back) return res.status(404).json({message: "feed_back non trouvé"});
+    res.status(200).json(feed_back);
+
+}   catch(error){
+    res.status(500).json({message:'error page'});
+}
 }
 
 exports.getFeed_backCurrentMonth = async (req, res) => {
@@ -72,10 +97,17 @@ exports.getFeed_backCurrentMonth = async (req, res) => {
 
 exports.creatFeed_back = async(req, res) => {
     try{
-        const {comment, date, userId, roomId} = req.body;
-        const newFeed = new Feed_back({comment, date, userId, roomId});
+        const {comment, date, email, roomNumber} = req.body;
+
+        const user = await User.findOne({email});
+        if (!user) return res.status(404).json({meesage: "user non trouvé"});
+
+        const room = await Room.findOne({roomNumber});
+        if (!room) return res.status(404).json({meesage: "room non trouvé"});
+
+        const newFeed = new Feed_back({comment, date, email, roomNumber});
         await newFeed.save();
-        res.status(201);
+        res.status(201).json(newFeed);
     }
     catch(error){
         res.status(500).json({message: 'error page'});
@@ -84,8 +116,15 @@ exports.creatFeed_back = async(req, res) => {
 
 exports.suppFeed_back = async (req, res) => {
     try{
-        const {userId, roomId}  =req.params;
-        const feedback = await Feed_back.findOneAndDelete({ userId, roomId }).populate('userId roomId');
+        const {email, roomNumber}  =req.params;
+
+        const user = await User.findOne({email});
+        if (!user) return res.status(404).json({meesage: "user non trouvé"});
+
+        const room = await Room.findOne({roomNumber});
+        if (!room) return res.status(404).json({meesage: "room non trouvé"});
+
+        const feedback = await Feed_back.findOneAndDelete({email, roomNumber});
         if(!feedback) return res.status(404).json({message: 'commentaire non trouvé'});
         await feedback.deleteOne({comment, date});
         res.status(200).json({message: 'feedback supprime'});

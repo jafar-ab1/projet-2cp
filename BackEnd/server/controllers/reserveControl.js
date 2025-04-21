@@ -16,9 +16,14 @@ exports.getAllReservations = async (req, res) => {
   };
 
 
-exports.getReservationById = async(req, res) => {
+exports.getReservationByEmail = async(req, res) => {
     try {
-    const reservation = await Reservation.findById(req.params.id);
+    const {email} = req.params;
+    
+    const user = await User.findOne({email});
+    if (!user) return res.status(404).json({message: "user non trouvé"});
+    
+    const reservation = await Reservation.find({email});
 
     if (!reservation) return res.status(404).json({ message: 'reservation non trouvé'});
     res.status(200).json(reservation);
@@ -28,12 +33,39 @@ exports.getReservationById = async(req, res) => {
     }
 };
 
+exports.getReservationByEmailAndRoomNumber = async(req, res) => {
+  try {
+    const {email, roomNumber} = req.params;
+    
+    const userValide = await User.findOne({email});
+      if (!userValide) return res.status(404).json({message: "user non trouvé"});
+
+      const roomNumberValide = await Room.findOne({roomNumber});
+      if (!roomNumberValide) return res.status(404).json({message: "room non trouvé"});
+    
+    const reservation = await Reservation.findOne({email, roomNumber});
+
+    if (!reservation) return res.status(404).json({ message: 'reservation non trouvé'});
+    res.status(200).json(reservation);
+    }
+    catch(error){
+        res.status(500).json({ message: error.message });
+    }
+}
+
 
 exports.creatReservation = async(req, res) =>{
-    const {userId, roomId, checkInDate, checkOutDate, totalPrice, status} = req.body;
+    const {email, roomNumber, checkInDate, checkOutDate, totalPrice, status} = req.body;
     try{
-        const newReservation= new Reservation({userId, roomId, checkInDate, checkOutDate, totalPrice, status});
-        await newReservation.save();
+
+      const userValide = await User.findOne({email});
+      if (!userValide) return res.status(404).json({message: "user non trouvé"});
+
+      const roomNumberValide = await Room.findOne({roomNumber});
+      if (!roomNumberValide) return res.status(404).json({message: "room non trouvé"});
+
+      const newReservation= new Reservation({email, roomNumber, checkInDate, checkOutDate, totalPrice, status});
+      await newReservation.save();
     
 
     const transporter = nodemailer.createTransport({
@@ -41,12 +73,12 @@ exports.creatReservation = async(req, res) =>{
         auth: {
           user: config.email.user,
           pass: config.email.password,
-        },
+        }
       });
 
-      const user = await User.findById(newReservation.userId);
+      const user = await User.findOne({email});
 
-      const room = await Room.findById(newReservation.roomId);
+      const room = await Room.findOne({roomNumber});
 
     const mailOptions = {
       from: config.email.user,
@@ -90,7 +122,15 @@ exports.creatReservation = async(req, res) =>{
 
 exports.modifyReservation = async(req, res) =>{
 try{
-    const reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {new:true});
+  const {email, roomNumber} = req.params;
+
+      const user = await User.findOne({email});
+      if (!user) return res.status(404).json({message: "user non trouvé"});
+
+      const roomNumberValide = await Room.findOne({roomNumber});
+      if (!roomNumberValide) return res.status(404).json({message: "room non trouvé"});      
+
+    const reservation = await Reservation.findOneAndUpdate({email, roomNumber}, req.body, {new:true});
     if (!reservation) return res.status(404).json({message:'reservation non trouvé'});
     res.status(200).json(reservation);
 }
@@ -102,7 +142,15 @@ catch(error){
 
 exports.suppReservation = async(req, res) => {
     try{
-        const reservation =await  Reservation.findByIdAndDelete(req.params.id);
+      const {email, roomNumber} = req.params;
+
+      const user = await User.findOne({email});
+      if (!user) return res.status(404).json({message: "user non trouvé"});
+
+      const roomNumberValide = await Room.findOne({roomNumber});
+      if (!roomNumberValide) return res.status(404).json({message: "room non trouvé"});      
+
+        const reservation =await  Reservation.findOneAndDelete({email, roomNumber});
         if (!reservation) return res.status(404).json({message: 'reservation non trouvé'});
         res.status(200).json({message: 'reservation supprime'});
     }

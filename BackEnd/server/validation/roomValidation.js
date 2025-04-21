@@ -10,16 +10,11 @@ const createRoomSchema = Joi.object({
     'any.required': 'Le type de chambre est obligatoire',
     'any.only': 'Le type de chambre doit être standard, deluxe ou suite'
   }),
-  bedType: Joi.string().valid('Simple', 'Double').required().messages({
-    'string.empty': 'Le type de lit est obligatoire',
-    'any.required': 'Le type de lit est obligatoire',
-    'any.only': 'Le type de lit doit être Simple, Double'
+  status0: Joi.string().valid('Dirty','Inspected','Clean').required().default('Dirty').messages({
+    'any.only': 'Le statut doit être disponible, Clean, Dirty ou Inspected'
   }),
-  status0: Joi.string().valid('Occupied', 'Available','Dirty','Inspected').required().default('Available').messages({
-    'any.only': 'Le statut doit être disponible, Occupied, Available, Dirty ou Inspected'
-  }),
-  status1: Joi.string().valid('Available', 'Booked','Wailtelist').required().default('Available').messages({
-    'any.only': 'Le statut doit être Wailtelist, Occupied, Available'
+  status1: Joi.string().valid('Available', 'Occupied').required().default('Available').messages({
+    'any.only': 'Le statut doit être Available, Occupied'
   }),
   price: Joi.number().min(0).required().messages({
     'number.base': 'Le prix doit être un nombre',
@@ -49,9 +44,6 @@ const updateRoomSchema = Joi.object({
     type: Joi.string().optional().valid('Standard', 'Deluxe', 'Suite').messages({
       'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite'
     }),
-    bedType: Joi.string().optional().valid('Simple', 'Double').messages({
-      'any.only': 'Le type de lit doit être Simple ou Double'
-    }),
     facilities: Joi.array().optional().items(Joi.string()).min(1).messages({
       'array.base': 'Les équipements doivent être une liste',
       'array.min': 'Au moins un équipement doit être spécifié'
@@ -61,8 +53,8 @@ const updateRoomSchema = Joi.object({
         'number.min': 'Le prix ne peut pas être négatif',
         'any.required': 'Le prix est obligatoire'
       }),
-    status0: Joi.string().optional().valid('Occupied', 'Available', 'Dirty', 'Inspected', 'Clean'),
-    status1: Joi.string().valid('Available', 'Booked','Wailtelist').default('Available'),
+    status0: Joi.string().optional().valid('Dirty', 'Inspected', 'Clean'),
+    status1: Joi.string().valid('Available', 'Occupied').default('Available'),
     floor: Joi.string().optional()
   })
   .min(1) // Au moins un champ doit être fourni
@@ -89,17 +81,17 @@ const roomNumberSchema = Joi.object({
       })
 });
 
-const roomStatus0Schema = Joi.object({
-  status0 : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
+const roomStatus1Schema = Joi.object({
+  status0 : Joi.string().valid( 'Available', 'Occupied').required()
 });
 
 const roomTypeCountSchema = Joi.object({
   type : Joi.string().valid('Standard', 'Deluxe', 'Suite').required()
 });
 
-const roomTypeAndStatus0CountSchema = Joi.object({
-  type : Joi.string().valid('Standard', 'Deluxe', 'Suite').required(),
-  status0 : Joi.string().valid('Occupied', 'Available','dirty','inspected' ).required()
+const roomStatus0AndStatus1CountSchema = Joi.object({
+  status1 : Joi.string().valid('Clean','Dirty','Inspected').required(),
+  status0 : Joi.string().valid('Available', 'Occupied' ).required()
 
 })
 
@@ -110,7 +102,7 @@ module.exports = {
   updateRoomSchema,
   roomTypeSchema,
   roomNumberSchema,
-  roomStatus0Schema,
+  roomStatus1Schema,
   roomTypeCountSchema,
-  roomTypeAndStatus0CountSchema
+  roomStatus0AndStatus1CountSchema
 };

@@ -41,9 +41,16 @@ const userSchema = Joi.object({
 });
 
 const updateUserSchema = userSchema.fork(
-  ['password', 'email'], 
+  ['password', 'email', 'fullName', 'telephone'], 
   schema => schema.optional()
 );
 
+const emailSchema = Joi.object({
+  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+    "string.email": "email must be of type Email",
+    "any.required": "email is required"
+})
+})
 
-module.exports = { userSchema, updateUserSchema };
+
+module.exports = { userSchema, updateUserSchema,  emailSchema};

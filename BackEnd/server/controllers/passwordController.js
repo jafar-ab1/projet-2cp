@@ -6,7 +6,6 @@ const config = require("../../config.js");
 exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
 
-  // 1. Vérifier l'existence de l'utilisateur
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(404).json({ message: "Email non trouvé" });
@@ -18,7 +17,7 @@ exports.forgotPassword = async (req, res) => {
     const resetToken = jwt.sign(
       { userId: user._id },
       tokenSecret,
-      { expiresIn: '1h' }
+      { expiresIn: '24h' }
     );
   const resetLink = `${config.frontendUrl}/reset-password?token=${encodeURIComponent(resetToken)}&id=${user._id}`;
   console.log("Lien généré :", resetLink);
@@ -32,8 +31,6 @@ exports.forgotPassword = async (req, res) => {
         user: config.email.user,
         pass: config.email.password
       },
-      logger: true,
-      debug: true,
       tls: {
         rejectUnauthorized: false // Seulement pour le développement
       }

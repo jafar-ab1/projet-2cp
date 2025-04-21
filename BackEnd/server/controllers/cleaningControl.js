@@ -1,4 +1,5 @@
 const Cleaning = require('../models/Cleaning');
+const Room = require('../models/Room');
 
 
 exports.getAllCleaning = async (req,res) => {
@@ -15,9 +16,8 @@ exports.getCleaningByRoomNb = async(req, res) => {
     try{
         const {roomNumber} = req.params;
 
-        if (!roomNumber) {
-            return res.status(400).json({ message: 'roomNumber is required' });
-        }
+        const room = await Room.findOne({roomNumber});
+        if (!room) res.status(404).json({message: 'chambre non trouvé'});
 
         const cleaning = await Cleaning.findOne({roomNumber});
         if(!cleaning) return res.status(404).json({Message:'cleanings  non trouvé'});
@@ -31,6 +31,10 @@ exports.getCleaningByRoomNb = async(req, res) => {
 exports.createCleaning = async(req, res) => {
     try{
         const {roomNumber, status, lastCleaned, nextCleaning} = req.body;
+
+        const room = await Room.findOne({roomNumber});
+        if (!room) res.status(404).json({message: 'chambre non trouvé'});
+        
         const newCleaning = new Cleaning({roomNumber, status, lastCleaned, nextCleaning});
         await newCleaning.save();
         res.status(201).json(newCleaning);
@@ -43,6 +47,9 @@ exports.createCleaning = async(req, res) => {
 exports.suppCleaning = async (req, res) => {
     try{
         const {roomNumber}= req.params;
+
+        const room = await Room.findOne({roomNumber});
+        if (!room) res.status(404).json({message: 'chambre non trouvé'});
 
         const cleaning = await Cleaning.findOne({roomNumber});
         if(!cleaning) return res.status(404).json({message: 'cleaning non trouvé'});

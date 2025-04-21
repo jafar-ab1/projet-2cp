@@ -6,10 +6,12 @@ const userSchema = require('../validation/userValidation');
 
 router.get('/', userController.getAllUsers);
 
-router.get('/:id', userController.getUserById);
+router.get('/:email',validate(userSchema.emailSchema, 'params'), userController.getUserByEmail);
 
-router.put('/:id',validate(userSchema.updateUserSchema), userController.modifyUser);
+router.get('/checkOut/:email',validate(userSchema.emailSchema, 'params'), userController.sendCheckoutEmail);
 
-router.delete('/:id',validate(userSchema.userSchema), userController.suppUser);
+router.put('/:email',validate(userSchema.emailSchema, 'params'), validate(userSchema.updateUserSchema), userController.modifyUser);
+
+router.delete('/:email',validate(userSchema.emailSchema, 'params'), userController.suppUser);
 
 module.exports = router;

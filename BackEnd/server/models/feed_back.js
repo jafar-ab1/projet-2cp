@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 
 const feed_backSchema = new mongoose.Schema({
-    userId:{type: mongoose.Schema.Types.ObjectId, ref:'User'},
-    roomId: {type: mongoose.Schema.Types.ObjectId, ref:'Room'},
+    email:{type: String, required: true, ref:'User'},
+    roomNumber: {type: Number, ref:'Room'},
     comment: {type:String, required:true},
     date : {type:Date, required:true}
 });

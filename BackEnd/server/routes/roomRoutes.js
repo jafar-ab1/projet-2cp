@@ -11,6 +11,10 @@ router.get('/:type', validate(roomScehma.roomTypeSchema, 'params'),roomControlle
 
 router.get('/number/:roomNumber', validate(roomScehma.roomNumberSchema, 'params'), roomController.getRoomByNumber);
 
+
+router.get('/count/all/rooms', roomController.countAllRooms);
+
+
 router.post('/',validate(roomScehma.createRoomSchema), roomController.creatRoom);
 
 router.put('/:roomNumber', validate(roomScehma.updateRoomSchema), roomController.modifyRoom);

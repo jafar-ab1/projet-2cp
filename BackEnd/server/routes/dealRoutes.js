@@ -8,7 +8,7 @@ const validate = require('../middlewares/validation.middleware');
 router.get('/', dealController.getAllDeals);
 
 // Récupérer un deal par son nom
-router.get('/:dealName', dealController.getDealByName);
+router.get('/:dealName', validate(deleteDealSchema, 'params'),dealController.getDealByName);
 
 // Créer un nouveau deal
 router.post('/', validate(createDealSchema), dealController.createDeal);

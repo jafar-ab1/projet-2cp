@@ -23,9 +23,9 @@ exports.getOccupancyByMonth = async (req, res) => {
 
 
 exports.createOccupancy = async (req, res) => {
-  const { month, occupationRate, totalRooms, occupiedRooms, availbleRooms } = req.body;
+  const { month, occupationRate, totalRooms, occupiedRooms, availableRooms } = req.body;
   try {
-    const newOccupancy = new Occupancy({ month, occupationRate, totalRooms, occupiedRooms, availbleRooms });
+    const newOccupancy = new Occupancy({ month, occupationRate, totalRooms, occupiedRooms, availableRooms });
     await newOccupancy.save();
     res.status(201).json(newOccupancy);
   } catch (error) {

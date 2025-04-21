@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const paymentControllers = require('../controllers/paymentControl');
 const validate = require('../middlewares/validation.middleware');
-const {userIdSchema,
+const {userEmailSchema,
     createPaymentSchema} = require('../validation/paymentValidation')
 
 router.get('/', paymentControllers.getAll);
 
-router.get('/:userId',validate(userIdSchema, 'params'), paymentControllers.getPayment);
+router.get('/:email',validate(userEmailSchema, 'params'), paymentControllers.getPayment);
 
 router.post('/',validate(createPaymentSchema), paymentControllers.creatPayment);
 

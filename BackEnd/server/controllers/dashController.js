@@ -109,12 +109,12 @@ exports.getCheck_out = async (req,res) => {
 };
 
 
-exports.countRoomsByStatus0 = async (req, res) => {
+exports.countRoomsByStatus1 = async (req, res) => {
     try {
-        const {status0} = req.params;
-        const statusCounts = await Room.countDocuments({status0});
+        const {status1} = req.params;
+        const statusCounts = await Room.countDocuments({status1});
         res.status(200).json({ 
-        status0,
+        status1,
         statusCounts
     });
     } catch (error) {
@@ -122,29 +122,51 @@ exports.countRoomsByStatus0 = async (req, res) => {
     }
 }
 
-exports.countRoomsByType = async (req, res) => {
-    try {
+
+exports.countByType = async(req, res) => {
+    try{
         const {type} = req.params;
+
         const TypeCount = await Room.countDocuments({type});
+
+        res.status(200).json({
+            type, 
+            TypeCount
+        })
+    }
+ catch (error) {
+    res.status(500).json({ message: error.message });
+};
+}
+
+
+exports.countRoomsByTypeAndAvailable = async (req, res) => {
+    try {
+        const {type, status1="Available"} = req.params;
+
+        const Count = await Room.countDocuments({type: type,
+            status1: status1
+        });
         res.status(200).json({ 
+        status:"Available",
         type,
-        TypeCount
+        Count
     });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 }
 
-exports.countRoomsByTypeAndStatus0 = async (req, res) => {
+exports.countRoomsByStatus0AndStatus1 = async (req, res) => {
     try {
-        const { type, status0 } = req.params;
+        const { status0, status1 } = req.params;
         const count = await Room.countDocuments({
-            type, status0
+            status0, status1
         });
 
         res.status(200).json({
-            type,
-            status0, 
+            status0,
+            status1, 
             count
         });
 
@@ -155,28 +177,41 @@ exports.countRoomsByTypeAndStatus0 = async (req, res) => {
     }
 };
 
+
 exports.AddGuest = async (req, res) => {
     try {
-        const {email} = req.params;
+        const today = new Date(); 
+        today.setHours(0, 0, 0, 0);
 
-        const user = await User.findOne({email});
-        if (!user) res.status(404).json({ message: 'reservation non trouvé' });
-            
-        const reservation = await Reservation.findOne({ userId: user._id });
-        if (!reservation) res.status(404).json({ message: 'reservation non trouvé' });
-        if (reservation.status="Due in") return reservation.status = "Checked in";
+        const { email } = req.params;
 
-        const roomReserve = await Room.findById(reservation.roomId);
-        if (!roomReserve) res.status(404).json({ message: 'room non trouvé' });
-        
-        
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'Utilisateur non trouvé' });
+        }
+
+        const reservation = await Reservation.findOne({email})
+
+        if (!reservation) {
+            return res.status(404).json({ message: 'Réservation non trouvée' });
+        }
+
+        const checkInDate = new Date(reservation.checkInDate);
+        checkInDate.setHours(0, 0, 0, 0);
+
+        if (reservation.status !== "Due in" || checkInDate.getTime() !== today.getTime()) {
+            return res.status(400).json({ 
+                message: 'La réservation n\'est pas disponible pour enregistrement aujourd\'hui',
+            });
+        }
+
         res.status(200).json({
             reservation,
             user,
             room:  roomReserve
     });
-    }
-    catch(error){
+
+    } catch(error){
         res.status(500).json({ message: error.message })
     }
 }
