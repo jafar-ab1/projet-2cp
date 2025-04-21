@@ -1,0 +1,48 @@
+.inner-container {
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  transition: all 0.3s ease;
+}
+
+.container {
+  width: 100%;
+  height: 500px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 450px;
+    height: 450px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container:hover {
+    box-shadow: -30px 30px 1px #837453;
+  }
+
+  .container.reverse:hover {
+    box-shadow: 30px -30px 1px #837453;
+  }
+
+  .container:hover .inner-container {
+    transform: translate(30px, -30px);
+  }
+
+  .container.reverse:hover .inner-container {
+    transform: translate(-30px, 30px);
+  }
+}
+
+/* Extra extra large devices (very large screens, 1400px and up) */
+@media (min-width: 1400px) {
+  .container {
+    width: 500px;
+    height: 500px;
+  }
+}

@@ -7,8 +7,8 @@ export default function Rooms({ city, description, rooms }) {
     <div className={styles.container}>
       <Description text={description.text} />
       <div className={styles['inner-container']}>
-        {rooms.map((room) => (
-          <Room city={city} room={room} />
+        {rooms.map((room, index) => (
+          <Room city={city} room={room} reverse={(index % 2) == 0} />
         ))}
       </div>
     </div>

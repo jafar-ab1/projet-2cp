@@ -1,16 +1,16 @@
 import image from '../../../../assets/pexels-mat-brown-150387-1395967.jpg';
-
 import styles from './Delight.module.css';
 
 import { Link } from 'react-router-dom';
 
+import FlexContainer from '../../../shared/static/basic/FlexContainer/FlexContainer';
+import Image from '../../../shared/static/basic/Image/Image';
+
 export default function Delight() {
   return (
-    <section className={styles.container}>
+    <FlexContainer reverse className={styles.container}>
       <div>
-        <div className={styles['left-side']}>
-          <img src={image} />
-        </div>
+        <Image image={image} />
         <div className={styles['right-side']}>
           <p className={styles.title}>Delight in Every Bite</p>
           <ul className={styles['gourmet-list']}>
@@ -24,11 +24,11 @@ export default function Delight() {
               <p>The Coffe Nook</p>
             </li>
           </ul>
-          <button className={styles.link}>
-            <Link to="/Dinning">Dinning</Link>
-          </button>
+          <Link className={styles.link} to="/Dinning">
+            Dinning
+          </Link>
         </div>
       </div>
-    </section>
+    </FlexContainer>
   );
 }
