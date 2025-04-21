@@ -13,13 +13,26 @@ exports.getAllDeals = async (req,res) => {
 
 exports.getDealByName = async(req, res) => {
     try{
-        const dealName = req.params.dealName;
-
-        if (!dealName) {
-            return res.status(400).json({ message: 'dealName is required' });
-        }
+        const dealName = req.params;
 
         const deal = await Deal.find({dealName});
+        if(!deal) return res.status(404).json({Message:'deals  non trouvé'});
+        res.status(200).json(deal);
+    }
+    catch(error){
+        res.status(500).json({message: error.message});
+    }
+}
+
+exports.getDealByStatus = async(req, res) => {
+    try{
+        const status = req.params;
+
+        if (!status) {
+            return res.status(400).json({ message: 'status is required' });
+        }
+
+        const deal = await Deal.find({status});
         if(!deal) return res.status(404).json({Message:'deals  non trouvé'});
         res.status(200).json(deal);
     }

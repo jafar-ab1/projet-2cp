@@ -40,6 +40,21 @@ exports.getByType = async(req, res) => {
     }
 }
 
+exports.getByStatus1 = async(req, res) => {
+    const {status1} = req.params;
+
+    if (!status1) {
+        return res.status(400).json({ message: 'status pas trouvé' });
+    }
+    
+    try{
+        const rooms = await Room.find({status1});
+        res.status(200).json(rooms);
+    } catch(error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
 
 exports.countAllRooms = async (req, res) => {
     try{

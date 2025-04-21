@@ -82,7 +82,7 @@ const roomNumberSchema = Joi.object({
 });
 
 const roomStatus1Schema = Joi.object({
-  status0 : Joi.string().valid( 'Available', 'Occupied').required()
+  status1 : Joi.string().valid( 'Available', 'Occupied').required()
 });
 
 const roomTypeCountSchema = Joi.object({

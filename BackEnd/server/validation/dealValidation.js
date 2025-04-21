@@ -19,8 +19,8 @@ const createDealSchema = Joi.object({
     'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite',
     'any.required': 'Le type de chambre est requis'
   }),
-  status: Joi.string().valid('Active', 'Inactive', 'Finished').required().messages({
-    'any.only': 'Le statut doit être Finished, Active ou Inactive',
+  status: Joi.string().valid('Ongoing', 'Finished').required().messages({
+    'any.only': 'Le statut doit être Finished, Ongoing',
     'any.required': 'Le statut est requis'
   })
 });
@@ -32,7 +32,15 @@ const deleteDealSchema = Joi.object({
   })
 });
 
+const statusSchema = Joi.object({
+  status: Joi.string().required().valid('Ongoing', 'Finished').messages({
+    'any.only': 'Le statut doit être Finished, Ongoing',
+    'any.required': 'Le statut est requis'
+  })
+})
+
 module.exports = {
   createDealSchema,
-  deleteDealSchema
+  deleteDealSchema,
+  statusSchema
 };
