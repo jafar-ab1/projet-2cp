@@ -52,10 +52,10 @@ export const countRoomStatus1 = async(status1) =>{
   return response.data;
 };
 
-//types: Standard or Deluxe or Suite
+//types: Standard or Deluxe or Suite(occupied)
 export const countRoomsByTypeAndAvailable = async (type) => {
   const response = await api.get(`/dash/countTypeAvailable/${type}`);
-  return response.date;
+  return response.data;
 }
 
 //status 0: Dirty or Inspected or Clean

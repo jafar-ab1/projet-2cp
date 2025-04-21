@@ -5,24 +5,31 @@ function Basket() {
   const [reservedRooms, setReservedRooms] = useState([]);
   const [retrievedData, setRetrievedData] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
-
   const calculateNights = (checkInDate, checkOutDate) => {
     if (!checkInDate || !checkOutDate) return 0;
-    const oneDay = 24 * 60 * 60 * 1000; 
+  
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
-    return Math.round(Math.abs((endDate - startDate) / oneDay));
+  
+    // Ensure checkout is after check-in
+    if (endDate <= startDate) return 0;
+  
+    const oneDay = 24 * 60 * 60 * 1000;
+    return Math.floor((endDate - startDate) / oneDay);
   };
-
+  
   const calculateTotalPrice = (rooms, checkInDate, checkOutDate) => {
-    if (!rooms || rooms.length === 0) return 0;
+    if (!Array.isArray(rooms) || rooms.length === 0) return 0;
+  
     const nights = calculateNights(checkInDate, checkOutDate);
-    return rooms.reduce(
-      (sum, room) => sum + (Number.parseFloat(room.price || 0) * nights),
-      0
-    );
+  
+    return rooms.reduce((sum, room) => {
+      const price = parseFloat(room.price);
+      if (isNaN(price)) return sum;
+      return sum + price * nights;
+    }, 0);
   };
-
+  
   useEffect(() => {
     const storedRooms = localStorage.getItem("reservedRooms");
     const storedData = localStorage.getItem("bookingData");
