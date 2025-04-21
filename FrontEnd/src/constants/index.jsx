@@ -85,3 +85,6 @@ export const accomodationBranches = accomodationPageBranches;
 
 import { dinning } from './dinning';
 export const dinningList = dinning;
+
+import { wellnessThings } from './wellness';
+export const wellnessList = wellnessThings;

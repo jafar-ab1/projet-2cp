@@ -29,6 +29,7 @@ import Branches from './pages/Branches/Branches.jsx';
 import Dinning from './pages/Dinning/Dinning.jsx';
 import Occasions from './pages/Occasions/Occasions.jsx';
 import Events from './pages/Events/Events.jsx';
+import Wellness from './pages/Wellness/Wellness.jsx';
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
         {/* Dashboard and FrontDesk pages (you can wrap in dashboard layout if needed) */}
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/front-desk" element={<FrontDesk />} />
-        <Route path="/test" element={<Events />} />
+        <Route path="/test" element={<Wellness />} />
         <Route path="/guest" element={<Guests />} />
         <Route path="/deal" element={<Deals />} />
         <Route path="/rooms" element={<Rooms />} />
