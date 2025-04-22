@@ -55,18 +55,74 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
 
 
 exports.creatReservation = async(req, res) =>{
-    const {email, roomNumber, checkInDate, checkOutDate, totalPrice, status} = req.body;
-    try{
-
-      const userValide = await User.findOne({email});
-      if (!userValide) return res.status(404).json({message: "user non trouvé"});
-
-      const roomNumberValide = await Room.findOne({roomNumber});
-      if (!roomNumberValide) return res.status(404).json({message: "room non trouvé"});
-
-      const newReservation= new Reservation({email, roomNumber, checkInDate, checkOutDate, totalPrice, status});
-      await newReservation.save();
+  const { email, roomNumber, checkInDate, checkOutDate, totalPrice, status } = req.body;
     
+  try {
+      // 1. Vérification de l'utilisateur (obligatoire)
+      const userValide = await User.findOne({ email });
+      if (!userValide) {
+          return res.status(404).json({ message: "Utilisateur non trouvé" });
+      }
+
+      // 2. Vérification des conflits de réservation (uniquement si la chambre existe)
+      const roomExists = await Room.exists({ roomNumber });
+      if (roomExists) {
+          const conflictingReservations = await Reservation.find({
+              roomNumber,
+              $or: [
+                  // Cas 1: Nouvelle réservation chevauche une réservation existante
+                  {
+                      checkInDate: { $lt: new Date(checkOutDate) },
+                      checkOutDate: { $gt: new Date(checkInDate) }
+                  },
+                  // Cas 2: Réservation existante englobe la nouvelle
+                  {
+                      checkInDate: { $lte: new Date(checkInDate) },
+                      checkOutDate: { $gte: new Date(checkOutDate) }
+                  }
+              ]
+          });
+
+          if (conflictingReservations.length > 0) {
+              return res.status(400).json({
+                  message: "La chambre n'est pas disponible pour ces dates",
+                  conflicts: conflictingReservations.map(res => ({
+                      id: res._id,
+                      period: `${res.checkInDate.toISOString().split('T')[0]} au ${res.checkOutDate.toISOString().split('T')[0]}`
+                  }))
+              });
+          }
+      }
+
+      // 3. Validation des dates
+      if (new Date(checkInDate) >= new Date(checkOutDate)) {
+          return res.status(400).json({ 
+              message: "La date de check-out doit être après la date de check-in" 
+          });
+      }
+
+      // 4. Création de la réservation
+      const newReservation = new Reservation({
+          email,
+          roomNumber,
+          checkInDate: new Date(checkInDate),
+          checkOutDate: new Date(checkOutDate),
+          totalPrice,
+          status: status || "confirmée"
+      });
+
+      await newReservation.save();
+
+      // 5. Création de la chambre si elle n'existe pas (optionnel)
+      if (!roomExists) {
+          const newRoom = new Room({
+              roomNumber,
+              type: "À définir", // Vous pouvez ajouter plus de détails
+              price: totalPrice, // Ou une valeur par défaut
+              status: "active"
+          });
+          await newRoom.save();
+      }    
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',

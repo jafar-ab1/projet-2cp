@@ -1,26 +1,24 @@
 const Joi = require('joi');
 
 const floorNumberSchema = Joi.object({
-  floorNumber: Joi.number().required().messages({
-    'string.empty': 'Le numéro d\'étage est obligatoire',
-    'any.required': 'Le paramètre floorNb est requis'
-  })
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          })
 });
 
 const createFloorSchema = Joi.object({
-  floorNumber: Joi.number().required().messages({
-    'string.empty': 'Le numéro d\'étage est obligatoire',
-    'any.required': 'Le numéro d\'étage est requis'
-  }),
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          }),
   status: Joi.string().valid('Complété', 'À compléter').default('actif').messages({
     'any.only': 'Le statut doit être actif, inactif ou maintenance'
   })
 });
 
 const updateFloorSchema = Joi.object({
-  floorNumber: Joi.number().messages({
-    'string.empty': 'Le numéro d\'étage ne peut pas être vide'
-  }),
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          }),
   status: Joi.string().valid('Complété', 'À compléter').messages({
     'any.only': 'Le statut doit être Complété, À compléter'
   })

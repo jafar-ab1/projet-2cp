@@ -55,10 +55,15 @@ export const countRoomStatus1 = async(status1) =>{
 //types: Standard or Deluxe or Suite
 export const countRoomsByTypeAndAvailable = async (type) => {
   const response = await api.get(`/dash/countTypeAvailable/${type}`);
-  return response.date;
+  return response.data;
 }
 
-//status 0: Dirty or Inspected or Clean
+export const countRoomsByType = async(type) => {
+  const response = await api.get(`count/All/type/${type}`);
+  return response.data;
+}
+
+//status 0: Maked up, Not Maked up
 //status1: Available or Occupied
 export const countRoomByStatus0AndStatus1 = async(status0, status1) =>{
   const response = await api.get(`/dash/count/${status0}/${status1}`);
@@ -85,9 +90,9 @@ export const getAllFeedbacks = async () => {
 
 //II- Guest
 
-export const addGuest = async(email) => {
-  const response = await api.get(`/dash/addGuest/${email}`);
-    return response.data;
+export const addGuest = async(email, roomNumber) => {
+  const response = await api.get(`/dash/addGuest/${email}/${roomNumber}`);
+  return response.data;
 };
 
 export const removeGuest = async(email) => {
@@ -131,6 +136,23 @@ export const addDeals = async(dealData) => {
 export const dealStatus = async(status) => {
   const response = await api.get(`/deal/${status}`);
   return response.data;
+}
+
+//sendEmail
+export const sendEmail = async(email, roomNumber) => {
+  const response = await api.get(`/user/checkOut/${email, roomNumber}`);
+  return response.data;
+}
+
+//after sending email we delete users
+export const userDelete = async(email) =>{
+  const response = await api.delete(`/user/${email}`);
+  return response.data;
+}
+
+export const getRoomByNumber = async(roomNumber) => {
+  const response = await api.get(`/rooms/number/${roomNumber}`);
+    return response.data;
 }
 
 

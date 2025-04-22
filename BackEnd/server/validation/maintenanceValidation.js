@@ -2,18 +2,16 @@ const Joi = require('joi');
 
 // Schéma pour les paramètres d'URL
 const roomNumberSchema = Joi.object({
-  roomNumber: Joi.number().required().messages({
-    'string.empty': 'Le numéro de chambre est obligatoire',
-    'any.required': 'Le paramètre roomNumber est requis dans l\'URL'
-  })
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          })
 });
 
 // Schéma pour la création
 const createSchema = Joi.object({
-  roomNumber: Joi.number().required().messages({
-    'string.empty': 'Le numéro de chambre ne peut pas être vide',
-    'any.required': 'Le champ roomNumber est obligatoire'
-  }),
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          }),
   issueDescription: Joi.string().min(10).required().messages({
     'string.empty': 'La description du problème ne peut pas être vide',
     'string.min': 'La description doit contenir au moins 10 caractères',
@@ -34,7 +32,7 @@ const createSchema = Joi.object({
 
 // Schéma pour la mise à jour
 const updateSchema = Joi.object({
-  roomNumber: Joi.number().messages({
+  roomNumber: Joi.string().messages({
     'string.empty': 'Le numéro de chambre ne peut pas être vide'
   }),
   issueDescription: Joi.string().min(10).messages({

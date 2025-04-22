@@ -14,10 +14,9 @@ const createSchema = Joi.object({
             "string.email": "email must be of type Email",
             "any.required": "email is required"
         }),
-  roomNumber: Joi.number().required().messages({
-      'string.empty': 'Le numéro de chambre est obligatoire',
-      'any.required': 'Le numéro de chambre est obligatoire'
-    }),
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          }),
 });
 
 // Schéma pour la récupération/suppression
@@ -26,10 +25,9 @@ const emailAndRoomSchema = Joi.object({
     "string.email": "email must be of type Email",
     "any.required": "email is required"
 }),
-  roomNumber: Joi.number().required().messages({
-      'string.empty': 'Le numéro de chambre est obligatoire',
-      'any.required': 'Le numéro de chambre est obligatoire'
-    })
+  roomNumber: Joi.string().required().alphanum().messages({
+          'any.required': 'Le numéro de chambre est obligatoire'
+          })
 });
 
 module.exports = {

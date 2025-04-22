@@ -8,7 +8,7 @@ router.get('/', userController.getAllUsers);
 
 router.get('/:email',validate(userSchema.emailSchema, 'params'), userController.getUserByEmail);
 
-router.get('/checkOut/:email',validate(userSchema.emailSchema, 'params'), userController.sendCheckoutEmail);
+router.get('/checkOut/:email/:roomNumber',validate(userSchema.sendEmailValidation, 'params'), userController.sendCheckoutEmail);
 
 router.put('/:email',validate(userSchema.emailSchema, 'params'), validate(userSchema.updateUserSchema), userController.modifyUser);
 

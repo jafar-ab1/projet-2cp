@@ -57,10 +57,10 @@ exports.forgotPassword = async (req, res) => {
 
 exports.resetPassword = async (req, res) => {
   try {
-    const { token, id: userId, newPassword } = req.body;
+    const { token, email, newPassword } = req.body;
     
     // 1. Récupérer l'utilisateur
-    const user = await User.findById(userId);
+    const user = await User.findOne({email});
     if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
 
     // 2. Vérifier le token avec le secret + mot de passe actuel

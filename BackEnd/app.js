@@ -20,6 +20,7 @@ const tarifRoutes = require('./server/routes/tarifRoutes');
 const maintenaceRoutes = require('./server/routes/maitenanceRoutes');
 const dashRoutes = require('./server/routes/dashRoutes');
 const passwordRoutes = require('./server/routes/passwordRoutes');
+const branchRoutes = require('./server/routes/branchRoutes');
 
 const app = express();
 const port = config.port;
@@ -34,6 +35,7 @@ mongoose.connect(config.db.connectionString)
 
 
 // Utilisation des routes
+app.use('/branch', branchRoutes);
 app.use('/dash', dashRoutes);
 app.use('/password', passwordRoutes);
 app.use('/auth', authRoutes); 

@@ -15,10 +15,9 @@ const emailAndRoomNumberSchema = Joi.object({
 }), 
 roomNumber: Joi.array()
         .items(
-          Joi.number().required().messages({
-              'string.empty': 'Le numéro de chambre est obligatoire',
-              'any.required': 'Le numéro de chambre est obligatoire'
-          })
+          Joi.string().required().alphanum().messages({
+                  'any.required': 'Le numéro de chambre est obligatoire'
+                  })
         )
         .min(1)
         .required()
@@ -38,10 +37,9 @@ const createSchema = Joi.object({
         }),
   roomNumber: Joi.array()
         .items(
-          Joi.number().required().messages({
-              'string.empty': 'Le numéro de chambre est obligatoire',
-              'any.required': 'Le numéro de chambre est obligatoire'
-          })
+          Joi.string().required().alphanum().messages({
+                  'any.required': 'Le numéro de chambre est obligatoire'
+                  })
         )
         .min(1)
         .required()
@@ -78,9 +76,9 @@ const updateSchema = Joi.object({
           }),
     roomNumber: Joi.array()
     .items(
-      Joi.number().required().messages({
-          'any.required': 'Le numéro de chambre est obligatoire'
-      })
+      Joi.string().required().alphanum().messages({
+              'any.required': 'Le numéro de chambre est obligatoire'
+              })
     )
     .min(1)
     .messages({

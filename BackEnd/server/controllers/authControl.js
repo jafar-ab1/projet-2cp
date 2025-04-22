@@ -17,7 +17,7 @@ exports.register = async (req, res) => {
 
     // Générer un token JWT
     const token = jwt.sign({ userId: user._id }, config.jwt.keys.secret, {
-      expiresIn: '1h',
+      expiresIn: '24h',
     });
 
     res.status(201).json({ token,

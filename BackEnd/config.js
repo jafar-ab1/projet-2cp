@@ -17,6 +17,10 @@ const config = {
     password: "eyqz oxlg nvlf zlcu", //motdepassPROJECT-2CP ida bghit tdkhl f email   
     
   },
+
+  hotel: {
+    hotelName: "hotel name"
+  },
   
   frontendUrl: "http://localhost:3000", // URL de votre frontend
  
