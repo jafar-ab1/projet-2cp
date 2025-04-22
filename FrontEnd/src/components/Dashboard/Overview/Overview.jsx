@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from "./Overview.module.css";
-import { TodayCheckIn, TodayCheckOut } from "../../../api/index"; // Adjust path as needed
+import {
+  getTodayCheckIns,
+  getTodayCheckOut,
+  getInHotelCount,
+  countRoomStatus1, // <-- Import this
+} from "../../../api/index"; // Adjust path as needed
 
 const Overview = () => {
   const [checkInCount, setCheckInCount] = useState(0);
@@ -12,18 +17,19 @@ const Overview = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const checkIns = await TodayCheckIn();   // Assuming these return counts
-        const checkOuts = await TodayCheckOut();
+        const checkIns = await getTodayCheckIns();
+        const checkOuts = await getTodayCheckOut();
+        const inHotel = await getInHotelCount();
 
-        setCheckInCount(checkIns.count || 0);
-        setCheckOutCount(checkOuts.count || 0);
+        const available = await countRoomStatus1("Available");
+        const occupied = await countRoomStatus1("Occupied");
 
-        // Assuming you calculate others based on check-ins/outs
-        const totalRooms = 100; // replace with actual logic or value
-       // const currentInHotel = checkIns.count - checkOuts.count;
-       // setInHotelCount(currentInHotel);
-        //setOccupiedRooms(currentInHotel);
-       // setAvailableRooms(totalRooms - currentInHotel);
+        setCheckInCount(checkIns);
+        setCheckOutCount(checkOuts);
+        setInHotelCount(inHotel);
+
+        setAvailableRooms(available);
+        setOccupiedRooms(occupied);
       } catch (error) {
         console.error("Error fetching overview data:", error);
       }
@@ -45,15 +51,15 @@ const Overview = () => {
           Today's <span>check-out</span>
         </div>
         <div>
-          <strong>Not Yet</strong>
+          <strong>{inHotelCount}</strong>
           Total <span>In hotel</span>
         </div>
         <div>
-          <strong>Not Yet</strong>
+          <strong>{availableRooms}</strong>
           Total <span>Available rooms</span>
         </div>
         <div>
-          <strong>Not Yet</strong>
+          <strong>{occupiedRooms}</strong>
           Total <span>Occupied rooms</span>
         </div>
       </div>

@@ -16,7 +16,10 @@ const StatusBadge = ({ status }) => {
     badgeClass += statusClass
   }
   // Guest statuses
-  else if (["clean", "dirty", "inspected", "pick-up"].includes(statusClass)) {
+  else if (["clean", "dirty", "inspected"].includes(statusClass)) {
+    badgeClass += statusClass
+  }
+  else if (["checked in","checked out",'due in',"due out"].includes(statusClass)) {
     badgeClass += statusClass
   }
   // Rate statuses (special case)

@@ -1,0 +1,74 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+  
+  .modal {
+    background: white;
+    width: 500px;
+    max-width: 90%;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+  }
+  
+  .modal h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #b26060;
+    background-color: #f5d4d4;
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+  
+  .modal .search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .modal .search-bar input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px 0 0 8px;
+    outline: none;
+    font-size: 14px;
+  }
+  
+  .modal .search-bar button {
+    padding: 8px 12px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+  }
+  
+  .modal .no-result {
+    margin-top: 30px;
+    font-size: 18px;
+    color: #555;
+  }
+  
+  .modal .image {
+    margin-top: 20px;
+    width: 180px;
+    height: auto;
+    opacity: 0.7;
+  }
+  
