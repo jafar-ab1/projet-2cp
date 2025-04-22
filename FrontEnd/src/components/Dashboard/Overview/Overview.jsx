@@ -24,12 +24,12 @@ const Overview = () => {
         const available = await countRoomStatus1("Available");
         const occupied = await countRoomStatus1("Occupied");
 
-        setCheckInCount(checkIns.count || 0);
-        setCheckOutCount(checkOuts.count || 0);
-        setInHotelCount(inHotel.count || 0);
+        setCheckInCount(checkIns);
+        setCheckOutCount(checkOuts);
+        setInHotelCount(inHotel);
 
-        setAvailableRooms(available.count || 0);
-        setOccupiedRooms(occupied.count || 0);
+        setAvailableRooms(available);
+        setOccupiedRooms(occupied);
       } catch (error) {
         console.error("Error fetching overview data:", error);
       }
