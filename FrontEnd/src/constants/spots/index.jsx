@@ -9,11 +9,11 @@ export const spots = [
     links: [
       {
         text: 'learn more',
-        to: '/',
+        to: '/dinning/?spot=gourmet-spot',
       },
       {
         text: 'menu',
-        to: '/',
+        to: '#',
       },
     ],
   },
@@ -23,11 +23,11 @@ export const spots = [
     links: [
       {
         text: 'learn more',
-        to: '/',
+        to: '/dinning/?spot=golden-plate',
       },
       {
         text: 'menu',
-        to: '/',
+        to: '#',
       },
     ],
   },
@@ -36,12 +36,12 @@ export const spots = [
     text: 'the coffee nook',
     links: [
       {
-        text: 'learn more',
+        to: '/dinning/?spot=coffee-nook',
         to: '/',
       },
       {
         text: 'menu',
-        to: '/',
+        to: '#',
       },
     ],
   },

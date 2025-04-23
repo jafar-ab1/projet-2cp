@@ -22,7 +22,7 @@ export default function Dinning() {
     return <DinningSpot spot={spot} />;
   }
 
-  if (spot !== null) {
+  if (spot !== undefined) {
     return <NotFound />;
   }
 

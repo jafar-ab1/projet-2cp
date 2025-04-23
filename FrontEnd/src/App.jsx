@@ -34,9 +34,9 @@ function App() {
     <Router>
       <Routes>
         <Route index element={<Home />} />
+        <Route path="/dinning" element={<Dinning />} />
         <Route path="accomodation" element={<Accomodation />} />
         <Route path="branches" element={<Branches />} />
-        <Route path="dinning" element={<Dinning />} />
         <Route path="occasions" element={<Occasions />} />
         <Route path="events" element={<Events />} />
         <Route path="wellness" element={<Wellness />} />

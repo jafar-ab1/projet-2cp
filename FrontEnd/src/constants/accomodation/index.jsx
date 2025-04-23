@@ -13,7 +13,7 @@ export const accomodationPageBranches = [
       },
       {
         text: 'learn more',
-        to: '/',
+        to: '/branches/?city=algiers',
       },
     ],
   },
@@ -27,7 +27,7 @@ export const accomodationPageBranches = [
       },
       {
         text: 'learn more',
-        to: '/',
+        to: '/branches/?city=oran',
       },
     ],
   },
@@ -41,7 +41,7 @@ export const accomodationPageBranches = [
       },
       {
         text: 'learn more',
-        to: '/',
+        to: '/branches/?city=annaba',
       },
     ],
   },

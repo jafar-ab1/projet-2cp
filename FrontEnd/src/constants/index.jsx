@@ -39,15 +39,15 @@ export const menuLinks = [
     subLinks: [
       {
         name: 'algiers',
-        to: '/algiers',
+        to: '/branches/?city=algiers',
       },
       {
         name: 'oran',
-        to: '/oran',
+        to: '/branches/?city=oran',
       },
       {
         name: 'annaba',
-        to: '/annaba',
+        to: '/branches/?city=annaba',
       },
     ],
   },
@@ -60,15 +60,15 @@ export const menuLinks = [
     subLinks: [
       {
         name: 'the gourmet spot',
-        to: '#',
+        to: '/dinning/?spot=gourmet-spot',
       },
       {
         name: 'the golden plate',
-        to: '#',
+        to: '/dinning/?spot=golden-plate',
       },
       {
         name: 'the coffee nook',
-        to: '#',
+        to: '/dinning/?spot=coffee-nook',
       },
     ],
   },
