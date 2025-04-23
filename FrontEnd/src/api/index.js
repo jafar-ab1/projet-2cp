@@ -56,14 +56,6 @@ export const countRoomStatus1 = async(status1) =>{
 export const countRoomsByTypeAndAvailable = async (type) => {
   const response = await api.get(`/dash/countTypeAvailable/${type}`);
   return response.data;
-<<<<<<< HEAD
-}
-
-export const countRoomsByType = async(type) => {
-  const response = await api.get(`count/All/type/${type}`);
-  return response.data;
-=======
->>>>>>> 448a3d85acfe75afb320a537a6a9df5d671c90f2
 }
 
 //status 0: Maked up, Not Maked up

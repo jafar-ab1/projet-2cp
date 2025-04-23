@@ -19,7 +19,7 @@
 
 .par1 {
   text-align: center;
-  font-size: 2rem;
+  font-size: 32px;
   font-weight: 700;
   margin: 0 auto;
   color: white;
@@ -28,10 +28,11 @@
 
 .par2 {
   text-align: center;
-  font-size: 0.8rem;
+  font-size: 16px;
   color: white;
   font-weight: 400;
   text-transform: capitalize;
+  margin: 0px 20px;
 }
 
 .buttons {
@@ -42,8 +43,8 @@
 }
 
 .booking {
-  padding: 19px 32px;
-  font-size: minmax(1rem, 20px);
+  padding: 10px 20px;
+  font-size: 16px;
   border-radius: 10px;
   cursor: pointer;
   border: none;
@@ -61,7 +62,7 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 19px 32px;
+  padding: 10px 20px;
   border-radius: 10px;
   cursor: pointer;
   border: none;
@@ -71,11 +72,11 @@
 }
 
 .more > p {
-  font-size: 1rem;
+  font-size: 16px;
 }
 
 .more > svg {
-  width: 1.2rem;
+  width: 16px;
 }
 
 .booking:hover {
@@ -89,77 +90,98 @@
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {
-  .par1 {
-    font-size: 3rem;
-  }
-
-  .par2 {
-    font-size: 0.9rem;
-  }
-
-  .buttons {
-    justify-content: center;
-    gap: 20px;
-  }
 }
 
 /* Medium devices (tablets, 768px and up) */
 @media (min-width: 768px) {
   .par1 {
-    font-size: 3.8rem;
-  }
-
-  .par2 {
-    font-size: 1.2rem;
+    font-size: 44px;
+    width: 600px;
   }
 
   .booking {
-    font-size: 1.2rem;
+    padding: 15px 25px;
+    font-size: 20px;
+  }
+
+  .more {
+    padding: 15px 25px;
   }
 
   .more > p {
-    font-size: 1.2rem;
+    font-size: 20px;
   }
 }
 
 /* Large devices (desktops, 992px and up) */
 @media (min-width: 992px) {
   .par1 {
-    max-width: 900px;
-    font-size: 4.3rem;
+    font-size: 52px;
+    width: 700px;
   }
 
   .par2 {
-    font-size: 1.4rem;
+    font-size: 20px;
   }
 
   .booking {
-    font-size: 1.3rem;
+    padding: 15px 25px;
+    font-size: 24px;
+  }
+
+  .more {
+    padding: 15px 25px;
   }
 
   .more > p {
-    font-size: 1.3rem;
+    font-size: 24px;
   }
 }
 
 /* Extra large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
   .par1 {
-    max-width: 1100px;
-    font-size: 4.8rem;
+    font-size: 56px;
+    width: 800px;
   }
 
   .par2 {
-    max-width: 900px;
-    font-size: 1.5rem;
+    font-size: 20px;
+    width: 1100px;
   }
 
   .buttons {
-    max-width: 900px;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 200px;
+  }
+
+  .booking {
+    padding: 15px 25px;
+    font-size: 24px;
+  }
+
+  .more {
+    padding: 15px 25px;
+  }
+
+  .more > p {
+    font-size: 24px;
   }
 }
 
 /* Extra extra large devices (very large screens, 1400px and up) */
 @media (min-width: 1400px) {
+  .par1 {
+    font-size: 64px;
+    width: 800px;
+  }
+
+  .container {
+    gap: 100px;
+  }
+
+  .par2 {
+    font-size: 24px;
+    width: 1100px;
+  }
 }
