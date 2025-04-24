@@ -13,20 +13,21 @@ const RoomStatus = () => {
   const [cleanAvailable, setCleanAvailable] = useState(0);
   const [dirtyAvailable, setDirtyAvailable] = useState(0);
   const [inspectedAvailable, setInspectedAvailable] = useState(0);
-
+//status 0: Maked up, Not Maked up
+//status1: Available or Occupied
   useEffect(() => {
     const fetchStatus = async () => {
       try {
         const occupiedCount = await countRoomStatus1("Occupied");
         const availableCount = await countRoomStatus1("Available");
 
-        const cleanOcc = await countRoomByStatus0AndStatus1("Clean", "Occupied");
-        const dirtyOcc = await countRoomByStatus0AndStatus1("Dirty", "Occupied");
-        const inspectedOcc = await countRoomByStatus0AndStatus1("Inspected", "Occupied");
+        const cleanOcc = await countRoomByStatus0AndStatus1("Maked up", "Occupied");
+        const dirtyOcc = await countRoomByStatus0AndStatus1("Not Maked up", "Occupied");
+       // const inspectedOcc = await countRoomByStatus0AndStatus1("Inspected", "Occupied");
 
-        const cleanAvail = await countRoomByStatus0AndStatus1("Clean", "Available");
-        const dirtyAvail = await countRoomByStatus0AndStatus1("Dirty", "Available");
-        const inspectedAvail = await countRoomByStatus0AndStatus1("Inspected", "Available");
+        const cleanAvail = await countRoomByStatus0AndStatus1("Maked up", "Available");
+        const dirtyAvail = await countRoomByStatus0AndStatus1("Not Maked up", "Available");
+       // const inspectedAvail = await countRoomByStatus0AndStatus1("Inspected", "Available");
 
         setOccupied(occupiedCount);
         setAvailable(availableCount);
@@ -56,17 +57,17 @@ const RoomStatus = () => {
             <strong>{occupied}</strong>
           </div>
           <div className="room-detail">
-            <span>Clean</span>
+            <span>Maked up</span>
             <strong>{cleanOccupied}</strong>
           </div>
           <div className="room-detail">
-            <span>Dirty</span>
+            <span>Not Maked up</span>
             <strong>{dirtyOccupied}</strong>
           </div>
-          <div className="room-detail">
+          {/*<div className="room-detail">
             <span>Inspected</span>
             <strong>{inspectedOccupied}</strong>
-          </div>
+          </div>*/}
         </div>
         <div className="room-column">
           <div className="room-header">
@@ -74,17 +75,17 @@ const RoomStatus = () => {
             <strong>{available}</strong>
           </div>
           <div className="room-detail">
-            <span>Clean</span>
+            <span>Maked up</span>
             <strong>{cleanAvailable}</strong>
           </div>
           <div className="room-detail">
-            <span>Dirty</span>
+            <span>Not Maked up</span>
             <strong>{dirtyAvailable}</strong>
           </div>
-          <div className="room-detail">
+          {/*<div className="room-detail">
             <span>Inspected</span>
             <strong>{inspectedAvailable}</strong>
-          </div>
+          </div>*/}
         </div>
       </div>
     </section>

@@ -1,0 +1,57 @@
+/* Room specific styles */
+.add-room-form {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .add-room-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .action-menu {
+    min-width: 120px;
+  }
+  
+  .loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-style: italic;
+  }
+  
+  .no-data {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }
+  
+  /* Status pill buttons */
+  .btn.pill.active {
+    background-color: #a6a381;
+    color: white;
+  }
+  
+  /* Room table styles */
+  .table-container {
+    margin-top: 20px;
+  }
+  
+  /* Add these to your existing GuestStyles.css or create a new RoomStyles.css */
+  textarea.edit-input {
+    min-height: 80px;
+    resize: vertical;
+  }
+  
+  .error-message {
+    color: #e27d7d;
+    background-color: #ffeeee;
+    padding: 10px;
+    margin: 0 0 10px 0;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  

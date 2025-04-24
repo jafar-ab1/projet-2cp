@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL: "http://localhost:3000",
 });
 
-
+//done
 //auth routes
 export const loginUser = async (loginUserData) => {
   try {
@@ -25,7 +25,7 @@ export const registerUser = async (registerUserData) => {
     throw error;
   }
 };
-
+//done
 //I- dash board
 
 export const getTodayCheckIns = async () => {
@@ -45,46 +45,46 @@ export const getInHotelCount = async () => {
   return response.data;
 };
 
-
+//done
 //status1: Available or Occupied
 export const countRoomStatus1 = async(status1) =>{
   const response = await api.get(`/dash/countStatus/${status1}`);
   return response.data;
 };
-
+//done
 //types: Standard or Deluxe or Suite(occupied)
 export const countRoomsByTypeAndAvailable = async (type) => {
   const response = await api.get(`/dash/countTypeAvailable/${type}`);
   return response.data;
 }
-
+//done
 //status 0: Maked up, Not Maked up
 //status1: Available or Occupied
 export const countRoomByStatus0AndStatus1 = async(status0, status1) =>{
   const response = await api.get(`/dash/count/${status0}/${status1}`);
   return response.data;
 }
-
+//later after finding a good design
 //status de chaque floor apart
 export const countStatusFloor = async(status) =>{
   const response = await api.get(`/dash/status/${status}`);
   return response.data;
 };
 
-
+//done
 export const getOccupancyByMonth = async (month) => {
   const response = await api.get(`/occupancies/${month}`);
   return response.data;
 };
 
-
+//change
 export const getAllFeedbacks = async () => {
   const response = await api.get("/feedbacks");
   return response.data;
 };
 
 //II- Guest
-
+//UI not ready
 export const addGuest = async(email, roomNumber) => {
   const response = await api.get(`/dash/addGuest/${email}/${roomNumber}`);
   return response.data;

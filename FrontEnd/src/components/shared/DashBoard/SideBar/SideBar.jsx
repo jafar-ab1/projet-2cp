@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./SideBar.css";
 
 const Sidebar = () => {
@@ -19,13 +19,13 @@ const Sidebar = () => {
       <h2 className="logo">Hotel</h2>
       <nav className="nav">
         {links.map((link) => (
-          <a
+          <Link
             key={link.href}
-            href={link.href}
+            to={link.href}
             className={currentPath === link.href ? "active" : ""}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
       </nav>
     </aside>
