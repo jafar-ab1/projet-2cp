@@ -9,7 +9,11 @@ const {
 
 const validate = require('../middlewares/validation.middleware');
 
-// GET all maintenance records
+
+/**cette fonction c'est pour afficher les données de touts les maitenances des chambres
+ tu le fais appeller avec le route suivant:
+ /maitenance                  avec la methode get
+ */
 router.get('/',maintenanceController.getAllMaintenance);
 
 // GET specific maintenance by room number
