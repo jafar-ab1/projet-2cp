@@ -73,9 +73,10 @@ export const countStatusFloor = async(status) =>{
 
 //done
 export const getOccupancyByMonth = async (month) => {
-  const response = await api.get(`/occupancies/${month}`);
+  const response = await api.get(`/occupation/${month}`);
   return response.data;
 };
+
 
 //change
 export const getAllFeedbacks = async () => {
@@ -104,9 +105,35 @@ export const editGuest = async(email, guestData) => {
 
 
 //rooms
-export const addRoom = async(roomData) =>{
-  const response = await api.post('/rooms', roomData);
-  return response.data;
+export const addRoom = async (roomData) => {
+  try {
+    // Create a simplified version of the data with only the essential fields
+    const formattedData = {
+      roomNumber: roomData.roomNumber,
+      type: roomData.type || "Standard",
+      floor: roomData.floor || "1",
+      facilities: Array.isArray(roomData.facilities)
+        ? roomData.facilities
+        : roomData.facilities.split(",").map((item) => item.trim()),
+      status0: roomData.status0 || "Maked-up",
+      status1: roomData.status1 || "Available",
+      price: Number(roomData.price),
+    }
+
+    // Log the exact data being sent to the server
+    console.log("Sending room data to server:", JSON.stringify(formattedData, null, 2))
+    
+    const response = await api.post("/rooms", formattedData)
+    console.log("Room added successfully:", response.data)
+    return response.data
+  } catch (error) {
+    console.error("Error adding room:", error)
+    // Log more detailed error information
+    if (error.response) {
+      console.error("Server response:", error.response.status, error.response.data)
+    }
+    throw error
+  }
 }
 
 export const getAllRooms = async() =>{
@@ -150,5 +177,5 @@ export const getRoomByNumber = async(roomNumber) => {
     return response.data;
 }
 
-
+   
 

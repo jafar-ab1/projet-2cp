@@ -34,11 +34,11 @@ const RoomStatus = () => {
 
         setCleanOccupied(cleanOcc);
         setDirtyOccupied(dirtyOcc);
-        setInspectedOccupied(inspectedOcc);
+        //setInspectedOccupied(inspectedOcc);
 
         setCleanAvailable(cleanAvail);
         setDirtyAvailable(dirtyAvail);
-        setInspectedAvailable(inspectedAvail);
+        //setInspectedAvailable(inspectedAvail);
       } catch (error) {
         console.error("Error fetching room status data:", error);
       }

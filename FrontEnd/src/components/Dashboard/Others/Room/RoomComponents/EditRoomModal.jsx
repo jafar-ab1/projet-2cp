@@ -3,11 +3,11 @@ import { useState, useEffect } from "react"
 const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
   const [roomData, setRoomData] = useState({
     roomNumber: "",
-    type: "",
+    type: "Standard",
     floor: "",
     facilities: "",
-    status0: "",
-    status1: "",
+    status0: "Maked-up",
+    status1: "Available",
     price: "",
   })
 
@@ -18,12 +18,12 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
     if (room) {
       setRoomData({
         roomNumber: room.roomNumber,
-        type: room.type,
-        floor: room.floor,
-        facilities: room.facilities,
-        status0: room.status0,
-        status1: room.status1,
-        price: room.price.toString(),
+        type: room.type || "Standard",
+        floor: room.floor || "",
+        facilities: Array.isArray(room.facilities) ? room.facilities.join(", ") : room.facilities || "",
+        status0: room.status0 || "Maked-up",
+        status1: room.status1 || "Available",
+        price: room.price ? room.price.toString() : "",
       })
     }
   }, [room])
@@ -38,6 +38,21 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
   const validateForm = () => {
     if (!roomData.roomNumber) {
       setError("Room number is required")
+      return false
+    }
+
+    if (!roomData.type) {
+      setError("Room type is required")
+      return false
+    }
+
+    if (!roomData.floor) {
+      setError("Floor is required")
+      return false
+    }
+
+    if (!roomData.facilities) {
+      setError("Facilities are required")
       return false
     }
 
@@ -99,43 +114,46 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
           </div>
 
           <div className="form-group">
-            <label>Bed Type:</label>
+            <label>Room Type:</label>
             <select
               value={roomData.type}
               onChange={(e) => handleInputChange("type", e.target.value)}
               className="edit-select"
               disabled={isLoading}
             >
-              <option value="Single bed">Single bed</option>
-              <option value="Double bed">Double bed</option>
-              <option value="VIP">VIP</option>
+              <option value="Standard">Standard</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Suite">Suite</option>
             </select>
           </div>
 
           <div className="form-group">
             <label>Floor:</label>
-            <select
+            <input
+              type="text"
               value={roomData.floor}
               onChange={(e) => handleInputChange("floor", e.target.value)}
-              className="edit-select"
+              className="edit-input"
+              placeholder="e.g. 1"
               disabled={isLoading}
-            >
-              <option value="floor-1">Floor 1</option>
-              <option value="floor-2">Floor 2</option>
-              <option value="floor-3">Floor 3</option>
-            </select>
+              required
+            />
           </div>
 
           <div className="form-group">
-            <label>Facilities:</label>
+            <label>
+              Facilities: <span className="required">*</span>
+            </label>
             <textarea
               value={roomData.facilities}
               onChange={(e) => handleInputChange("facilities", e.target.value)}
               className="edit-input"
-              placeholder="e.g. AC, shower, TV, towel"
+              placeholder="e.g. AC, shower, TV, towel (comma separated)"
               disabled={isLoading}
               rows={3}
+              required
             />
+            <small>Enter facilities separated by commas</small>
           </div>
 
           <div className="form-group">
@@ -162,9 +180,7 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
               disabled={isLoading}
             >
               <option value="Available">Available</option>
-              <option value="Booked">Booked</option>
-              <option value="Reserved">Reserved</option>
-              <option value="Waitlist">Waitlist</option>
+              <option value="Occupied">Occupied</option>
             </select>
           </div>
 
@@ -176,9 +192,8 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
               className="edit-select"
               disabled={isLoading}
             >
-              <option value="Clean">Clean</option>
-              <option value="Dirty">Dirty</option>
-              <option value="Inspected">Inspected</option>
+              <option value="Maked-up">Maked-up</option>
+              <option value="Not-Maked-up">Not-Maked-up</option>
             </select>
           </div>
 

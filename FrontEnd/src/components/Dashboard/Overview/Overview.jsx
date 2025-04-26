@@ -19,14 +19,14 @@ const Overview = () => {
       try {
         const checkIns = await getTodayCheckIns();
         const checkOuts = await getTodayCheckOut();
-        const inHotel = await getInHotelCount();
+        //const inHotel = await getInHotelCount();
 
         const available = await countRoomStatus1("Available");
         const occupied = await countRoomStatus1("Occupied");
 
         setCheckInCount(checkIns);
         setCheckOutCount(checkOuts);
-        setInHotelCount(inHotel);
+       // setInHotelCount(inHotel);
 
         setAvailableRooms(available);
         setOccupiedRooms(occupied);
@@ -51,7 +51,7 @@ const Overview = () => {
           Today's <span>check-out</span>
         </div>
         <div>
-          <strong>{inHotelCount}</strong>
+          <strong>{/*{inHotelCount*/}</strong>
           Total <span>In hotel</span>
         </div>
         <div>

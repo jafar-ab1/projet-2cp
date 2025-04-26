@@ -1,3 +1,7 @@
+"use client"
+
+// Update the RoomTable component to match the MongoDB schema
+
 import StatusBadge from "../../Common/StatusBadge.jsx"
 
 const RoomTable = ({ rooms, onEdit, onDelete }) => {
@@ -75,15 +79,23 @@ const RoomTable = ({ rooms, onEdit, onDelete }) => {
     }, 100)
   }
 
+  // Format facilities for display
+  const formatFacilities = (facilities) => {
+    if (Array.isArray(facilities)) {
+      return facilities.join(", ")
+    }
+    return facilities
+  }
+
   return (
     <div className="table-container">
       <table className="styled-table">
         <thead>
           <tr>
             <th>Room number</th>
-            <th>Bed type</th>
-            <th>Room floor</th>
-            <th>Room facility</th>
+            <th>Room type</th>
+            <th>Floor</th>
+            <th>Facilities</th>
             <th>Price</th>
             <th>Status</th>
             <th></th>
@@ -94,11 +106,11 @@ const RoomTable = ({ rooms, onEdit, onDelete }) => {
             rooms.map((room, index) => (
               <tr key={index}>
                 <td>
-                  <strong>{room.id}</strong>
+                  <strong>{room.roomNumber}</strong>
                 </td>
                 <td>{room.type}</td>
                 <td>{room.floor}</td>
-                <td>{room.facilities}</td>
+                <td>{formatFacilities(room.facilities)}</td>
                 <td>${room.price}</td>
                 <td>
                   <StatusBadge status={room.status1} />

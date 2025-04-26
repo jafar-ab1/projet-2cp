@@ -1,12 +1,13 @@
+
 import { useState } from "react"
 
 const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
   const [roomData, setRoomData] = useState({
     roomNumber: "",
-    type: "Double bed",
-    floor: "floor-1",
+    type: "Standard",
+    floor: "",
     facilities: "",
-    status0: "Clean",
+    status0: "Maked-up",
     status1: "Available",
     price: "",
   })
@@ -20,9 +21,25 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     })
   }
 
+  // Update the validateForm function to check all required fields
   const validateForm = () => {
     if (!roomData.roomNumber) {
       setError("Room number is required")
+      return false
+    }
+
+    if (!roomData.type) {
+      setError("Room type is required")
+      return false
+    }
+
+    if (!roomData.floor) {
+      setError("Floor is required")
+      return false
+    }
+
+    if (!roomData.facilities) {
+      setError("Facilities are required")
       return false
     }
 
@@ -39,16 +56,23 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     return true
   }
 
+  // Update the handleSubmit function to ensure all required fields are present
   const handleSubmit = async () => {
     if (!validateForm()) return
 
     setError("")
 
     try {
-      // Convert price to number
+      // Format the data for submission
       const dataToSubmit = {
         ...roomData,
-        price: Number.parseFloat(roomData.price),
+        price: Number(roomData.price),
+        facilities: roomData.facilities.split(",").map((item) => item.trim()),
+        // Ensure these fields are always included
+        type: roomData.type || "Standard",
+        status0: roomData.status0 || "Maked-up",
+        status1: roomData.status1 || "Available",
+        floor: roomData.floor || "",
       }
 
       const success = await onAddRoom(dataToSubmit)
@@ -57,7 +81,8 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
         onClose()
       }
     } catch (err) {
-      setError("Failed to add room. Please try again.")
+      console.error("Failed to add room:", err)
+      setError("Failed to add room. " + (err.response?.data?.message || "Please try again."))
     }
   }
 
@@ -85,43 +110,46 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
           </div>
 
           <div className="form-group">
-            <label>Bed Type:</label>
+            <label>Room Type:</label>
             <select
               value={roomData.type}
               onChange={(e) => handleInputChange("type", e.target.value)}
               className="edit-select"
               disabled={isLoading}
             >
-              <option value="Single bed">Single bed</option>
-              <option value="Double bed">Double bed</option>
-              <option value="VIP">VIP</option>
+              <option value="Standard">Standard</option>
+              <option value="Deluxe">Deluxe</option>
+              <option value="Suite">Suite</option>
             </select>
           </div>
 
           <div className="form-group">
             <label>Floor:</label>
-            <select
+            <input
+              type="text"
               value={roomData.floor}
               onChange={(e) => handleInputChange("floor", e.target.value)}
-              className="edit-select"
+              className="edit-input"
+              placeholder="e.g. 1"
               disabled={isLoading}
-            >
-              <option value="floor-1">Floor 1</option>
-              <option value="floor-2">Floor 2</option>
-              <option value="floor-3">Floor 3</option>
-            </select>
+              required
+            />
           </div>
 
           <div className="form-group">
-            <label>Facilities:</label>
+            <label>
+              Facilities: <span className="required">*</span>
+            </label>
             <textarea
               value={roomData.facilities}
               onChange={(e) => handleInputChange("facilities", e.target.value)}
               className="edit-input"
-              placeholder="e.g. AC, shower, TV, towel"
+              placeholder="e.g. AC, shower, TV, towel (comma separated)"
               disabled={isLoading}
               rows={3}
+              required
             />
+            <small>Enter facilities separated by commas</small>
           </div>
 
           <div className="form-group">
@@ -148,9 +176,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
               disabled={isLoading}
             >
               <option value="Available">Available</option>
-              <option value="Booked">Booked</option>
-              <option value="Reserved">Reserved</option>
-              <option value="Waitlist">Waitlist</option>
+              <option value="Occupied">Occupied</option>
             </select>
           </div>
 
@@ -162,9 +188,8 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
               className="edit-select"
               disabled={isLoading}
             >
-              <option value="Clean">Clean</option>
-              <option value="Dirty">Dirty</option>
-              <option value="Inspected">Inspected</option>
+              <option value="Maked-up">Maked-up</option>
+              <option value="Not-Maked-up">Not-Maked-up</option>
             </select>
           </div>
 

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react"
 import "../Table.css"
 import "../StatusBadge.css"
@@ -7,32 +8,10 @@ import RoomTable from "./RoomComponents/RoomTable.jsx"
 import AddRoomModal from "./RoomComponents/AddRoomModal.jsx"
 import EditRoomModal from "./RoomComponents/EditRoomModal.jsx"
 import { addRoom, getAllRooms } from "../../../../api/index.js"
-
+import axios from "axios"
 const Room = () => {
   // State for rooms data
-  const [allRooms, setAllRooms] = useState([
-    {
-      id: "#001",
-      roomNumber: "001",
-      type: "Double bed",
-      floor: "floor-1",
-      facilities: "AC,shower,Double bed,towel bathtub,TV",
-      status1: "Available",
-      price: 100,
-      status0: "Clean",
-    },
-    {
-      id: "#002",
-      roomNumber: "002",
-      type: "Single bed",
-      floor: "floor-2",
-      facilities: "AC,shower,Double bed,towel bathtub,TV",
-      status1: "Booked",
-      price: 80,
-      status0: "Clean",
-    },
-    // More sample data...
-  ])
+  const [allRooms, setAllRooms] = useState([])
 
   // State for room counts
   const [roomCounts, setRoomCounts] = useState({
@@ -74,7 +53,6 @@ const Room = () => {
     })
   }, [allRooms])
 
-  // Fetch rooms from API
   const fetchRooms = async () => {
     setIsLoading(true)
     setError(null)
@@ -82,8 +60,9 @@ const Room = () => {
     try {
       // Call the API to get all rooms
       const rooms = await getAllRooms()
+      console.log("Rooms fetched successfully:", rooms)
 
-      // Format the response data if needed
+      // Format the response data
       const formattedRooms = Array.isArray(rooms)
         ? rooms.map((room) => ({
             id: `#${room.roomNumber}`,
@@ -92,9 +71,12 @@ const Room = () => {
         : []
 
       setAllRooms(formattedRooms)
-      setIsLoading(false)
     } catch (err) {
-      setError("Failed to fetch rooms: " + (err.message || "Unknown error"))
+      console.error("Error fetching rooms:", err)
+      setError("Failed to fetch rooms. Please check if the backend server is running.")
+      // Initialize with empty array to prevent errors
+      setAllRooms([])
+    } finally {
       setIsLoading(false)
     }
   }
@@ -132,76 +114,90 @@ const Room = () => {
     setCurrentPage(1)
   }, [activeFilter, searchQuery])
 
-  // Handle adding a new room
   const handleAddRoom = async (roomData) => {
     setIsLoading(true)
     setError(null)
 
     try {
+      console.log("Adding room with data:", roomData)
       // Call the API function to add a room
-      const newRoomData = await addRoom(roomData)
+      const newRoom = await addRoom(roomData)
+      console.log("Room added successfully:", newRoom)
 
-      // Add the new room to the local state
-      const newRoom = {
-        id: `#${roomData.roomNumber}`,
-        ...newRoomData,
+      // Format the new room for the UI
+      const formattedRoom = {
+        id: `#${newRoom.roomNumber || roomData.roomNumber}`,
+        ...newRoom,
       }
 
-      setAllRooms([...allRooms, newRoom])
+      // Update the local state with the new room
+      setAllRooms((prevRooms) => [...prevRooms, formattedRoom])
+
       setIsAddModalOpen(false)
-      setIsLoading(false)
+      alert("Room added successfully!")
       return true
     } catch (err) {
-      setError("Failed to add room: " + (err.message || "Unknown error"))
-      setIsLoading(false)
+      console.error("Error adding room:", err)
+      setError("Failed to add room. Please check if the backend server is running.")
       return false
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  // Handle editing a room (local only since API not available)
   const handleEditRoom = async (roomNumber, updatedData) => {
     setIsLoading(true)
     setError(null)
 
     try {
-      // Since we don't have the modifyRoom API function,
-      // we'll just update the local state for now
-      const updatedRooms = allRooms.map((room) => (room.roomNumber === roomNumber ? { ...room, ...updatedData } : room))
+      console.log("Updating room:", roomNumber, "with data:", updatedData)
+
+      // Make a direct axios call since we don't have updateRoom in the API
+      const response = await axios.put(`http://localhost:3000/rooms/${roomNumber}`, updatedData)
+      const updatedRoom = response.data
+      console.log("Room updated successfully:", updatedRoom)
+
+      // Update the local state
+      const updatedRooms = allRooms.map((room) => (room.roomNumber === roomNumber ? { ...room, ...updatedRoom } : room))
 
       setAllRooms(updatedRooms)
       setIsEditModalOpen(false)
       setSelectedRoom(null)
-      setIsLoading(false)
 
-      // Show a message that this is local only
-      alert("Room updated locally. API update not implemented.")
+      alert("Room updated successfully!")
       return true
     } catch (err) {
-      setError("Failed to update room: " + (err.message || "Unknown error"))
-      setIsLoading(false)
+      console.error("Error updating room:", err)
+      setError("Failed to update room. Please check if the backend server is running.")
       return false
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  // Handle deleting a room (local only since API not available)
   const handleDeleteRoom = async (roomNumber) => {
     setIsLoading(true)
     setError(null)
 
     try {
-      // Since we don't have the suppRoom API function,
-      // we'll just update the local state for now
+      console.log("Deleting room:", roomNumber)
+
+      // Make a direct axios call since we don't have deleteRoom in the API
+      await axios.delete(`http://localhost:3000/rooms/${roomNumber}`)
+      console.log("Room deleted successfully")
+
+      // Update the local state
       const updatedRooms = allRooms.filter((room) => room.roomNumber !== roomNumber)
       setAllRooms(updatedRooms)
-      setIsLoading(false)
 
-      // Show a message that this is local only
-      alert("Room deleted locally. API deletion not implemented.")
+      alert("Room deleted successfully!")
       return true
     } catch (err) {
-      setError("Failed to delete room: " + (err.message || "Unknown error"))
-      setIsLoading(false)
+      console.error("Error deleting room:", err)
+      setError("Failed to delete room. Please check if the backend server is running.")
       return false
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -245,7 +241,21 @@ const Room = () => {
         </div>
       </div>
 
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div
+          className="error-message"
+          style={{
+            backgroundColor: "#f8d7da",
+            color: "#721c24",
+            padding: "10px 15px",
+            marginBottom: "15px",
+            border: "1px solid #f5c6cb",
+            borderRadius: "4px",
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       {isLoading ? (
         <div className="loading">Loading rooms...</div>

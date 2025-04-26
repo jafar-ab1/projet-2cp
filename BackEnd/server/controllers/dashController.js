@@ -27,35 +27,33 @@ exports.countFloorStatus = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 exports.inHotel = async (req, res) => {
-    try{
-        const todayDate = new Date();
-        const startDay = new Date(todayDate);
-        startDay.setHours(0,0,0,0);
-        const endDay = new Date(todayDate);
-        endDay.setHours(23, 59, 59, 999);
-
-        const count = await Reservation.countDocuments({
-            checkInDate: {
-                $gte: startDay,
-                $lte: endDay
-            },
-            status1:{
-                $or: ["Checked in", "Due out"]
-            }
-        });
-
-        res.status(200).json(  
-            count
-        )
-    }catch (error) {
-        res.status(500).json({
-            error: error.message
-        });
+    try {
+      const todayDate = new Date();
+      const startDay = new Date(todayDate);
+      startDay.setHours(0, 0, 0, 0);
+  
+      const endDay = new Date(todayDate);
+      endDay.setHours(23, 59, 59, 999);
+  
+      const count = await Reservation.countDocuments({
+        checkInDate: {
+          $gte: startDay,
+          $lte: endDay
+        },
+        status: {
+          $in: ["Checked in", "Due out"]
+        }
+      });
+  
+      res.status(200).json(count);
+    } catch (error) {
+      console.error("Error in inHotel controller:", error.message);
+      res.status(500).json({
+        error: error.message
+      });
     }
-};
-
+  };
 
 exports.getCheck_in = async (req,res) => {
     try{

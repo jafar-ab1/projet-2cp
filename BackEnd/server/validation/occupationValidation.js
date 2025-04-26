@@ -1,6 +1,5 @@
 const Joi = require('joi');
 
-// Schéma pour les paramètres d'URL
 const monthSchema = Joi.object({
   month: Joi.string().pattern(/^(0[1-9]|1[0-2])-(19|20)\d{2}$/).required().messages({
     'string.pattern.base': 'Le mois doit être au format MM-YYYY',
@@ -8,7 +7,6 @@ const monthSchema = Joi.object({
   })
 });
 
-// Schéma pour la création
 const createSchema = Joi.object({
   month: Joi.string().pattern(/^(0[1-9]|1[0-2])-(19|20)\d{2}$/).required().messages({
     'string.pattern.base': 'Le mois doit être au format MM-YYYY',
@@ -38,17 +36,14 @@ const createSchema = Joi.object({
     'any.required': 'Le nombre de chambres disponibles est obligatoire'
   })
 }).custom((value, helpers) => {
-  // Validation croisée
   if (value.occupiedRooms + value.availableRooms !== value.totalRooms) {
     return helpers.error('any.invalid');
   }
-  
   return value;
 }).messages({
   'any.invalid': 'Les chiffres fournis sont incohérents'
 });
 
-// Schéma pour la mise à jour
 const updateSchema = Joi.object({
   month: Joi.string().pattern(/^(0[1-9]|1[0-2])-(19|20)\d{2}$/).messages({
     'string.pattern.base': 'Le mois doit être au format MM-YYYY'
@@ -57,10 +52,9 @@ const updateSchema = Joi.object({
   totalRooms: Joi.number().integer().min(1),
   occupiedRooms: Joi.number().integer().min(0),
   availbleRooms: Joi.number().integer().min(0)
-}).min(1)
-  .messages({
-    'object.missing': 'Au moins un champ doit être fourni pour la mise à jour'
-  });
+}).min(1).messages({
+  'object.missing': 'Au moins un champ doit être fourni pour la mise à jour'
+});
 
 module.exports = {
   monthSchema,
