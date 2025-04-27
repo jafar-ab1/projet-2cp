@@ -10,9 +10,9 @@ const createRoomSchema = Joi.object({
     'any.only': 'Le type de chambre doit être standard, deluxe ou suite'
   }),
   status0: Joi.string().valid('Maked up', 'Not Maked up').default('Maked up').required().messages({
-    'any.only': 'Le statut doit être disponible, Clean, Dirty ou Inspected'
+    'any.only': 'Le statut doit être Maked up, Not Maked up'
   }),
-  status1: Joi.string().valid('Available', 'Occupied').required().default('Available').messages({
+  status1: Joi.string().valid('Available', 'Occupied').default('Available').messages({
     'any.only': 'Le statut doit être Available, Occupied'
   }),
   price: Joi.number().min(0).required().messages({

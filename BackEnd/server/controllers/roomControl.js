@@ -72,9 +72,9 @@ exports.countAllRooms = async (req, res) => {
 };
 
 exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type,facilities,status0,status1, price, floor} = req.body;
+    const {roomNumber, type,facilities,status0, price, floor} = req.body;
     try{
-        const newRoom= new Room({roomNumber,facilities, type, status0,status1, price, floor});
+        const newRoom= new Room({roomNumber,facilities, type, status0, price, floor});
         await newRoom.save();
         res.status(201).json(newRoom);
     }
