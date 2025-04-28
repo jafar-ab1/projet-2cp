@@ -22,7 +22,6 @@ const Dashboard = () => {
         const standard = await countRoomsByTypeAndAvailable("Standard");
         const deluxe = await countRoomsByTypeAndAvailable("Deluxe");
         const suite = await countRoomsByTypeAndAvailable("Suite");
-
         setCountRoomsStandard(standard);
         setCountRoomsDeluxe(deluxe);
         setCountRoomsSuite(suite);
