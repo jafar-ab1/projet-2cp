@@ -6,6 +6,8 @@ const roomScehma = new mongoose.Schema({
     facilities: { type: [String], required: true },
     status0: { type: String, enum: ['Maked-up', 'Not-Maked-up'], default:'Maked up', required: true},
     status1: { type: String, enum: ['Available', 'Occupied'], default:'Available'},
+    status0: { type: String, enum: ['Maked up', 'Not Maked up'], default:'Maked up', required: true},
+    status1: { type: String, enum: ['Available', 'Occupied'], default:'Available', required: false},
     floor:{type:String, required: true},
     price: {type:Number, required: true}
 })
