@@ -1,5 +1,4 @@
-
-import { useState } from "react"
+import { useState } from "react";
 
 const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
   const [roomData, setRoomData] = useState({
@@ -10,81 +9,86 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     status0: "Maked-up",
     status1: "Available",
     price: "",
-  })
+  });
 
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
 
   const handleInputChange = (field, value) => {
     setRoomData({
       ...roomData,
       [field]: value,
-    })
-  }
+    });
+  };
 
-  // Update the validateForm function to check all required fields
   const validateForm = () => {
     if (!roomData.roomNumber) {
-      setError("Room number is required")
-      return false
+      setError("Room number is required");
+      return false;
     }
 
     if (!roomData.type) {
-      setError("Room type is required")
-      return false
+      setError("Room type is required");
+      return false;
     }
 
     if (!roomData.floor) {
-      setError("Floor is required")
-      return false
+      setError("Floor is required");
+      return false;
+    }
+
+    if (isNaN(roomData.floor)) {
+      setError("Floor must be a number");
+      return false;
     }
 
     if (!roomData.facilities) {
-      setError("Facilities are required")
-      return false
+      setError("Facilities are required");
+      return false;
     }
 
     if (!roomData.price) {
-      setError("Price is required")
-      return false
+      setError("Price is required");
+      return false;
     }
 
     if (isNaN(roomData.price)) {
-      setError("Price must be a number")
-      return false
+      setError("Price must be a number");
+      return false;
     }
 
-    return true
-  }
+    return true;
+  };
 
-  // Update the handleSubmit function to ensure all required fields are present
   const handleSubmit = async () => {
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setError("")
+    setError("");
 
     try {
-      // Format the data for submission
       const dataToSubmit = {
         ...roomData,
+        roomNumber: roomData.roomNumber.trim(),
+        type: roomData.type.trim(),
+        status0: roomData.status0.trim(),
+        status1: roomData.status1.trim(),
+        floor: Number(roomData.floor),
         price: Number(roomData.price),
-        facilities: roomData.facilities.split(",").map((item) => item.trim()),
-        // Ensure these fields are always included
-        type: roomData.type || "Standard",
-        status0: roomData.status0 || "Maked-up",
-        status1: roomData.status1 || "Available",
-        floor: roomData.floor || "",
-      }
+        facilities: roomData.facilities
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item.length > 0),
+      };
 
-      const success = await onAddRoom(dataToSubmit)
+      const success = await onAddRoom(dataToSubmit);
 
       if (success) {
-        onClose()
+        onClose();
       }
     } catch (err) {
-      console.error("Failed to add room:", err)
-      setError("Failed to add room. " + (err.response?.data?.message || "Please try again."))
+      console.error("Failed to add room:", err);
+      setError("Failed to add room. " + (err.response?.data?.message || "Please try again."));
     }
-  }
+  };
 
   return (
     <div className="modal-overlay">
@@ -124,7 +128,9 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
           </div>
 
           <div className="form-group">
-            <label>Floor:</label>
+            <label>
+              Floor: <span className="required">*</span>
+            </label>
             <input
               type="text"
               value={roomData.floor}
@@ -157,7 +163,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
               Price: <span className="required">*</span>
             </label>
             <input
-              type="text"
+              type="number"
               value={roomData.price}
               onChange={(e) => handleInputChange("price", e.target.value)}
               className="edit-input"
@@ -194,17 +200,25 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
           </div>
 
           <div className="add-room-buttons">
-            <button className="done-button" onClick={handleSubmit} disabled={isLoading}>
+            <button
+              className="done-button"
+              onClick={handleSubmit}
+              disabled={isLoading}
+            >
               {isLoading ? "Adding..." : "Add Room"}
             </button>
-            <button className="cancel-button" onClick={onClose} disabled={isLoading}>
+            <button
+              className="cancel-button"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               Cancel
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddRoomModal
+export default AddRoomModal;
