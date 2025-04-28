@@ -72,8 +72,8 @@ export const countStatusFloor = async(status) =>{
 };
 
 //done
-export const getOccupancyByMonth = async (month) => {
-  const response = await api.get(`/occupation/${month}`);
+export const OccupancyMonth = async (year) => {
+  const response = await api.get(`/reservation/dash/occupancy/${year}`);
   return response.data;
 };
 

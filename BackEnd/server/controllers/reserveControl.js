@@ -203,7 +203,77 @@ exports.suppReservation = async(req, res) => {
     }
 }
 
-exports.occupancyMonth = async(req, res) => {
-
-}
-
+exports.occupancyStatistics = async (req, res) => {
+  try {
+   
+    const year = req.query.year || new Date().getFullYear();
+    
+    // Obtenir toutes les réservations pour l'année spécifiée
+    const reservations = await Reservation.find({
+      $and: [
+        { checkInDate: { $gte: new Date(`${year}-01-01`) } },
+        { checkInDate: { $lte: new Date(`${year}-12-31`) } }
+      ]
+    });
+    
+    // Obtenir le nombre total de chambres dans l'hôtel
+    const totalRooms = await Room.countDocuments();
+    
+    // Initialiser un tableau pour stocker les taux d'occupation par mois (index 0-11 pour janvier-décembre)
+    const monthlyOccupancy = Array(12).fill(0);
+    
+    // Calculer l'occupation par mois
+    for (let month = 0; month < 12; month++) {
+      // Déterminer le premier et dernier jour du mois
+      const startDate = new Date(year, month, 1);
+      const endDate = new Date(year, month + 1, 0);
+      const daysInMonth = endDate.getDate();
+      
+      // Compter les chambres occupées pour chaque jour du mois
+      let totalOccupiedDays = 0;
+      
+      // Pour chaque réservation
+      reservations.forEach(reservation => {
+        const checkIn = new Date(reservation.checkInDate);
+        const checkOut = new Date(reservation.checkOutDate);
+        
+        // Si la réservation chevauche ce mois
+        if (checkOut >= startDate && checkIn <= endDate) {
+          // Calculer le nombre de jours d'occupation dans ce mois
+          const overlapStart = checkIn > startDate ? checkIn : startDate;
+          const overlapEnd = checkOut < endDate ? checkOut : endDate;
+          
+          // Ajouter le nombre de jours d'occupation
+          const occupiedDays = Math.ceil((overlapEnd - overlapStart) / (1000 * 60 * 60 * 24));
+          totalOccupiedDays += occupiedDays;
+        }
+      });
+      
+      // Calculer le taux d'occupation (nombre de jours-chambres occupés / nombre total de jours-chambres disponibles)
+      const totalAvailableDays = totalRooms * daysInMonth;
+      monthlyOccupancy[month] = totalAvailableDays > 0 ? 
+        (totalOccupiedDays / totalAvailableDays * 100) : 0;
+    }
+    
+    // Préparer les données pour la réponse
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    
+    const result = monthNames.map((month, index) => ({
+      month,
+      occupancyRate: parseFloat(monthlyOccupancy[index].toFixed(2))
+    }));
+    
+    // Envoyer la réponse
+    res.status(200).json({
+      year: parseInt(year),
+      totalRooms,
+      occupancyStatistics: result
+    });
+    
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

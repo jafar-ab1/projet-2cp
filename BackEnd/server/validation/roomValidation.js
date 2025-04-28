@@ -15,10 +15,9 @@ const createRoomSchema = Joi.object({
   status1: Joi.string().valid('Available', 'Occupied').default('Available').messages({
     'any.only': 'Le statut doit être Available, Occupied'
   }),
-  price: Joi.number().min(0).required().messages({
+  price: Joi.number().min(0).messages({
     'number.base': 'Le prix doit être un nombre',
-    'number.min': 'Le prix ne peut pas être négatif',
-    'any.required': 'Le prix est obligatoire'
+    'number.min': 'Le prix ne peut pas être négatif'
   }),
   floor: Joi.number().integer().min(0).required().messages({
     'number.base': 'L\'étage doit être un nombre entier',

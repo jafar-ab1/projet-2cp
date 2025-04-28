@@ -28,6 +28,8 @@ router.get('/:email',validate(emailSchema, 'params'), reservationController.getR
 router.get('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.getReservationByEmailAndRoomNumber);
 
 
+router.get('/dash/occupancy/:year', reservationController.occupancyStatistics);
+
 router.post('/',validate(createSchema), reservationController.creatReservation);
 
 

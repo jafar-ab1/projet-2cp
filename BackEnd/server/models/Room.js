@@ -9,7 +9,7 @@ const roomScehma = new mongoose.Schema({
     status0: { type: String, enum: ['Maked up', 'Not Maked up'], default:'Maked up', required: true},
     status1: { type: String, enum: ['Available', 'Occupied'], default:'Available', required: false},
     floor:{type:String, required: true},
-    price: {type:Number, required: true}
+    price: {type:Number, required: false}
 })
 
 module.exports = mongoose.model('Room', roomScehma);

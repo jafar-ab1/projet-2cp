@@ -72,11 +72,21 @@ exports.countAllRooms = async (req, res) => {
 };
 
 exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type, facilities, status0, price, floor} = req.body;
+    const {roomNumber, type, facilities, status0, floor} = req.body;
     try{
-        const newRoom= new Room({roomNumber,facilities, type, status0, price, floor});
+        const newRoom= new Room({roomNumber,facilities, type, status0, floor});
         await newRoom.save();
         res.status(201).json(newRoom);
+        if (newRoom.type=="Standard") {
+            newRoom.price=100
+        }
+        else if (newRoom.type=="Deluxe") {
+            newRoom.price=200
+        }
+        else if (newRoom.type=="Suite") {
+            newRoom.price=300
+        }
+        newRoom.save()
     }
     catch(error){
         res.status(500).json({ message: error.message });

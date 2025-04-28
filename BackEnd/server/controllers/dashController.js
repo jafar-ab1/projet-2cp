@@ -199,11 +199,7 @@ exports.AddGuest = async (req, res) => {
        const checkInDate = new Date(reservation.checkInDate);
         checkInDate.setHours(0, 0, 0, 0);
 
-        if (checkInDate.getTime() > today.getTime() || checkOutDate.getTime() < today.getTime()) {
-            return res.status(400).json({ 
-                message: 'La réservation n\'est pas disponible pour enregistrement aujourd\'hui',
-            });
-        }
+       
 
         reservation.status = "Checked in";
         await reservation.save();
