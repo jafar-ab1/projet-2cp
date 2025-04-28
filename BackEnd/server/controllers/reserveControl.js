@@ -55,7 +55,7 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
 
 
 exports.creatReservation = async(req, res) =>{
-  const { email, roomNumber, checkInDate, checkOutDate, totalPrice, status } = req.body;
+  const { email, roomNumber, checkInDate, checkOutDate, totalPrice } = req.body;
     
   try {
       // 1. Vérification de l'utilisateur (obligatoire)
@@ -107,22 +107,8 @@ exports.creatReservation = async(req, res) =>{
           roomNumber,
           checkInDate: new Date(checkInDate),
           checkOutDate: new Date(checkOutDate),
-          totalPrice,
-          status: status || "confirmée"
       });
-
       await newReservation.save();
-
-      // 5. Création de la chambre si elle n'existe pas (optionnel)
-      if (!roomExists) {
-          const newRoom = new Room({
-              roomNumber,
-              type: "À définir", // Vous pouvez ajouter plus de détails
-              price: totalPrice, // Ou une valeur par défaut
-              status: "active"
-          });
-          await newRoom.save();
-      }    
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -135,6 +121,8 @@ exports.creatReservation = async(req, res) =>{
       const user = await User.findOne({email});
 
       const room = await Room.findOne({roomNumber});
+      room.status1 = "Occupied";
+      await room.save();
 
     const mailOptions = {
       from: config.email.user,
@@ -213,5 +201,9 @@ exports.suppReservation = async(req, res) => {
     catch(error){
         res.status(500).json({ message: error.message });
     }
+}
+
+exports.occupancyMonth = async(req, res) => {
+
 }
 
