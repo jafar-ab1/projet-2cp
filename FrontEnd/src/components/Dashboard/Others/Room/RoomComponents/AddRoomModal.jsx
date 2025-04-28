@@ -7,7 +7,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     floor: "",
     facilities: "",
     status0: "Maked up",
-    price: "",
+
   });
 
   const [error, setError] = useState("");
@@ -45,10 +45,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
       return false;
     }
 
-    if (!roomData.price) {
-      setError("Price is required");
-      return false;
-    }
+ 
 
     if (isNaN(roomData.price)) {
       setError("Price must be a number");
@@ -71,7 +68,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
         status0: roomData.status0.trim(),
 
         floor: Number(roomData.floor),
-        price: Number(roomData.price),
+
         facilities: roomData.facilities
           .split(",")
           .map((item) => item.trim())
