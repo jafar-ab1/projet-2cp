@@ -47,10 +47,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
 
  
 
-    if (isNaN(roomData.price)) {
-      setError("Price must be a number");
-      return false;
-    }
+  
 
     return true;
   };

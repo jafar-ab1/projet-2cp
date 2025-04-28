@@ -44,7 +44,7 @@ const Room = () => {
   useEffect(() => {
     const total = allRooms.length
     const available = allRooms.filter((room) => room.status1 === "Available").length
-    const booked = allRooms.filter((room) => room.status1 === "Booked").length
+    const booked = allRooms.filter((room) => room.status1 === "Occupied").length
 
     setRoomCounts({
       total,
@@ -88,8 +88,8 @@ const Room = () => {
     // Apply status filter
     if (activeFilter === "available") {
       filtered = filtered.filter((room) => room.status1 === "Available")
-    } else if (activeFilter === "booked") {
-      filtered = filtered.filter((room) => room.status1 === "Booked")
+    } else if (activeFilter === "Occupied") {
+      filtered = filtered.filter((room) => room.status1 === "Occupied")
     }
 
     // Apply search filter if there's a search query
@@ -220,8 +220,8 @@ const Room = () => {
             Available room({roomCounts.available})
           </button>
           <button
-            className={`btn pill ${activeFilter === "booked" ? "active" : ""}`}
-            onClick={() => setActiveFilter("booked")}
+            className={`btn pill ${activeFilter === "Occupied" ? "active" : ""}`}
+            onClick={() => setActiveFilter("Occupied")}
           >
             Booked({roomCounts.booked})
           </button>

@@ -12,15 +12,10 @@
 .available {
   background-color: #7b8caa;
 }
-.booked {
+.occupied {
   background-color: #e27d7d;
 }
-.reserved {
-  background-color: #b6b49d;
-}
-.waitlist {
-  background-color: #c4ad66;
-}
+
 
 /* Deal statuses */
 .ongoing {
@@ -37,7 +32,7 @@
 }
 
 /* Guest statuses */
-.clean {
+.Maked {
   background-color: #99aab5;
 }
 .dirty {
