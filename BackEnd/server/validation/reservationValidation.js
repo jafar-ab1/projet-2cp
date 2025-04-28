@@ -58,11 +58,7 @@ const createSchema = Joi.object({
     'date.greater': 'La date de départ doit être après la date d\'arrivée',
     'any.required': 'Date de départ est requise'
   }),
-  totalPrice: Joi.number().positive().required().messages({
-    'number.base': 'Doit être un nombre',
-    'number.positive': 'Doit être positif',
-    'any.required': 'Prix total est requis'
-  }),
+  
   status: Joi.string().valid("Due in", "Checked out", "Due out", "Checked in").default('Due in').messages({
     'any.only': 'Statut doit être  Due in,  Checked out, Due out, Checked in'
   })

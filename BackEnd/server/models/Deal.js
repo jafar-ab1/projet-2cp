@@ -6,7 +6,7 @@ const dealSchema = new mongoose.Schema({
   reservationsLeft: { type: Number, required: true },
   endDate: { type: Date, required: true },
   roomType: { type: String, enum: ["Standard", "Deluxe", "Suite"], required: true },
-  status: { type: String, enum: ["Ongoing", "Finished"], default: "Active" },
+  status: { type: String, enum: ["Ongoing", "Finished"], default: "Ongoing" },
 });
 
 module.exports = mongoose.model("Deal", dealSchema);
