@@ -4,8 +4,7 @@ const api = axios.create({
   baseURL: "http://localhost:3000",
 });
 
-//done
-//auth routes
+// Auth routes
 export const loginUser = async (loginUserData) => {
   try {
     const response = await api.post("/auth/login", loginUserData);
@@ -17,97 +16,127 @@ export const loginUser = async (loginUserData) => {
 };
 
 export const registerUser = async (registerUserData) => {
-  try{
-  const response = await api.post("/auth/register", registerUserData);
-  return response.data;
-  }catch (error) {
+  try {
+    const response = await api.post("/auth/register", registerUserData);
+    return response.data;
+  } catch (error) {
     console.error("Registration failed:", error);
     throw error;
   }
 };
-//done
-//I- dash board
 
+// Dashboard routes
 export const getTodayCheckIns = async () => {
   const response = await api.get("/dash/today/in");
   return response.data;
 };
 
-
-export const getTodayCheckOut = async() =>{
+export const getTodayCheckOut = async () => {
   const response = await api.get("/dash/today/out");
   return response.data;
 };
-
 
 export const getInHotelCount = async () => {
   const response = await api.get("/dash/inHotel");
   return response.data;
 };
 
-//done
-//status1: Available or Occupied
-export const countRoomStatus1 = async(status1) =>{
+export const countRoomStatus1 = async (status1) => {
   const response = await api.get(`/dash/countStatus/${status1}`);
   return response.data;
 };
-//done
-//types: Standard or Deluxe or Suite(occupied)
+
 export const countRoomsByTypeAndAvailable = async (type) => {
   const response = await api.get(`/dash/countTypeAvailable/${type}`);
   return response.data;
-}
-//done
-//status 0: Maked up, Not Maked up
-//status1: Available or Occupied
-export const countRoomByStatus0AndStatus1 = async(status0, status1) =>{
+};
+
+export const countRoomByStatus0AndStatus1 = async (status0, status1) => {
   const response = await api.get(`/dash/count/${status0}/${status1}`);
   return response.data;
-}
-//later after finding a good design
-//status de chaque floor apart
-export const countStatusFloor = async(status) =>{
+};
+
+export const countStatusFloor = async (status) => {
   const response = await api.get(`/dash/status/${status}`);
   return response.data;
 };
 
-//done
 export const OccupancyMonth = async (year) => {
   const response = await api.get(`/reservation/dash/occupancy/${year}`);
   return response.data;
 };
 
-
-//change
 export const getAllFeedbacks = async () => {
   const response = await api.get("/feedbacks");
   return response.data;
 };
 
-//II- Guest
-//UI not ready
-export const addGuest = async(email, roomNumber) => {
-  const response = await api.get(`/dash/addGuest/${email}/${roomNumber}`);
-  return response.data;
+// Guest routesimport axios from "axios";
+
+// Guest Operations
+export const getAllGuests = async () => {
+  try {
+    const response = await api.get("/user");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching guests:", error);
+    throw error;
+  }
 };
 
-export const removeGuest = async(email) => {
-  const response = await api.delete(`/user/${email}`);
-  return response.data;
+export const getGuestByEmail = async (email) => {
+  try {
+    const response = await api.get(`/user/${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching guest:", error);
+    throw error;
+  }
 };
 
-export const editGuest = async(email, guestData) => {
-  const response = await api.put(`/user/${email}`, guestData);
-  return response.data
+export const addGuest = async (email, roomNumber) => {
+  try {
+    const response = await api.post("/user/addGuest", { email, roomNumber });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding guest:", error);
+    throw error;
+  }
 };
 
+export const updateGuest = async (email, guestData) => {
+  try {
+    const response = await api.put(`/user/${email}`, guestData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating guest:", error);
+    throw error;
+  }
+};
 
+export const deleteGuest = async (email) => {
+  try {
+    const response = await api.delete(`/user/${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting guest:", error);
+    throw error;
+  }
+};
 
+export const sendCheckoutEmail = async (email, roomNumber) => {
+  try {
+    const response = await api.get(`/user/checkOut/${email}/${roomNumber}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error sending checkout email:", error);
+    throw error;
+  }
+};
 
-//rooms
+// Room routes
 export const addRoom = async (roomData) => {
   try {
-    // Create a simplified version of the data with only the essential fields
     const formattedData = {
       roomNumber: roomData.roomNumber,
       type: roomData.type || "Standard",
@@ -115,67 +144,46 @@ export const addRoom = async (roomData) => {
       facilities: Array.isArray(roomData.facilities)
         ? roomData.facilities
         : roomData.facilities.split(",").map((item) => item.trim()),
-      status0: roomData.status0 || "Maked-up",
+      status0: roomData.status0 || "Maked up",
       status1: roomData.status1 || "Available",
       price: Number(roomData.price),
-    }
+    };
 
-    // Log the exact data being sent to the server
-    console.log("Sending room data to server:", JSON.stringify(formattedData, null, 2))
-    
-    const response = await api.post("/rooms", formattedData)
-    console.log("Room added successfully:", response.data)
-    return response.data
+    console.log("Sending room data to server:", JSON.stringify(formattedData, null, 2));
+    const response = await api.post("/rooms", formattedData);
+    console.log("Room added successfully:", response.data);
+    return response.data;
   } catch (error) {
-    console.error("Error adding room:", error)
-    // Log more detailed error information
+    console.error("Error adding room:", error);
     if (error.response) {
-      console.error("Server response:", error.response.status, error.response.data)
+      console.error("Server response:", error.response.status, error.response.data);
     }
-    throw error
+    throw error;
   }
-}
+};
 
-export const getAllRooms = async() =>{
+export const getAllRooms = async () => {
   const response = await api.get('/rooms');
   return response.data;
-}
+};
 
-
-            //status1 : occupied available 
-export const getRoomsByStatus1 = async(status1) => {
+export const getRoomsByStatus1 = async (status1) => {
   const response = await api.get(`/rooms/${status1}`);
   return response.data;
-}
+};
 
+export const getRoomByNumber = async (roomNumber) => {
+  const response = await api.get(`/rooms/number/${roomNumber}`);
+  return response.data;
+};
 
-//deal
-export const addDeals = async(dealData) => {
+// Deal routes
+export const addDeal = async (dealData) => {
   const response = await api.post('/deal', dealData);
   return response.data;
-} 
+};
 
-export const dealStatus = async(status) => {
+export const getDealsByStatus = async (status) => {
   const response = await api.get(`/deal/${status}`);
   return response.data;
-}
-
-//sendEmail
-export const sendEmail = async(email, roomNumber) => {
-  const response = await api.get(`/user/checkOut/${email, roomNumber}`);
-  return response.data;
-}
-
-//after sending email we delete users
-export const userDelete = async(email) =>{
-  const response = await api.delete(`/user/${email}`);
-  return response.data;
-}
-
-export const getRoomByNumber = async(roomNumber) => {
-  const response = await api.get(`/rooms/number/${roomNumber}`);
-    return response.data;
-}
-
-   
-
+};
