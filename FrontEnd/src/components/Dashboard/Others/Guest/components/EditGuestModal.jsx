@@ -1,72 +1,62 @@
-import { useState } from "react"
+import { useState } from "react";
+import { updateGuest } from "../../../../../api/index";
 
-const EditGuestModal = ({ onClose, onEditGuest, allGuests }) => {
-  const [searchEmail, setSearchEmail] = useState("")
-  const [matchingGuests, setMatchingGuests] = useState([])
-  const [editableGuests, setEditableGuests] = useState([])
-  const [didSearch, setDidSearch] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+const EditGuestModal = ({ onClose, allGuests, refreshGuests }) => {
+  const [searchEmail, setSearchEmail] = useState("");
+  const [matchingGuests, setMatchingGuests] = useState([]);
+  const [editableGuests, setEditableGuests] = useState([]);
+  const [didSearch, setDidSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSearch = () => {
-    setDidSearch(true)
-    setError("")
+    setDidSearch(true);
+    setError("");
 
     if (!searchEmail.trim()) {
-      setMatchingGuests([])
-      setEditableGuests([])
-      return
+      setMatchingGuests([]);
+      setEditableGuests([]);
+      return;
     }
 
-    const found = allGuests.filter((g) => g.email.toLowerCase() === searchEmail.toLowerCase().trim())
+    const found = allGuests.filter((g) => 
+      g.email.toLowerCase() === searchEmail.toLowerCase().trim()
+    );
 
-    setMatchingGuests(found)
-    // Create a deep copy for editing
-    setEditableGuests(JSON.parse(JSON.stringify(found)))
-  }
+    setMatchingGuests(found);
+    setEditableGuests(JSON.parse(JSON.stringify(found)));
+  };
 
   const handleInputChange = (index, field, value) => {
-    const updatedGuests = [...editableGuests]
-    updatedGuests[index][field] = value
-    setEditableGuests(updatedGuests)
-  }
+    const updatedGuests = [...editableGuests];
+    updatedGuests[index][field] = value;
+    setEditableGuests(updatedGuests);
+  };
 
   const handleConfirm = async () => {
-    if (editableGuests.length === 0) return
+    if (editableGuests.length === 0) return;
 
-    setIsLoading(true)
-    setError("")
+    setIsLoading(true);
+    setError("");
 
     try {
-      // Process each edited guest
       for (const guest of editableGuests) {
-        const success = await onEditGuest(guest.email, {
-          name: guest.name,
-          room: guest.room,
-          total: guest.total,
-          guestStatus: guest.guestStatus,
-          roomStatus: guest.roomStatus,
-        })
-
-        if (!success) {
-          setError(`Failed to update guest: ${guest.email}`)
-          setIsLoading(false)
-          return
-        }
+        await updateGuest(guest._id, {
+          fullName: guest.fullName,
+          email: guest.email,
+          phone: guest.phone,
+          roomNumber: guest.roomNumber,
+          status: guest.status
+        });
       }
-
-      // Reset and close on success
-      setSearchEmail("")
-      setMatchingGuests([])
-      setEditableGuests([])
-      setDidSearch(false)
-      onClose()
+      await refreshGuests();
+      onClose();
     } catch (err) {
-      setError("An unexpected error occurred")
+      setError(err.response?.data?.message || "Failed to update guest");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="modal-overlay">
@@ -127,9 +117,7 @@ const EditGuestModal = ({ onClose, onEditGuest, allGuests }) => {
                   <th>Email</th>
                   <th>Name</th>
                   <th>Room</th>
-                  <th>Total</th>
-                  <th>Guest statut</th>
-                  <th>Room statut</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,8 +127,8 @@ const EditGuestModal = ({ onClose, onEditGuest, allGuests }) => {
                     <td>
                       <input
                         type="text"
-                        value={guest.name}
-                        onChange={(e) => handleInputChange(index, "name", e.target.value)}
+                        value={guest.fullName}
+                        onChange={(e) => handleInputChange(index, "fullName", e.target.value)}
                         className="edit-input"
                         disabled={isLoading}
                       />
@@ -148,44 +136,21 @@ const EditGuestModal = ({ onClose, onEditGuest, allGuests }) => {
                     <td>
                       <input
                         type="text"
-                        value={guest.room}
-                        onChange={(e) => handleInputChange(index, "room", e.target.value)}
-                        className="edit-input"
-                        disabled={isLoading}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={guest.total}
-                        onChange={(e) => handleInputChange(index, "total", e.target.value)}
+                        value={guest.roomNumber}
+                        onChange={(e) => handleInputChange(index, "roomNumber", e.target.value)}
                         className="edit-input"
                         disabled={isLoading}
                       />
                     </td>
                     <td>
                       <select
-                        value={guest.guestStatus}
-                        onChange={(e) => handleInputChange(index, "guestStatus", e.target.value)}
+                        value={guest.status}
+                        onChange={(e) => handleInputChange(index, "status", e.target.value)}
                         className="edit-select"
                         disabled={isLoading}
                       >
-                        <option value="Checked in">Checked in</option>
-                        <option value="Checked out">Checked out</option>
-                        <option value="due in">due in</option>
-                        <option value="due out">due out</option>
-                      </select>
-                    </td>
-                    <td>
-                      <select
-                        value={guest.roomStatus}
-                        onChange={(e) => handleInputChange(index, "roomStatus", e.target.value)}
-                        className="edit-select"
-                        disabled={isLoading}
-                      >
-                        <option value="Dirty">Dirty</option>
-                        <option value="Clean">Clean</option>
-                        <option value="Inspected">Inspected</option>
+                        <option value="Checked In">Checked In</option>
+                        <option value="Checked Out">Checked Out</option>
                       </select>
                     </td>
                   </tr>
@@ -209,7 +174,7 @@ const EditGuestModal = ({ onClose, onEditGuest, allGuests }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditGuestModal
+export default EditGuestModal;

@@ -1,54 +1,59 @@
-import { useState } from "react"
+import { useState } from "react";
+import { addGuest } from "../../../../../api/index";
 
-const AddGuestModal = ({ onClose, onAddGuest }) => {
-  const [email, setEmail] = useState("")
-  const [room, setRoom] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+const AddGuestModal = ({ onClose, refreshGuests }) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    roomNumber: ""
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = async () => {
-    if (!email.trim()) {
-      setError("Email is required")
-      return
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!formData.email.trim()) {
+      setError("Email is required");
+      return;
     }
 
-    setError("")
-    setIsLoading(true)
+    setError("");
+    setIsLoading(true);
 
     try {
-      const success = await onAddGuest(email, room)
-
-      if (success) {
-        // Reset form and close on success
-        setEmail("")
-        setRoom("")
-        onClose()
-      } else {
-        setError("Failed to add guest. Please try again.")
-      }
+      await addGuest(formData);
+      await refreshGuests();
+      onClose();
     } catch (err) {
-      setError("An unexpected error occurred")
+      setError(err.response?.data?.message || "Failed to add guest. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="modal-overlay">
       <div className="edit-modal">
         <div className="edit-header">Add New Guest</div>
-
-        <div className="add-guest-form">
+        
+        <form onSubmit={handleSubmit} className="add-guest-form">
           {error && <div className="error-message">{error}</div>}
 
           <div className="form-group">
-            <label>
+            <label htmlFor="email">
               Email: <span className="required">*</span>
             </label>
             <input
+              id="email"
+              name="email"
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
               className="edit-input"
               placeholder="guest@example.com"
               disabled={isLoading}
@@ -57,11 +62,13 @@ const AddGuestModal = ({ onClose, onAddGuest }) => {
           </div>
 
           <div className="form-group">
-            <label>Room Number:</label>
+            <label htmlFor="roomNumber">Room Number:</label>
             <input
+              id="roomNumber"
+              name="roomNumber"
               type="text"
-              value={room}
-              onChange={(e) => setRoom(e.target.value)}
+              value={formData.roomNumber}
+              onChange={handleChange}
               className="edit-input"
               placeholder="Optional"
               disabled={isLoading}
@@ -69,17 +76,26 @@ const AddGuestModal = ({ onClose, onAddGuest }) => {
           </div>
 
           <div className="add-guest-buttons">
-            <button className="done-button" onClick={handleSubmit} disabled={isLoading}>
+            <button 
+              type="submit" 
+              className="done-button" 
+              disabled={isLoading}
+            >
               {isLoading ? "Adding..." : "Add Guest"}
             </button>
-            <button className="cancel-button" onClick={onClose} disabled={isLoading}>
+            <button 
+              type="button"
+              className="cancel-button" 
+              onClick={onClose} 
+              disabled={isLoading}
+            >
               Cancel
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddGuestModal
+export default AddGuestModal;

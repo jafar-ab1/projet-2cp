@@ -1,5 +1,3 @@
-"use client"
-
 // Update the RoomTable component to match the MongoDB schema
 
 import StatusBadge from "../../Common/StatusBadge.jsx"

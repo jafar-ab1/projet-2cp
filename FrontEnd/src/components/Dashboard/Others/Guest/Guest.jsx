@@ -1,186 +1,76 @@
-import { useState, useEffect } from "react"
-import "../Table.css"
-import "../StatusBadge.css"
-import "./GuestStyles.css"
-import Pagination from "../Common/Pagination.jsx"
-import { addGuest, removeGuest, editGuest } from "../../../../api/index.js"
-import GuestTable from "./components/GuestTable.jsx"
-import AddGuestModal from "./components/AddGuestModal.jsx"
-import EditGuestModal from "./components/EditGuestModal.jsx"
-import RemoveGuestModal from "./components/RemoveGuestModal.jsx"
+import { useState, useEffect } from "react";
+import { 
+  getAllGuests,
+  addGuest,
+  updateGuest,
+  deleteGuest,
+  sendCheckoutEmail
+} from "../../../../api/index";
+import "../Table.css";
+import "../StatusBadge.css";
+import "./GuestStyles.css";
+import Pagination from "../Common/Pagination";
+import GuestTable from "./components/GuestTable";
+import AddGuestModal from "./components/AddGuestModal";
+import EditGuestModal from "./components/EditGuestModal";
+import RemoveGuestModal from "./components/RemoveGuestModal";
 
 const Guest = () => {
-  // Sample data - in a real app this would come from an API or database
-  const [allGuests, setAllGuests] = useState([
-    {
-      id: "#9841",
-      name: "Ahmed",
-      email: "dh04oussalahhhhhhhhhhhhhhhhhhhhhh@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "Checked in",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9842",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "Checked in",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9843",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "due out",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9844",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "due in",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9845",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "Checked in",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9846",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "due out",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9847",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "due out",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9848",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "Checked in",
-      roomStatus: "Dirty",
-    },
-    {
-      id: "#9849",
-      name: "Ahmed",
-      email: "ahmedmoha@gmail.com",
-      room: "B734",
-      total: "$900",
-      guestStatus: "Checked out",
-      roomStatus: "Dirty",
-    },
-  ])
+  const [guests, setGuests] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage] = useState(7)
-  const [searchQuery, setSearchQuery] = useState("")
+  const itemsPerPage = 7;
 
-  // Modal states
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
-
-  // Get current page data
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-
-  // Filter guests based on search query (room number)
-  const filteredGuests = searchQuery
-    ? allGuests.filter((guest) => guest.room.toLowerCase().includes(searchQuery.toLowerCase()))
-    : allGuests
-
-  const currentGuests = filteredGuests.slice(indexOfFirstItem, indexOfLastItem)
-  const totalPages = Math.ceil(filteredGuests.length / itemsPerPage)
-
-  // Reset to first page when search changes
   useEffect(() => {
-    setCurrentPage(1)
-  }, [searchQuery])
-
-  // API handlers
-  const handleAddGuest = async (email, room = "Unassigned") => {
-    try {
-      await addGuest(email, room)
-
-      // In a real app, you would fetch the updated list
-      // For demo, we'll add a placeholder guest
-      const newGuest = {
-        id: `#${Math.floor(Math.random() * 1000)}`,
-        name: "New Guest",
-        email: email,
-        room: room,
-        total: "$0",
-        guestStatus: "due in",
-        roomStatus: "Clean",
+    const fetchGuests = async () => {
+      try {
+        const data = await getAllGuests();
+        setGuests(data);
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to load guests");
+        setLoading(false);
       }
+    };
+    fetchGuests();
+  }, []);
 
-      setAllGuests([...allGuests, newGuest])
-      setIsAddModalOpen(false)
+  const filteredGuests = guests.filter(guest =>
+    guest.roomNumber?.toString().includes(searchQuery.toLowerCase())
+  );
 
-      return true
-    } catch (error) {
-      console.error("Error adding guest:", error)
-      return false
-    }
-  }
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentGuests = filteredGuests.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredGuests.length / itemsPerPage);
 
-  const handleEditGuest = async (email, updatedData) => {
+  const handleCheckout = async (email, roomNumber) => {
     try {
-      await editGuest(email, updatedData)
-
-      // Update the local state
-      const updatedGuests = allGuests.map((guest) => (guest.email === email ? { ...guest, ...updatedData } : guest))
-
-      setAllGuests(updatedGuests)
-      setIsEditModalOpen(false)
-
-      return true
-    } catch (error) {
-      console.error("Error updating guest:", error)
-      return false
+      await sendCheckoutEmail(email, roomNumber);
+      setGuests(guests.filter(g => g.email !== email));
+    } catch (err) {
+      setError("Checkout failed");
     }
-  }
+  };
 
-  const handleRemoveGuest = async (email) => {
+  const refreshGuests = async () => {
     try {
-      await removeGuest(email)
-
-      // Update the local state
-      const updatedGuests = allGuests.filter((guest) => guest.email !== email)
-      setAllGuests(updatedGuests)
-      setIsRemoveModalOpen(false)
-
-      return true
-    } catch (error) {
-      console.error("Error removing guest:", error)
-      return false
+      const data = await getAllGuests();
+      setGuests(data);
+    } catch (err) {
+      setError("Failed to refresh guests");
     }
-  }
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="page">
@@ -193,6 +83,13 @@ const Guest = () => {
         </div>
 
         <div className="right-buttons">
+          <input
+            className="search"
+            type="text"
+            placeholder="search by room number"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
           <button className="btn icon-btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -209,47 +106,64 @@ const Guest = () => {
             </svg>
             Filter
           </button>
-          <input
-            className="search"
-            type="text"
-            placeholder="search by room number"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className="btn edit-btn" onClick={() => setIsEditModalOpen(true)}>
+          <button 
+            className="btn edit-btn" 
+            onClick={() => setIsEditModalOpen(true)}
+          >
             Edit
           </button>
-          <button className="btn remove-btn" onClick={() => setIsRemoveModalOpen(true)}>
+          <button 
+            className="btn remove-btn" 
+            onClick={() => setIsRemoveModalOpen(true)}
+          >
             Remove Guest
           </button>
-          <button className="btn add-btn" onClick={() => setIsAddModalOpen(true)}>
+          <button 
+            className="btn add-btn" 
+            onClick={() => setIsAddModalOpen(true)}
+          >
             Add Guest
           </button>
         </div>
       </div>
 
-      <GuestTable guests={currentGuests} />
+      <GuestTable 
+        guests={currentGuests} 
+        onRowSelect={setSelectedGuest}
+        selectedGuestId={selectedGuest?._id}
+        onCheckout={(guest) => handleCheckout(guest.email, guest.roomNumber)}
+      />
 
-      <div className="pagination-container">
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-      </div>
+      <Pagination 
+        currentPage={currentPage} 
+        totalPages={totalPages} 
+        onPageChange={setCurrentPage} 
+      />
 
-      {/* Modals */}
-      {isAddModalOpen && <AddGuestModal onClose={() => setIsAddModalOpen(false)} onAddGuest={handleAddGuest} />}
+      {isAddModalOpen && (
+        <AddGuestModal 
+          onClose={() => setIsAddModalOpen(false)}
+          refreshGuests={refreshGuests}
+        />
+      )}
 
       {isEditModalOpen && (
-        <EditGuestModal onClose={() => setIsEditModalOpen(false)} onEditGuest={handleEditGuest} allGuests={allGuests} />
+        <EditGuestModal
+          onClose={() => setIsEditModalOpen(false)}
+          refreshGuests={refreshGuests}
+          allGuests={guests}
+        />
       )}
 
       {isRemoveModalOpen && (
         <RemoveGuestModal
           onClose={() => setIsRemoveModalOpen(false)}
-          onRemoveGuest={handleRemoveGuest}
-          allGuests={allGuests}
+          refreshGuests={refreshGuests}
+          allGuests={guests}
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Guest
+export default Guest;
