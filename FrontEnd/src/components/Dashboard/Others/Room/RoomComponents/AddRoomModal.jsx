@@ -6,8 +6,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     type: "Standard",
     floor: "",
     facilities: "",
-    status0: "Maked-up",
-    status1: "Available",
+    status0: "Maked up",
     price: "",
   });
 
@@ -70,7 +69,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
         roomNumber: roomData.roomNumber.trim(),
         type: roomData.type.trim(),
         status0: roomData.status0.trim(),
-        status1: roomData.status1.trim(),
+
         floor: Number(roomData.floor),
         price: Number(roomData.price),
         facilities: roomData.facilities
@@ -158,33 +157,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
             <small>Enter facilities separated by commas</small>
           </div>
 
-          <div className="form-group">
-            <label>
-              Price: <span className="required">*</span>
-            </label>
-            <input
-              type="number"
-              value={roomData.price}
-              onChange={(e) => handleInputChange("price", e.target.value)}
-              className="edit-input"
-              placeholder="e.g. 100"
-              disabled={isLoading}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Room Status:</label>
-            <select
-              value={roomData.status1}
-              onChange={(e) => handleInputChange("status1", e.target.value)}
-              className="edit-select"
-              disabled={isLoading}
-            >
-              <option value="Available">Available</option>
-              <option value="Occupied">Occupied</option>
-            </select>
-          </div>
+          
 
           <div className="form-group">
             <label>Cleaning Status:</label>
@@ -194,8 +167,8 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
               className="edit-select"
               disabled={isLoading}
             >
-              <option value="Maked-up">Maked-up</option>
-              <option value="Not-Maked-up">Not-Maked-up</option>
+              <option value="Maked up">Maked up</option>
+              <option value="Not Maked up">Not Maked up</option>
             </select>
           </div>
 

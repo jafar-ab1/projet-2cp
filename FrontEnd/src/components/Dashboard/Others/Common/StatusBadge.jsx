@@ -8,7 +8,7 @@ const StatusBadge = ({ status }) => {
   let badgeClass = "badge "
 
   // Room statuses
-  if (["available", "booked", "reserved", "waitlist"].includes(statusClass)) {
+  if (["available", "occupied"].includes(statusClass)) {
     badgeClass += statusClass
   }
   // Deal statuses
@@ -16,7 +16,7 @@ const StatusBadge = ({ status }) => {
     badgeClass += statusClass
   }
   // Guest statuses
-  else if (["clean", "dirty", "inspected"].includes(statusClass)) {
+  else if (["Maked up", "Not Maked up"].includes(statusClass)) {
     badgeClass += statusClass
   }
   else if (["checked in","checked out",'due in',"due out"].includes(statusClass)) {
