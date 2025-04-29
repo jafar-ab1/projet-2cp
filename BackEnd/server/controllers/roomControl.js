@@ -91,8 +91,7 @@ exports.creatRoom = async(req, res) => {
             facilities,
             status0,
             floor,
-            price,
-            status1: "Available" // Default status
+            price
         });
 
         await newRoom.save();
@@ -117,6 +116,15 @@ try{
     const room = await Room.findOneAndUpdate({roomNumber}, req.body, {new:true});
     if (!room) return res.status(404).json({message:'chambre non trouvé'});
     res.status(200).json(room);
+
+        if (room.type === "Standard") {
+            room.price = 100;
+        } else if (room.type === "Deluxe") {
+            room.price = 200;
+        } else if (room.type === "Suite") {
+            room.price = 300;
+        }
+        await room.save();
 }
 catch(error){
     res.status(500).json({ message: error.message });
