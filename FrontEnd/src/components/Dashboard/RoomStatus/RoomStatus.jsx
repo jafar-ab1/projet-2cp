@@ -18,6 +18,8 @@ const RoomStatus = () => {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
+
+
         const occupiedCount = await countRoomStatus1("Occupied");
         const availableCount = await countRoomStatus1("Available");
 
@@ -29,16 +31,17 @@ const RoomStatus = () => {
         const dirtyAvail = await countRoomByStatus0AndStatus1("Not Maked up", "Available");
        // const inspectedAvail = await countRoomByStatus0AndStatus1("Inspected", "Available");
 
-        setOccupied(occupiedCount);
-        setAvailable(availableCount);
+       setOccupied(occupiedCount.statusCounts);
+       setAvailable(availableCount.statusCounts);
+       
+       setCleanOccupied(cleanOcc.statusCounts);
+       setDirtyOccupied(dirtyOcc.statusCounts);
+       // ...
+       setCleanAvailable(cleanAvail.statusCounts);
+       setDirtyAvailable(dirtyAvail.statusCounts);
+       
+       
 
-        setCleanOccupied(cleanOcc);
-        setDirtyOccupied(dirtyOcc);
-        //setInspectedOccupied(inspectedOcc);
-
-        setCleanAvailable(cleanAvail);
-        setDirtyAvailable(dirtyAvail);
-        //setInspectedAvailable(inspectedAvail);
       } catch (error) {
         console.error("Error fetching room status data:", error);
       }

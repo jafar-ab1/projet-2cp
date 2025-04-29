@@ -138,24 +138,25 @@ exports.countByType = async(req, res) => {
     res.status(500).json({ message: error.message });
 };
 }
-
-
 exports.countRoomsByTypeAndAvailable = async (req, res) => {
     try {
-        const {type, status1="Available"} = req.params;
-
-        const Count = await Room.countDocuments({type: type,
-            status1: status1
-        });
-        res.status(200).json({ 
-        status:"Available",
+      const { type } = req.params;
+  
+      const count = await Room.countDocuments({
         type,
-        Count
-    });
+        status1: "Available"
+      });
+  
+      res.status(200).json({
+        type,
+        status1: "Available",
+        count
+      });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+      res.status(500).json({ message: error.message });
     }
-}
+  };
+  
 
 exports.countRoomsByStatus0AndStatus1 = async (req, res) => {
     try {

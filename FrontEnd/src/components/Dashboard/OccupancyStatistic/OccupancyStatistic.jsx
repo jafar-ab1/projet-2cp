@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { OccupancyMonth } from '../../../api/index';
 import './OccupancyStatistic.css';
 
 const OccupancyStatistic = () => {
@@ -9,24 +10,17 @@ const OccupancyStatistic = () => {
 
   useEffect(() => {
     const fetchOccupancyStats = async () => {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        setError(null);
-        
-        const response = await fetch(`/api/reservation/dash/occupancy/${selectedYear}`);
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch occupancy data');
-        }
-        
-        const data = await response.json();
-        
-        // Transform data to match our display format
+        const data = await OccupancyMonth(selectedYear);
+
+        // Format the data for display
         const formattedStats = data.occupancyStatistics.map(item => ({
           month: item.month,
           rate: item.occupancyRate
         }));
-        
+
         setStats(formattedStats);
       } catch (err) {
         console.error('Error fetching occupancy stats:', err);
@@ -39,7 +33,6 @@ const OccupancyStatistic = () => {
     fetchOccupancyStats();
   }, [selectedYear]);
 
-  // Month order as shown in your screenshot
   const monthOrder = ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   return (

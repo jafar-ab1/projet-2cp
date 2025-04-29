@@ -4,7 +4,7 @@ import {
   getTodayCheckIns,
   getTodayCheckOut,
   getInHotelCount,
-  countRoomStatus1, // <-- Import this
+  countRoomStatus1, 
 } from "../../../api/index"; // Adjust path as needed
 
 const Overview = () => {
@@ -19,17 +19,18 @@ const Overview = () => {
       try {
         const checkIns = await getTodayCheckIns();
         const checkOuts = await getTodayCheckOut();
-        //const inHotel = await getInHotelCount();
+        const inHotel = await getInHotelCount();
 
         const available = await countRoomStatus1("Available");
         const occupied = await countRoomStatus1("Occupied");
-
+        
+        setAvailableRooms(available.statusCounts); 
+        setOccupiedRooms(occupied.statusCounts);   
+        
         setCheckInCount(checkIns);
         setCheckOutCount(checkOuts);
-       // setInHotelCount(inHotel);
+        setInHotelCount(inHotel);
 
-        setAvailableRooms(available);
-        setOccupiedRooms(occupied);
       } catch (error) {
         console.error("Error fetching overview data:", error);
       }
@@ -51,7 +52,7 @@ const Overview = () => {
           Today's <span>check-out</span>
         </div>
         <div>
-          <strong>{/*{inHotelCount*/}</strong>
+          <strong>{inHotelCount}</strong>
           Total <span>In hotel</span>
         </div>
         <div>
