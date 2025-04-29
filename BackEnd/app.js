@@ -22,7 +22,7 @@ const passwordRoutes = require('./server/routes/passwordRoutes');
 const branchRoutes = require('./server/routes/branchRoutes');
 
 const app = express();
-const port = config.port;
+const port = 3000;
 
 
 app.use(cors());

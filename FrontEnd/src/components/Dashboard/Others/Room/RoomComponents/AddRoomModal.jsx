@@ -1,36 +1,29 @@
 import { useState } from "react";
-
 const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
   const [roomData, setRoomData] = useState({
     roomNumber: "",
     type: "Standard",
-    floor: "",
+    floor: "1",
     facilities: "",
-    status0: "Maked up",
-
+    status0: "Maked up"
   });
 
   const [error, setError] = useState("");
 
   const handleInputChange = (field, value) => {
-    setRoomData({
-      ...roomData,
-      [field]: value,
-    });
+    setRoomData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
   const validateForm = () => {
-    if (!roomData.roomNumber) {
+    if (!roomData.roomNumber.trim()) {
       setError("Room number is required");
       return false;
     }
 
-    if (!roomData.type) {
-      setError("Room type is required");
-      return false;
-    }
-
-    if (!roomData.floor) {
+    if (!roomData.floor.trim()) {
       setError("Floor is required");
       return false;
     }
@@ -40,46 +33,33 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
       return false;
     }
 
-    if (!roomData.facilities) {
-      setError("Facilities are required");
+    if (!roomData.facilities.trim()) {
+      setError("At least one facility is required");
       return false;
     }
 
- 
-
-  
-
+    setError("");
     return true;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    setError("");
-
     try {
-      const dataToSubmit = {
+      // Prepare the data for submission
+      const submissionData = {
         ...roomData,
-        roomNumber: roomData.roomNumber.trim(),
-        type: roomData.type.trim(),
-        status0: roomData.status0.trim(),
-
-        floor: Number(roomData.floor),
-
         facilities: roomData.facilities
-          .split(",")
-          .map((item) => item.trim())
-          .filter((item) => item.length > 0),
       };
 
-      const success = await onAddRoom(dataToSubmit);
-
+      const success = await onAddRoom(submissionData);
+      
       if (success) {
         onClose();
       }
     } catch (err) {
-      console.error("Failed to add room:", err);
-      setError("Failed to add room. " + (err.response?.data?.message || "Please try again."));
+      console.error("Add room error:", err);
+      setError(err.message || "Failed to add room. Please try again.");
     }
   };
 
@@ -165,17 +145,16 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
               <option value="Not Maked up">Not Maked up</option>
             </select>
           </div>
-
-          <div className="add-room-buttons">
-            <button
-              className="done-button"
+<div className="add-room-buttons">
+            <button 
+              className="done-button" 
               onClick={handleSubmit}
               disabled={isLoading}
             >
               {isLoading ? "Adding..." : "Add Room"}
             </button>
-            <button
-              className="cancel-button"
+            <button 
+              className="cancel-button" 
               onClick={onClose}
               disabled={isLoading}
             >
@@ -187,5 +166,7 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     </div>
   );
 };
+
+
 
 export default AddRoomModal;

@@ -137,27 +137,30 @@ export const sendCheckoutEmail = async (email, roomNumber) => {
 // Room routes
 export const addRoom = async (roomData) => {
   try {
+    // Format the facilities array
+    const facilities = Array.isArray(roomData.facilities) 
+      ? roomData.facilities 
+      : roomData.facilities.split(',').map(item => item.trim());
+
     const formattedData = {
-      roomNumber: roomData.roomNumber,
-      type: roomData.type || "Standard",
-      floor: roomData.floor || "1",
-      facilities: Array.isArray(roomData.facilities)
-        ? roomData.facilities
-        : roomData.facilities.split(",").map((item) => item.trim()),
-      status0: roomData.status0 || "Maked up",
-      status1: roomData.status1 || "Available",
-      price: Number(roomData.price),
+      roomNumber: roomData.roomNumber.toString(),
+      type: roomData.type,
+      floor: roomData.floor.toString(),
+      facilities,
+      status0: roomData.status0,
+      // status1 will be set by the backend
     };
 
-    console.log("Sending room data to server:", JSON.stringify(formattedData, null, 2));
+    console.log("Sending room data:", formattedData);
     const response = await api.post("/rooms", formattedData);
-    console.log("Room added successfully:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error adding room:", error);
-    if (error.response) {
-      console.error("Server response:", error.response.status, error.response.data);
+    
+    if (response.status >= 200 && response.status < 300) {
+      return response.data;
+    } else {
+      throw new Error(response.data?.message || "Failed to add room");
     }
+  } catch (error) {
+    console.error("API Error:", error.response?.data || error.message);
     throw error;
   }
 };

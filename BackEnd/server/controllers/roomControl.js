@@ -71,25 +71,38 @@ exports.countAllRooms = async (req, res) => {
     }
 };
 
-exports.creatRoom = async(req, res) =>{
-    const {roomNumber, type, facilities, status0, floor} = req.body;
-    try{
-        const newRoom= new Room({roomNumber,facilities, type, status0, floor});
+exports.creatRoom = async(req, res) => {
+    try {
+        const { roomNumber, type, facilities, status0, floor } = req.body;
+        
+        // Calculate price based on room type
+        let price;
+        if (type === "Standard") {
+            price = 100;
+        } else if (type === "Deluxe") {
+            price = 120;
+        } else if (type === "Suite") {
+            price = 200;
+        }
+
+        const newRoom = new Room({
+            roomNumber,
+            type,
+            facilities,
+            status0,
+            floor,
+            price,
+            status1: "Available" // Default status
+        });
+
         await newRoom.save();
         res.status(201).json(newRoom);
-        if (newRoom.type=="Standard") {
-            newRoom.price=100
-        }
-        else if (newRoom.type=="Deluxe") {
-            newRoom.price=200
-        }
-        else if (newRoom.type=="Suite") {
-            newRoom.price=300
-        }
-        newRoom.save()
-    }
-    catch(error){
-        res.status(500).json({ message: error.message });
+    } catch(error) {
+        console.error("Error creating room:", error);
+        res.status(500).json({ 
+            message: "Failed to create room",
+            error: error.message 
+        });
     }
 }
 

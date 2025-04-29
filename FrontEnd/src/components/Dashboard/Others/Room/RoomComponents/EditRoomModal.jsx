@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
   const [roomData, setRoomData] = useState({
@@ -6,12 +6,10 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
     type: "Standard",
     floor: "",
     facilities: "",
-    status0: "Maked-up",
-    status1: "Available",
-    price: "",
-  })
+    status0: "Maked up",
+  });
 
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
 
   // Initialize form with room data
   useEffect(() => {
@@ -20,76 +18,71 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
         roomNumber: room.roomNumber,
         type: room.type || "Standard",
         floor: room.floor || "",
-        facilities: Array.isArray(room.facilities) ? room.facilities.join(", ") : room.facilities || "",
-        status0: room.status0 || "Maked-up",
-        status1: room.status1 || "Available",
-        price: room.price ? room.price.toString() : "",
-      })
+        facilities: Array.isArray(room.facilities)
+          ? room.facilities.join(", ")
+          : room.facilities || "",
+        status0: room.status0 || "Maked up",
+      });
     }
-  }, [room])
+  }, [room]);
 
   const handleInputChange = (field, value) => {
     setRoomData({
       ...roomData,
       [field]: value,
-    })
-  }
+    });
+  };
 
   const validateForm = () => {
     if (!roomData.roomNumber) {
-      setError("Room number is required")
-      return false
+      setError("Room number is required");
+      return false;
     }
 
     if (!roomData.type) {
-      setError("Room type is required")
-      return false
+      setError("Room type is required");
+      return false;
     }
 
     if (!roomData.floor) {
-      setError("Floor is required")
-      return false
+      setError("Floor is required");
+      return false;
     }
 
     if (!roomData.facilities) {
-      setError("Facilities are required")
-      return false
+      setError("Facilities are required");
+      return false;
     }
 
-    if (!roomData.price) {
-      setError("Price is required")
-      return false
-    }
-
-    if (isNaN(roomData.price)) {
-      setError("Price must be a number")
-      return false
-    }
-
-    return true
-  }
+    return true;
+  };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return
+    if (!validateForm()) return;
 
-    setError("")
+    setError("");
 
     try {
-      // Convert price to number
       const dataToSubmit = {
-        ...roomData,
-        price: Number.parseFloat(roomData.price),
-      }
+        roomNumber: roomData.roomNumber,
+        type: roomData.type,
+        floor: roomData.floor,
+        facilities: roomData.facilities
+          .split(",")
+          .map((f) => f.trim())
+          .filter((f) => f),
+        status0: roomData.status0,
+      };
 
-      const success = await onEditRoom(room.roomNumber, dataToSubmit)
+      const success = await onEditRoom(room.roomNumber, dataToSubmit);
 
       if (success) {
-        onClose()
+        onClose();
       }
     } catch (err) {
-      setError("Failed to update room. Please try again.")
+      setError("Failed to update room. Please try again.");
     }
-  }
+  };
 
   return (
     <div className="modal-overlay">
@@ -106,7 +99,9 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
             <input
               type="text"
               value={roomData.roomNumber}
-              onChange={(e) => handleInputChange("roomNumber", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("roomNumber", e.target.value)
+              }
               className="edit-input"
               disabled={true} // Room number cannot be changed
               required
@@ -146,7 +141,9 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
             </label>
             <textarea
               value={roomData.facilities}
-              onChange={(e) => handleInputChange("facilities", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("facilities", e.target.value)
+              }
               className="edit-input"
               placeholder="e.g. AC, shower, TV, towel (comma separated)"
               disabled={isLoading}
@@ -157,34 +154,6 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
           </div>
 
           <div className="form-group">
-            <label>
-              Price: <span className="required">*</span>
-            </label>
-            <input
-              type="text"
-              value={roomData.price}
-              onChange={(e) => handleInputChange("price", e.target.value)}
-              className="edit-input"
-              placeholder="e.g. 100"
-              disabled={isLoading}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Room Status:</label>
-            <select
-              value={roomData.status1}
-              onChange={(e) => handleInputChange("status1", e.target.value)}
-              className="edit-select"
-              disabled={isLoading}
-            >
-              <option value="Available">Available</option>
-              <option value="Occupied">Occupied</option>
-            </select>
-          </div>
-
-          <div className="form-group">
             <label>Cleaning Status:</label>
             <select
               value={roomData.status0}
@@ -192,23 +161,31 @@ const EditRoomModal = ({ room, onClose, onEditRoom, isLoading }) => {
               className="edit-select"
               disabled={isLoading}
             >
-              <option value="Maked-up">Maked-up</option>
-              <option value="Not-Maked-up">Not-Maked-up</option>
+              <option value="Maked up">Maked up</option>
+              <option value="Not Maked up">Not Maked up</option>
             </select>
           </div>
 
           <div className="add-room-buttons">
-            <button className="done-button" onClick={handleSubmit} disabled={isLoading}>
+            <button
+              className="done-button"
+              onClick={handleSubmit}
+              disabled={isLoading}
+            >
               {isLoading ? "Saving..." : "Save Changes"}
             </button>
-            <button className="cancel-button" onClick={onClose} disabled={isLoading}>
+            <button
+              className="cancel-button"
+              onClick={onClose}
+              disabled={isLoading}
+            >
               Cancel
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EditRoomModal
+export default EditRoomModal;
