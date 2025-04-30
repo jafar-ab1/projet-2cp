@@ -15,26 +15,27 @@ const Dashboard = () => {
   const [countRoomsStandard, setCountRoomsStandard] = useState(0);
   const [countRoomsDeluxe, setCountRoomsDeluxe] = useState(0);
   const [countRoomsSuite, setCountRoomsSuite] = useState(0);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const standard = await countRoomsByTypeAndAvailable("Standard");
-        const deluxe = await countRoomsByTypeAndAvailable("Deluxe");
-        const suite = await countRoomsByTypeAndAvailable("Suite");
-    
-        setCountRoomsStandard(standard.count);
-        setCountRoomsDeluxe(deluxe.count);
-        setCountRoomsSuite(suite.count);
+        const standardRes = await countRoomsByTypeAndAvailable("Standard");
+        const deluxeRes = await countRoomsByTypeAndAvailable("Deluxe");
+        const suiteRes = await countRoomsByTypeAndAvailable("Suite");
+        console.log("Standard Response:", standardRes);
+          
+        setCountRoomsStandard(standardRes.Count);
+        setCountRoomsDeluxe(deluxeRes.Count);
+        setCountRoomsSuite(suiteRes.Count);
       } catch (error) {
         console.error("Error fetching overview data:", error);
       }
     };
-    
-
-
+  
     fetchData();
   }, []);
+  
+   
+  
 
   return (
     <div className="dashboard">
@@ -46,21 +47,21 @@ const Dashboard = () => {
   <RoomCard 
     title="Standard room" 
     deals={2} 
-    booked={Number(countRoomsStandard) }  // Fallback to 0 if invalid
+    booked={(countRoomsStandard) }  // Fallback to 0 if invalid
     total={30} 
     price={12000} 
   />
   <RoomCard 
     title="Deluxe room" 
     deals={2} 
-    booked={Number(countRoomsDeluxe) } 
+    booked={countRoomsDeluxe} 
     total={30} 
     price={15000} 
   />
   <RoomCard 
     title="Suite" 
     deals={0} 
-    booked={Number(countRoomsSuite) } 
+    booked={countRoomsSuite} 
     total={30} 
     price={20000} 
   />
