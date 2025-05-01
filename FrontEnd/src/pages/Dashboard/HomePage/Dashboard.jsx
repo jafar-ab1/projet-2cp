@@ -23,9 +23,9 @@ const Dashboard = () => {
         const suiteRes = await countRoomsByTypeAndAvailable("Suite");
         console.log("Standard Response:", standardRes);
           
-        setCountRoomsStandard(standardRes.Count);
-        setCountRoomsDeluxe(deluxeRes.Count);
-        setCountRoomsSuite(suiteRes.Count);
+        setCountRoomsStandard(standardRes.count);
+        setCountRoomsDeluxe(deluxeRes.count);
+        setCountRoomsSuite(suiteRes.count);
       } catch (error) {
         console.error("Error fetching overview data:", error);
       }

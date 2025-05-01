@@ -71,9 +71,7 @@ export const getAllFeedbacks = async () => {
   return response.data;
 };
 
-// Guest routesimport axios from "axios";
-
-// Guest Operations
+// Guest routes
 export const getAllGuests = async () => {
   try {
     const response = await api.get("/user");
@@ -190,3 +188,75 @@ export const getDealsByStatus = async (status) => {
   const response = await api.get(`/deal/${status}`);
   return response.data;
 };
+
+// NEWLY ADDED RESERVATION ROUTES 
+export const getAllReservations = async () => {
+  try {
+    const response = await api.get("/reservation");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching reservations:", error);
+    throw error;
+  }
+};
+
+export const getReservationByEmail = async (email) => {
+  try {
+    const response = await api.get(`/reservation/${email}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching reservation by email:", error);
+    throw error;
+  }
+};
+
+export const getReservationByEmailAndRoom = async (email, roomNumber) => {
+  try {
+    const response = await api.get(`/reservation/${email}/${roomNumber}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching reservation by email and room:", error);
+    throw error;
+  }
+};
+
+export const createReservation = async (reservationData) => {
+  try {
+    const response = await api.post("/reservation", reservationData);
+    return response.data;
+  } catch (error) {
+    console.error("Error creating reservation:", error);
+    throw error;
+  }
+};
+
+export const updateReservation = async (email, roomNumber, updateData) => {
+  try {
+    const response = await api.put(`/reservation/${email}/${roomNumber}`, updateData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating reservation:", error);
+    throw error;
+  }
+};
+
+export const deleteReservation = async (email, roomNumber) => {
+  try {
+    const response = await api.delete(`/reservation/${email}/${roomNumber}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting reservation:", error);
+    throw error;
+  }
+};
+
+
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, error => {
+  return Promise.reject(error);
+});

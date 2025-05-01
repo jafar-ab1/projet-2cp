@@ -30,6 +30,7 @@ const Overview = () => {
         setCheckInCount(checkIns);
         setCheckOutCount(checkOuts);
         setInHotelCount(inHotel);
+        
 
       } catch (error) {
         console.error("Error fetching overview data:", error);

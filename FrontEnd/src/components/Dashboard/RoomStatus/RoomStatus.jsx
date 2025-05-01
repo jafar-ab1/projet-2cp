@@ -34,11 +34,11 @@ const RoomStatus = () => {
        setOccupied(occupiedCount.statusCounts);
        setAvailable(availableCount.statusCounts);
        
-       setCleanOccupied(cleanOcc.statusCounts);
-       setDirtyOccupied(dirtyOcc.statusCounts);
+       setCleanOccupied(cleanOcc.count);
+       setDirtyOccupied(dirtyOcc.count);
        // ...
-       setCleanAvailable(cleanAvail.statusCounts);
-       setDirtyAvailable(dirtyAvail.statusCounts);
+       setCleanAvailable(cleanAvail.count);
+       setDirtyAvailable(dirtyAvail.count);
        
        
 
