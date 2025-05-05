@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 999;
+}
+
+.container > p {
+  font-family: sans-serif;
+  color: black;
+}
+
+.container > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.container > div > button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  border: 0px;
+  outline: 0px;
+  background-color: transparent;
+}
+
+.container > div > button > svg {
+  width: 100%;
+  color: #494444;
+}

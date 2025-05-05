@@ -1,0 +1,64 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #494444;
+  padding: 4px 4px;
+}
+
+.upper-container {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid #494444;
+}
+
+.image-container {
+  object-fit: cover;
+  object-position: center;
+  flex: 2;
+}
+
+.image-container > img {
+  width: 100%;
+}
+
+.info {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.someone-image-container {
+  width: 40px;
+  object-fit: cover;
+  object-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.someone-image-container > svg {
+  width: 100%;
+}
+
+.bed-type {
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 28px;
+}
+
+.bed-type > svg {
+  width: 28px;
+}
+
+.bottom-container {
+  display: flex;
+  align-items: end;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 4px;
+}

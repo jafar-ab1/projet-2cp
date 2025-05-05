@@ -28,6 +28,7 @@ import SignPageLayout from './layouts/SignPageLayout/Sign-page.layout.jsx';
 import Booking from './component/Main/Booking/Booking.jsx';
 import Page12 from './Page12.jsx';
 import Page13 from './Page13.jsx';
+import RoomsPage from './pages/Rooms/Rooms.jsx';
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
         <Route path="/deal" element={<Deals />} />
         <Route path="/rooms" element={<Rooms />} />
         <Route path="/rate" element={<Rates />} />
+        <Route path="/test" element={<RoomsPage />} />
         <Route path="/auth" element={<SignPageLayout />}>
           <Route path="sign-in" element={<SignInPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
