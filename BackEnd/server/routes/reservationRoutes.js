@@ -5,8 +5,11 @@ const validate = require('../middlewares/validation.middleware');
 const { emailSchema, 
   createSchema,
   updateSchema,
-  emailAndRoomNumberSchema
+  emailAndRoomNumberSchema,
+  ReservationRoomSchema
   } = require('../validation/reservationValidation');
+
+  const { protect } = require('../middlewares/auth'); 
 
 
 
@@ -28,9 +31,13 @@ router.get('/:email',validate(emailSchema, 'params'), reservationController.getR
 router.get('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.getReservationByEmailAndRoomNumber);
 
 
+router.get('/rooms/:type/:checkInDate/:checkOutDate', validate(ReservationRoomSchema, 'params'), reservationController.getRoomsForReservation)
+
+
 router.get('/dash/occupancy/:year', reservationController.occupancyStatistics);
 
-router.post('/',validate(createSchema), reservationController.creatReservation);
+
+router.post('/', protect, validate(createSchema), reservationController.creatReservation);
 
 
 router.put('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.modifyReservation);

@@ -6,7 +6,7 @@ const ReservationSchema = new mongoose.Schema({
     roomNumber: [{ type: String, ref: "Room", required: true }],
     checkInDate: { type: Date, required: true },
     checkOutDate: { type: Date, required: true },
-    totalPrice: { type: Number, required: false },
+    totalPrice: { type: Number, required: true },
     status: {
       type: String,
       enum: ["Due in", "Checked out", "Due out", "Checked in"],

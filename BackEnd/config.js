@@ -9,7 +9,7 @@ const config = {
   jwt: {
     keys: {
       secret: "ayzibceugfj-2023-freaesff-2026-jzhfjkfqkbf-G/:!!@", 
-      expiresIn: '1h'
+      expiresIn: '24h'
     }
   },
   email: {

@@ -61,12 +61,5 @@ router.get('/count/All/type/:type', validate(roomScehma.roomTypeSchema, 'params'
 
 
 
-/** cette fonction elle renvoie l'utilisateur qui a deja fais un reservation 
- donc son status etait due in et elle fais son check in donc status de la reservation deviens check in 
- et la chambre son status deviens occupied 
- et elle lui envois un email pour lui dire qu'il a fais son cheked in dans l'hotel
- */
-router.get('/addGuest/:email/:roomNumber', dashConrtoll.AddGuest);
-
 
 module.exports = router;

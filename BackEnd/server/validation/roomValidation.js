@@ -23,14 +23,6 @@ const createRoomSchema = Joi.object({
     'number.base': 'L\'étage doit être un nombre entier',
     'number.min': 'L\'étage ne peut pas être négatif',
     'any.required': 'L\'étage est obligatoire'
-  }),
-
-  facilities: Joi.array().items(
-    Joi.string()
-  ).min(1).required().messages({
-    'array.base': 'Les équipements doivent être fournis sous forme de tableau',
-    'array.min': 'Au moins un équipement doit être spécifié',
-    'any.required': 'Les équipements sont obligatoires'
   })
 });
 

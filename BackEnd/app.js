@@ -20,6 +20,7 @@ const maintenaceRoutes = require('./server/routes/maitenanceRoutes');
 const dashRoutes = require('./server/routes/dashRoutes');
 const passwordRoutes = require('./server/routes/passwordRoutes');
 const branchRoutes = require('./server/routes/branchRoutes');
+const guestRoutes = require('./server/routes/guestRoutes');
 
 const app = express();
 const port = 3000;
@@ -48,6 +49,11 @@ app.use('/user', userRoutes);
 app.use('/deal', dealRoutes);
 app.use('/tarif', tarifRoutes);
 app.use('/maintenance', maintenaceRoutes);
+app.use('/guest', guestRoutes);
+
+app.use(cors({
+  exposedHeaders: ['Authorization']
+}));
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Route non trouvée' });

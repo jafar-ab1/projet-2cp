@@ -54,8 +54,84 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
 }
 
 
+exports.getRoomsForReservation = async (req, res) => {
+  const { type, checkInDate, checkOutDate } = req.params;
+
+  try {
+    // 1. Trouver toutes les chambres du type demandé
+    const allRoomsOfType = await Room.find({ type });
+
+    // 2. Trouver les chambres déjà réservées pendant cette période
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+
+    const conflictingReservations = await Reservation.find({
+      $or: [
+        // Réservations qui commencent pendant la période demandée
+        { 
+          checkInDate: { $gte: startDate, $lt: endDate },
+          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+        },
+        // Réservations qui finissent pendant la période demandée
+        { 
+          checkOutDate: { $gt: startDate, $lte: endDate },
+          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+        },
+        // Réservations qui englobent la période demandée
+        { 
+          checkInDate: { $lte: startDate },
+          checkOutDate: { $gte: endDate },
+          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+        }
+      ]
+    });
+
+    // 3. Extraire les IDs des chambres non disponibles
+    const unavailableRoomIds = conflictingReservations.map(res => res.roomNumber.toString());
+
+    // 4. Filtrer pour garder seulement les chambres disponibles
+    const availableRooms = allRoomsOfType.filter(room => 
+      !unavailableRoomIds.includes(room.roomNumber.toString())
+    );
+
+
+    // 5. Formater la réponse
+    const response = availableRooms.map(room => ({
+      id: room._id,
+      roomNumber: room.roomNumber,
+      type: room.type,
+      price: room.price,
+      floor: room.floor,
+      facilities: room.facilities,
+      currentStatus: room.currentStatus
+    }));
+
+    if (response.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: `Aucune chambre ${type} disponible pour les dates sélectionnées`,
+        suggestion: "Modifiez vos dates ou essayez un autre type de chambre"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: response.length,
+      availableRooms: response
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Erreur lors de la recherche des chambres",
+      error: error.message
+    });
+  }
+};
+
 exports.creatReservation = async(req, res) =>{
-  const { email, roomNumber, checkInDate, checkOutDate, totalPrice } = req.body;
+  const email = req.user.email;
+  const {checkInDate, checkOutDate, type} = req.body;
     
   try {
       // 1. Vérification de l'utilisateur (obligatoire)
@@ -64,65 +140,74 @@ exports.creatReservation = async(req, res) =>{
           return res.status(404).json({ message: "Utilisateur non trouvé" });
       }
 
-      // 2. Vérification des conflits de réservation (uniquement si la chambre existe)
-      const roomExists = await Room.exists({ roomNumber });
-      if (roomExists) {
-          const conflictingReservations = await Reservation.find({
-              roomNumber,
-              $or: [
-                  // Cas 1: Nouvelle réservation chevauche une réservation existante
-                  {
-                      checkInDate: { $lt: new Date(checkOutDate) },
-                      checkOutDate: { $gt: new Date(checkInDate) }
-                  },
-                  // Cas 2: Réservation existante englobe la nouvelle
-                  {
-                      checkInDate: { $lte: new Date(checkInDate) },
-                      checkOutDate: { $gte: new Date(checkOutDate) }
-                  }
-              ]
-          });
-
-          if (conflictingReservations.length > 0) {
-              return res.status(400).json({
-                  message: "La chambre n'est pas disponible pour ces dates",
-                  conflicts: conflictingReservations.map(res => ({
-                      id: res._id,
-                      period: `${res.checkInDate.toISOString().split('T')[0]} au ${res.checkOutDate.toISOString().split('T')[0]}`
-                  }))
-              });
-          }
+      const allRoomsOfType = await Room.find({ type });
+      if (!allRoomsOfType || allRoomsOfType.length === 0) {
+        return res.status(404).json({ message: "Aucune chambre de ce type n'existe" });
       }
 
-      // 3. Validation des dates
-      if (new Date(checkInDate) >= new Date(checkOutDate)) {
-          return res.status(400).json({ 
-              message: "La date de check-out doit être après la date de check-in" 
-          });
-      }
+    // 2. Trouver les chambres déjà réservées pendant cette période
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+
+    const conflictingReservations = await Reservation.find({
+      $or: [
+        // Réservations qui commencent pendant la période demandée
+        { 
+          checkInDate: { $gte: startDate, $lt: endDate },
+          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+        },
+        // Réservations qui finissent pendant la période demandée
+        { 
+          checkOutDate: { $gt: startDate, $lte: endDate },
+          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+        },
+        // Réservations qui englobent la période demandée
+        { 
+          checkInDate: { $lte: startDate },
+          checkOutDate: { $gte: endDate },
+          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+        }
+      ]
+    });
+
+    // 3. Extraire les IDs des chambres non disponibles
+    const unavailableRoomIds = conflictingReservations.map(res => res.roomNumber.toString());
+
+    // 4. Filtrer pour garder seulement les chambres disponibles
+    const availableRooms =  allRoomsOfType.filter(room => 
+      !unavailableRoomIds.includes(room.roomNumber.toString() 
+    ))
+  
+    if (availableRooms.length === 0) {
+      return res.status(400).json({ 
+        message: "Aucune chambre de ce type n'est disponible pour ces dates ou avec le statut requis" 
+      });
+    }
+    
+    const availableRoom = availableRooms[0];
+    console.log(availableRoom);
 
       // 4. Création de la réservation
-      const newReservation = new Reservation({
-          email,
-          roomNumber,
-          checkInDate: new Date(checkInDate),
-          checkOutDate: new Date(checkOutDate),
+      const newReservation = await Reservation.create({
+        email,
+        roomNumber: availableRoom.roomNumber,
+        checkInDate,
+        checkOutDate,
+        roomType: availableRoom.type,
+        totalPrice: availableRoom.price
       });
+
       await newReservation.save();
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: config.email.user,
-          pass: config.email.password,
-        }
-      });
-
+      
       const user = await User.findOne({email});
-
-      const room = await Room.findOne({roomNumber});
-      room.status1 = "Occupied";
-      await room.save();
+      
+      const transporter = nodemailer.createTransport({
+          service: 'gmail',
+          auth: {
+            user: config.email.user,
+            pass: config.email.password,
+          }
+        });
 
     const mailOptions = {
       from: config.email.user,
@@ -134,10 +219,10 @@ exports.creatReservation = async(req, res) =>{
         <p>Votre réservation a bien été enregistrée :</p>
         <ul>
           <li>Référence de reservation: ${newReservation._id}</li>
-          <li>numero de la Chambre: ${room.roomNumber}</li>
+          <li>numero de la Chambre: ${availableRoom.roomNumber}</li>
           <li>Arrivée: ${new Date(checkInDate).toLocaleDateString()}</li>
           <li>Départ: ${new Date(checkOutDate).toLocaleDateString()}</li>
-          <li>Prix total: ${totalPrice} €</li>
+          <li>Prix total: ${newReservation.totalPrice} €</li>
         </ul>
         <p>Merci pour votre confiance !</p>
       `

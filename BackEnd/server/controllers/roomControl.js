@@ -73,22 +73,40 @@ exports.countAllRooms = async (req, res) => {
 
 exports.creatRoom = async(req, res) => {
     try {
-        const { roomNumber, type, facilities, status0, floor } = req.body;
+        const { roomNumber, type, status0, floor } = req.body;
         
-        // Calculate price based on room type
-        let price;
         if (type === "Standard") {
             price = 100;
+            facilities = ["Lit connecté réglable par appli",
+        "Contrôle vocal Alexa/Google",
+        "Douche à chromatothérapie Bluetooth",
+        "Tablette tactile centrale",
+        "Cosmétiques bio personnalisés",
+        "Wi-Fi 4K ultra-rapide",
+        "Climatisation intelligente"];
+
         } else if (type === "Deluxe") {
-            price = 120;
-        } else if (type === "Suite") {
             price = 200;
+            facilities = ["Mur végétal intelligent",
+        "Douche à effet forêt sensorielle",
+        "Écran artistique numérique",
+        "Rituel aromathérapie (5 huiles)",
+        "Machine à café barista",
+        "Mini-bar gastronomique",
+        "Peignoir en fibre de bambou"];
+
+        } else if (type === "Suite") {
+            price = 300;
+            facilities = ["Plafond étoilé 4K",
+        "Station de mixage DJ Pro",
+        "Glacière à champagne intelligente",
+        "Système holographique 3D",
+        "Valet connecté (préparation habits)"];
         }
 
         const newRoom = new Room({
             roomNumber,
             type,
-            facilities,
             status0,
             floor,
             price
@@ -110,7 +128,7 @@ try{
 
     const {roomNumber} = req.params;
     if (!roomNumber) {
-        return res.status(400).json({ message: 'type pas trouvé' });
+        return res.status(400).json({ message: 'roomNumber pas trouvé' });
     }
 
     const room = await Room.findOneAndUpdate({roomNumber}, req.body, {new:true});
@@ -146,4 +164,6 @@ exports.suppRoom = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+
 

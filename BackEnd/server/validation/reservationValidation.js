@@ -31,24 +31,7 @@ roomNumber: Joi.array()
 
 // Schéma pour la création
 const createSchema = Joi.object({
-  email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
-            "string.email": "email must be of type Email",
-            "any.required": "email is required"
-        }),
-  roomNumber: Joi.array()
-        .items(
-          Joi.string().required().alphanum().messages({
-                  'any.required': 'Le numéro de chambre est obligatoire'
-                  })
-        )
-        .min(1)
-        .required()
-        .messages({
-          'array.base': 'Doit être un tableau',
-          'array.min': 'Au moins une chambre doit être spécifiée',
-          'any.required': 'Chambre(s) est/sont requise(s)'
-        }),
-  checkInDate: Joi.date().greater('now').required().messages({
+  checkInDate: Joi.date().required().messages({
     'date.base': 'Date invalide',
     'date.greater': 'La date d\'arrivée doit être dans le futur',
     'any.required': 'Date d\'arrivée est requise'
@@ -58,10 +41,10 @@ const createSchema = Joi.object({
     'date.greater': 'La date de départ doit être après la date d\'arrivée',
     'any.required': 'Date de départ est requise'
   }),
-  
-  status: Joi.string().valid("Due in", "Checked out", "Due out", "Checked in").default('Due in').messages({
-    'any.only': 'Statut doit être  Due in,  Checked out, Due out, Checked in'
-  })
+  type: Joi.string().required().valid('Standard', 'Deluxe', 'Suite').messages({
+    'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite'
+  }),
+
 });
 
 // Schéma pour la mise à jour
@@ -99,9 +82,24 @@ const updateSchema = Joi.object({
   'object.missing': 'Au moins un champ doit être fourni'
 }).min(1);
 
+const ReservationRoomSchema = Joi.object({
+  checkInDate: Joi.date().required().messages({
+    'date.base': 'Date invalide',
+    'date.greater': 'Doit être dans le futur'
+  }),
+  checkOutDate: Joi.date().required().greater(Joi.ref('checkInDate')).messages({
+    'date.base': 'Date invalide',
+    'date.greater': 'Doit être après la date d\'arrivée'
+  }),
+  type: Joi.string().required().valid('Standard', 'Deluxe', 'Suite').messages({
+        'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite'
+      })
+})
+
 module.exports = {
   emailSchema,
   createSchema,
   updateSchema, 
-  emailAndRoomNumberSchema
+  emailAndRoomNumberSchema,
+  ReservationRoomSchema
 };
