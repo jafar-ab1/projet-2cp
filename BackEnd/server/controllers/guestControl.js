@@ -16,6 +16,34 @@ exports.getAll = async (req, res) => {
     }
 }
 
+exports.getAllCheckInDueOut = async (req, res) => {
+    try {
+        // Trouver toutes les réservations avec les statuts recherchés
+        const reservations = await Reservation.find({
+            status: { $in: ["Due out", "Checked in"] }
+        })
+
+        // Si vous n'utilisez pas populate, vous devrez faire une jointure manuelle
+        const guestEmails = reservations.map(res => res.email);
+        
+        // Trouver les utilisateurs correspondants
+        const guests = await User.find({
+            email: { $in: guestEmails },
+            role: 'Client'
+        });
+
+        if (guests.length === 0) {
+            return res.status(404).json({ message: 'Aucun guest trouvé avec ces statuts de réservation' });
+        }
+
+        return res.status(200).json(guests);
+
+    } catch (error) {
+        console.error("Erreur:", error);
+        return res.status(500).json({ message: "Erreur interne du serveur" });
+    }
+}
+
 
 exports.AddGuest = async (req, res) => {
     try {

@@ -15,6 +15,8 @@ router.post('/addGuest',validate(guestValidation.addGuest), guestControll.AddGue
 
 router.get('/', guestControll.getAll);
 
+router.get('/checkIn/dueOut', guestControll.getAllCheckInDueOut);
+
 
 module.exports = router;
 
