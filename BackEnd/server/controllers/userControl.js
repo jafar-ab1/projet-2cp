@@ -70,7 +70,7 @@ exports.sendCheckoutEmail = async (req, res) => {
         const checkOutDate = new Date(reservation.checkOutDate);
         checkOutDate.setHours(0,0,0,0);
         
-     //   if (toDay.getDate !== checkOutDate.getDate) return res.status(404).json({message:"c'est pas le jour de son checkOut"})
+        if (toDay.getDate !== checkOutDate.getDate) return res.status(404).json({message:"c'est pas le jour de son checkOut"})
 
      const room = await Room.findOne({roomNumber});
         room.status1="Available";

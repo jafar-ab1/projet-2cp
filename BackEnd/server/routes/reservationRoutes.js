@@ -42,6 +42,7 @@ router.post('/', protect, validate(createSchema), reservationController.creatRes
 
 router.put('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.modifyReservation);
 
+router.put('/', reservationController.modifyStatusDueOut);
 
 router.delete('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.suppReservation);
 

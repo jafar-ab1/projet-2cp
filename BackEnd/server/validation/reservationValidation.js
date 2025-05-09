@@ -31,7 +31,7 @@ roomNumber: Joi.array()
 
 // Schéma pour la création
 const createSchema = Joi.object({
-  checkInDate: Joi.date().required().messages({
+  checkInDate: Joi.date().required().greater('now').messages({
     'date.base': 'Date invalide',
     'date.greater': 'La date d\'arrivée doit être dans le futur',
     'any.required': 'Date d\'arrivée est requise'

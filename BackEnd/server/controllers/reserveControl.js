@@ -248,6 +248,46 @@ exports.creatReservation = async(req, res) =>{
     }
 }
 
+exports.modifyStatusDueOut = async (req, res) => {
+  try {
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+
+    
+    const reservations = await Reservation.find({ status: 'Checked in' });
+
+    // 3. Filtrer celles dont la date de check-out est aujourd'hui ou antérieure
+    const reservationsToUpdate = reservations.filter(reservation => {
+      const checkOutDate = new Date(reservation.checkOutDate);
+      checkOutDate.setHours(0, 0, 0, 0);
+      return checkOutDate = today;
+    });
+
+    // 4. Mettre à jour le statut de ces réservations
+    const updatePromises = reservationsToUpdate.map(reservation => {
+      return Reservation.findByIdAndUpdate(
+        reservation._id,
+        { status: 'Due out' },
+        { new: true }
+      );
+    });
+
+    await Promise.all(updatePromises);
+
+    return res.status(200).json({
+      message: `${reservationsToUpdate.length} réservation(s) mise(s) à jour en "Due out"`,
+      updatedCount: reservationsToUpdate.length
+    });
+
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour du statut:", error);
+    return res.status(500).json({ 
+      message: "Erreur interne du serveur",
+      error: error.message 
+    });
+  }
+};
 
 exports.modifyReservation = async(req, res) =>{
 try{
