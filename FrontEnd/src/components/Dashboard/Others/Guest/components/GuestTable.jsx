@@ -22,12 +22,12 @@ const GuestTable = ({ guests }) => {
                   <td>{guest.room}</td>
                   <td>{guest.total}</td>
                   <td>
-                    <span className={`status-badge ${guest.guestStatus.toLowerCase().replace(/\s+/g, "-")}`}>
+                    <span className={`status-badge ${guest.guestStatus.toLowerCase()}`}>
                       {guest.guestStatus}
                     </span>
                   </td>
                   <td>
-                    <span className={`status-badge ${guest.roomStatus.toLowerCase().replace(/\s+/g, "-")}`}>
+                    <span className={`status-badge ${guest.roomStatus.toLowerCase()}`}>
                       {guest.roomStatus}
                     </span>
                   </td>

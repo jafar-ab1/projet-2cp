@@ -52,83 +52,84 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-
-
 exports.getRoomsForReservation = async (req, res) => {
   const { type, checkInDate, checkOutDate } = req.params;
 
   try {
-    // 1. Trouver toutes les chambres du type demandé
-    const allRoomsOfType = await Room.find({ type });
-
-    // 2. Trouver les chambres déjà réservées pendant cette période
-    const startDate = new Date(checkInDate);
-    const endDate = new Date(checkOutDate);
-
-    const conflictingReservations = await Reservation.find({
-      $or: [
-        // Réservations qui commencent pendant la période demandée
-        { 
-          checkInDate: { $gte: startDate, $lt: endDate },
-          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
-        },
-        // Réservations qui finissent pendant la période demandée
-        { 
-          checkOutDate: { $gt: startDate, $lte: endDate },
-          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
-        },
-        // Réservations qui englobent la période demandée
-        { 
-          checkInDate: { $lte: startDate },
-          checkOutDate: { $gte: endDate },
-          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
-        }
-      ]
-    });
-
-    // 3. Extraire les IDs des chambres non disponibles
-    const unavailableRoomIds = conflictingReservations.map(res => res.roomNumber.toString());
-
-    // 4. Filtrer pour garder seulement les chambres disponibles
-    const availableRooms = allRoomsOfType.filter(room => 
-      !unavailableRoomIds.includes(room.roomNumber.toString())
-    );
-
-
-    // 5. Formater la réponse
-    const response = availableRooms.map(room => ({
-      id: room._id,
-      roomNumber: room.roomNumber,
-      type: room.type,
-      price: room.price,
-      floor: room.floor,
-      facilities: room.facilities,
-      currentStatus: room.currentStatus
-    }));
-
-    if (response.length === 0) {
-      return res.status(404).json({
+    // Validate date format (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(checkInDate) || !dateRegex.test(checkOutDate)) {
+      return res.status(400).json({
         success: false,
-        message: `Aucune chambre ${type} disponible pour les dates sélectionnées`,
-        suggestion: "Modifiez vos dates ou essayez un autre type de chambre"
+        message: "Invalid date format. Please use YYYY-MM-DD",
+        received: { checkInDate, checkOutDate }
       });
     }
 
-    res.status(200).json({
+    // Parse dates
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+
+    // Validate date objects
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date values",
+        details: {
+          checkInDate: { received: checkInDate, parsed: startDate.toString() },
+          checkOutDate: { received: checkOutDate, parsed: endDate.toString() }
+        }
+      });
+    }
+
+    // Validate date sequence
+    if (startDate >= endDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-out date must be after check-in date",
+        dates: {
+          checkIn: startDate.toISOString(),
+          checkOut: endDate.toISOString()
+        }
+      });
+    }
+
+    // Rest of your existing room availability logic...
+    const allRoomsOfType = await Room.find({ type });
+    const conflictingReservations = await Reservation.find({
+      $or: [
+        { checkInDate: { $gte: startDate, $lt: endDate } },
+        { checkOutDate: { $gt: startDate, $lte: endDate } },
+        { checkInDate: { $lte: startDate }, checkOutDate: { $gte: endDate } }
+      ],
+      status: { $in: ["Due in", "Checked in", "Due out"] }
+    });
+
+    const availableRooms = allRoomsOfType.filter(room => 
+      !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
+    );
+
+    return res.status(200).json({
       success: true,
-      count: response.length,
-      availableRooms: response
+      availableRooms: availableRooms.map(room => ({
+        id: room._id,
+        roomNumber: room.roomNumber,
+        type: room.type,
+        price: room.price,
+        floor: room.floor,
+        facilities: room.facilities || []
+      }))
     });
 
   } catch (error) {
-    res.status(500).json({
+    console.error("Room availability error:", error);
+    return res.status(500).json({
       success: false,
-      message: "Erreur lors de la recherche des chambres",
+      message: "Internal server error",
       error: error.message
     });
   }
 };
-
 exports.creatReservation = async(req, res) =>{
   const email = req.user.email;
   const {checkInDate, checkOutDate, type} = req.body;

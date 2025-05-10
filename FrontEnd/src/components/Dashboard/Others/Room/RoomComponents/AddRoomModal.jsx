@@ -4,7 +4,6 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
     roomNumber: "",
     type: "Standard",
     floor: "1",
-    facilities: "",
     status0: "Maked up"
   });
 
@@ -33,10 +32,6 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
       return false;
     }
 
-    if (!roomData.facilities.trim()) {
-      setError("At least one facility is required");
-      return false;
-    }
 
     setError("");
     return true;
@@ -115,21 +110,6 @@ const AddRoomModal = ({ onClose, onAddRoom, isLoading }) => {
             />
           </div>
 
-          <div className="form-group">
-            <label>
-              Facilities: <span className="required">*</span>
-            </label>
-            <textarea
-              value={roomData.facilities}
-              onChange={(e) => handleInputChange("facilities", e.target.value)}
-              className="edit-input"
-              placeholder="e.g. AC, shower, TV, towel (comma separated)"
-              disabled={isLoading}
-              rows={3}
-              required
-            />
-            <small>Enter facilities separated by commas</small>
-          </div>
 
           
 

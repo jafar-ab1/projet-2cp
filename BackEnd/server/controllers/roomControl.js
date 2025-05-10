@@ -2,13 +2,23 @@ const Room = require('../models/Room');
 
 exports.getAllRooms = async (req, res) => {
     try {
-      const rooms = await Room.find();
-      res.status(200).json(rooms);
+      const rooms = await Room.find({});
+      const roomsWithFacilities = rooms.map(room => {
+        let facilities = [];
+        if (room.type === "Standard") {
+          facilities = ["Lit connecté réglable par appli", "Contrôle vocal Alexa/Google", /*...*/];
+        } else if (room.type === "Deluxe") {
+          facilities = ["Mur végétal intelligent", "Douche à effet forêt sensorielle", /*...*/];
+        } else if (room.type === "Suite") {
+          facilities = ["Plafond étoilé 4K", "Station de mixage DJ Pro", /*...*/];
+        }
+        return { ...room._doc, facilities }; // Append facilities to each room
+      });
+      res.status(200).json(roomsWithFacilities);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(500).json({ message: "Failed to fetch rooms", error: error.message });
     }
   };
-
 exports.getRoomByNumber = async(req, res) => {
     try {
         const {roomNumber} = req.params;

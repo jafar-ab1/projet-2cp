@@ -1,9 +1,9 @@
 import { useState } from "react"
 import "./Booking.css"
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom"
 
 function Booking() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [formData, setFormData] = useState({
     checkInDate: null,
     checkOutDate: null,
@@ -21,28 +21,19 @@ function Booking() {
   const [submitMessage, setSubmitMessage] = useState("")
 
   const handleCheckAvailability = () => {
-    const { checkInDate, checkOutDate, selectedBranch, adults, children } = formData;
-  
+    const { checkInDate, checkOutDate, selectedBranch, adults, children } = formData
+
     // Basic validation
-    if (
-      !checkInDate ||
-      !checkOutDate ||
-      selectedBranch === "choose your branch" ||
-      adults < 1
-    ) {
-      setSubmitMessage("Please fill in all booking details before continuing.");
-      return;
+    if (!checkInDate || !checkOutDate || selectedBranch === "choose your branch" || adults < 1) {
+      setSubmitMessage("Please fill in all booking details before continuing.")
+      return
     }
-  
-    setSubmitMessage(""); // Clear previous message
-    localStorage.setItem("bookingData", JSON.stringify(formData));
-    navigate("/Choose");
-  };
-  
-  
-  <button className="CheckAvailability" >
-    Check Availability
-  </button>
+
+    setSubmitMessage("") // Clear previous message
+    localStorage.setItem("bookingData", JSON.stringify(formData))
+    navigate("/Choose")
+  }
+  ;<button className="CheckAvailability">Check Availability</button>
 
   // Function to update form data
   const updateFormData = (field, value) => {
@@ -99,7 +90,8 @@ function Booking() {
           formData.checkInDate.getDate() === day &&
           formData.checkInDate.getMonth() === month &&
           formData.checkInDate.getFullYear() === year
-      } if (calendarType === "checkOut" && formData.checkOutDate) {
+      }
+      if (calendarType === "checkOut" && formData.checkOutDate) {
         isSelected =
           formData.checkOutDate.getDate() === day &&
           formData.checkOutDate.getMonth() === month &&
@@ -128,19 +120,18 @@ function Booking() {
 
   // Handle day selection
   const handleDayClick = (day, calendarType) => {
-    if (!day) return;
-  
-    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
-    
+    if (!day) return
+
+    const selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
+
     if (calendarType === "checkIn") {
-      updateFormData("checkInDate", selectedDate);
-      setShowCheckInCalendar(false);
+      updateFormData("checkInDate", selectedDate)
+      setShowCheckInCalendar(false)
     } else {
-      updateFormData("checkOutDate", selectedDate);
-      setShowCheckOutCalendar(false);
-      
+      updateFormData("checkOutDate", selectedDate)
+      setShowCheckOutCalendar(false)
     }
-  };
+  }
 
   // Custom Calendar Component
   const CustomCalendar = ({ calendarType }) => {
@@ -304,14 +295,12 @@ function Booking() {
         attractions, our hotel offers the ideal blend of comfort and convenience.
       </p>
 
-      <button className="CheckAvailability"  onClick={handleCheckAvailability} >
+      <button className="CheckAvailability" onClick={handleCheckAvailability}>
         Check Availability
       </button>
       {submitMessage && <p className="SubmitMessage">{submitMessage}</p>}
-
     </div>
   )
 }
 
 export default Booking
-

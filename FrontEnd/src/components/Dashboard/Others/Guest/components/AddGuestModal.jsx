@@ -26,11 +26,13 @@ const AddGuestModal = ({ onClose, refreshGuests }) => {
     setIsLoading(true);
 
     try {
-      await addGuest(formData);
+      const response = await addGuest(formData);
+      console.log("Add Guest Response:", response.data);
       await refreshGuests();
       onClose();
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to add guest. Please try again.");
+      console.error("Error adding guest:", err);
+      setError(err.response?.data?.message || "Failed to check in guest.");
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +41,7 @@ const AddGuestModal = ({ onClose, refreshGuests }) => {
   return (
     <div className="modal-overlay">
       <div className="edit-modal">
-        <div className="edit-header">Add New Guest</div>
+        <div className="edit-header">Check In Guest</div>
         
         <form onSubmit={handleSubmit} className="add-guest-form">
           {error && <div className="error-message">{error}</div>}
@@ -70,8 +72,9 @@ const AddGuestModal = ({ onClose, refreshGuests }) => {
               value={formData.roomNumber}
               onChange={handleChange}
               className="edit-input"
-              placeholder="Optional"
+              placeholder="Room number"
               disabled={isLoading}
+              required
             />
           </div>
 
@@ -81,7 +84,7 @@ const AddGuestModal = ({ onClose, refreshGuests }) => {
               className="done-button" 
               disabled={isLoading}
             >
-              {isLoading ? "Adding..." : "Add Guest"}
+              {isLoading ? "Checking In..." : "Check In"}
             </button>
             <button 
               type="button"
