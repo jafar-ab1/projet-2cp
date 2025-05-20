@@ -1,3 +1,4 @@
+const { sign } = require('crypto');
 const Joi = require('joi');
 
 const createRoomSchema = Joi.object({
@@ -23,6 +24,19 @@ const createRoomSchema = Joi.object({
     'number.base': 'L\'étage doit être un nombre entier',
     'number.min': 'L\'étage ne peut pas être négatif',
     'any.required': 'L\'étage est obligatoire'
+  }),
+  capacity: Joi.number().integer().min(1).messages({
+    'number.base': 'La capacité doit être un nombre entier',
+    'number.min': 'La capacité doit être au moins 1',
+    'any.required': 'La capacité est obligatoire'
+  }),
+  size: Joi.string().min(0).messages({
+    'number.base': 'La taille doit être un nombre',
+    'number.min': 'La taille ne peut pas être négative',
+    'any.required': 'La taille est obligatoire'
+  }),
+  bedType: Joi.string().messages({
+    'any.required': 'Le type de lit est obligatoire'
   })
 });
 
@@ -45,7 +59,20 @@ const updateRoomSchema = Joi.object({
       }),
     status0: Joi.string().optional().valid('Maked up', 'Not Maked up'),
     status1: Joi.string().valid('Available', 'Occupied').default('Available'),
-    floor: Joi.string().optional()
+    floor: Joi.string().optional(),
+    capacity: Joi.number().integer().min(1).optional().messages({
+    'number.base': 'La capacité doit être un nombre entier',
+    'number.min': 'La capacité doit être au moins 1',
+    'any.required': 'La capacité est obligatoire'
+  }),
+  size: Joi.string().min(0).optional().messages({
+    'number.base': 'La taille doit être un nombre',
+    'number.min': 'La taille ne peut pas être négative',
+    'any.required': 'La taille est obligatoire'
+  }),
+  bedType: Joi.string().optional().messages({
+    'any.required': 'Le type de lit est obligatoire'
+  })
   })
   .min(1) // Au moins un champ doit être fourni
   .messages({

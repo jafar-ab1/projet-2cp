@@ -94,6 +94,9 @@ exports.creatRoom = async(req, res) => {
         "Cosmétiques bio personnalisés",
         "Wi-Fi 4K ultra-rapide",
         "Climatisation intelligente"];
+            bedType = "1 Queen bed or 2 Twin beds";
+            size = "25 m²";
+            capacity = 2;
 
         } else if (type === "Deluxe") {
             price = 200;
@@ -104,6 +107,9 @@ exports.creatRoom = async(req, res) => {
         "Machine à café barista",
         "Mini-bar gastronomique",
         "Peignoir en fibre de bambou"];
+            bedType = "1 King bed or 2 twin beds";
+            size = "35 m²";
+            capacity = 2;
 
         } else if (type === "Suite") {
             price = 300;
@@ -112,6 +118,9 @@ exports.creatRoom = async(req, res) => {
         "Glacière à champagne intelligente",
         "Système holographique 3D",
         "Valet connecté (préparation habits)"];
+            bedType = "1 King bed + 1 sofa bed";
+            size = "50 m²";
+            capacity = 4;
         }
 
         const newRoom = new Room({
@@ -119,7 +128,10 @@ exports.creatRoom = async(req, res) => {
             type,
             facilities,
             floor,
-            price
+            price,
+            bedType,
+            size,
+            capacity
         });
 
         await newRoom.save();
