@@ -8,7 +8,7 @@ import { getRoomsForReservation } from "../../../api/index.js";
 import "./Booking3.css";
 
 function Booking3() {
-  const [roomTypes, setRoomTypes] = useState({});
+  const [roomTypes, setRoomTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bookingData, setBookingData] = useState(null);
@@ -94,23 +94,32 @@ function Booking3() {
           throw new Error(response.message || "No rooms available for selected dates");
         }
 
+        const roomsByType = response.roomsByType;
+
         // Create room type data structure
-        const availableRoomTypes = {};
-        
-        if (response.Deluxe && response.Deluxe.count > 0) {
-          availableRoomTypes.Deluxe = [createSampleRoom("Deluxe", response.Deluxe)];
-        }
-        if (response.Standard && response.Standard.count > 0) {
-          availableRoomTypes.Standard = [createSampleRoom("Standard", response.Standard)];
-        }
-        if (response.Suite && response.Suite.count > 0) {
-          availableRoomTypes.Suite = [createSampleRoom("Suite", response.Suite)];
-        }
+        const availableRoomTypes = [];
+
+        roomsByType.forEach((room) => {
+          const type = room.type;
+          const data = room.rooms[0];
+          if(data.count == 0) return;
+          availableRoomTypes.push(createSampleRoom(type, data));
+        })
+
+        // if (response.Deluxe && response.Deluxe.count > 0) {
+        //   availableRoomTypes.Deluxe = [createSampleRoom("Deluxe", response.Deluxe)];
+        // }
+        // if (response.Standard && response.Standard.count > 0) {
+        //   availableRoomTypes.Standard = [createSampleRoom("Standard", response.Standard)];
+        // }
+        // if (response.Suite && response.Suite.count > 0) {
+        //   availableRoomTypes.Suite = [createSampleRoom("Suite", response.Suite)];
+        // }
 
         console.log("Processed room types:", availableRoomTypes); // Debug log
         setRoomTypes(availableRoomTypes);
 
-        if (Object.keys(availableRoomTypes).length === 0) {
+        if (availableRoomTypes.length === 0) {
           setError("No rooms available for the selected dates. Please try different dates.");
         }
       } catch (err) {
@@ -240,24 +249,24 @@ function Booking3() {
           </div>
         ) : (
           <div className="AvailableRoomsByType">
-            {Object.keys(roomTypes).length > 0 ? (
-              Object.entries(roomTypes).map(([type, rooms]) => (
-                <div key={type} className="RoomTypeSection">
+            {roomTypes.length > 0 ? (
+              roomTypes.map((roomType) => {
+                console.log(roomType);
+                return (
+                <div key={roomType.type} className="RoomTypeSection">
                   <h2 className="RoomTypeHeading">
-                    {type} Rooms (Available: {rooms[0].count})
+                    {roomType.type} Rooms (Available: {roomType.count})
                   </h2>
                   <div className="RoomTypeContainer">
-                    {rooms.map((room) => (
                       <Room
-                        key={`${room.id}-${room.type}`}
-                        room={room}
+                        key={`${roomType.id}-${roomType.type}`}
+                        room={roomType}
                         handleAddToBasketClick={() => addToBasket(room)}
                         isAdded={reservedRooms.some(r => r.type === room.type)}
                       />
-                    ))}
                   </div>
                 </div>
-              ))
+              ) })
             ) : (
               <p className="no-rooms-message">
                 No rooms available for the selected dates and criteria.
