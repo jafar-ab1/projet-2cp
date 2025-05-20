@@ -1,18 +1,18 @@
-import { create } from "zustand";
-import { loginUser, registerUser } from "../../api";
+import { create } from 'zustand';
+import { loginUser, registerUser } from '../../api';
+import { LOCAL_STORAGE } from '../../constants';
 
 const useAuth = create((set) => {
-  const savedToken = localStorage.getItem("accessToken");
+  const savedToken = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
 
-  const savedUserData = localStorage.getItem("user");
+  const savedUserData = localStorage.getItem(LOCAL_STORAGE.USER);
   let savedUser = null;
   try {
     savedUser = savedUserData ? JSON.parse(savedUserData) : null;
   } catch (error) {
     console.error("Erreur lors du parsing de l'utilisateur :", error);
     savedUser = null;
-  } 
-
+  }
 
   return {
     user: savedUser,
@@ -25,15 +25,13 @@ const useAuth = create((set) => {
       login: async (loginUserData) => {
         set({ loading: true, err: null });
         try {
-          const { user, token } = await loginUser(loginUserData);
+          const { token } = await loginUser(loginUserData);
 
-          localStorage.setItem("accessToken", token);
-          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, token);
 
           set({
-            user,
             accessToken: token,
-            err: null,
+            err: null
           });
         } catch (err) {
           set({ err });
@@ -47,8 +45,8 @@ const useAuth = create((set) => {
         try {
           const { user, token } = await registerUser(registerUserData);
 
-          localStorage.setItem("accessToken", token);
-          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, token);
+          localStorage.setItem(LOCAL_STORAGE.USER, JSON.stringify(user));
 
           set({
             user,
@@ -63,8 +61,8 @@ const useAuth = create((set) => {
       },
 
       logout: () => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("user");
+        localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
+        localStorage.removeItem(LOCAL_STORAGE.USER);
 
         set({
           user: null,

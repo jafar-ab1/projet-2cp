@@ -129,7 +129,7 @@ exports.getRoomsForReservation = async (req, res) => {
 
 exports.creatReservation = async(req, res) =>{
   const email = req.user.email;
-  const {checkInDate, checkOutDate, type} = req.body;
+  const {checkInDate, checkOutDate, roomsRequested} = req.body; //roomsRequested est un tableau [type, quantite]
     
   try {
       // 1. Vérification de l'utilisateur (obligatoire)
@@ -138,64 +138,92 @@ exports.creatReservation = async(req, res) =>{
           return res.status(404).json({ message: "Utilisateur non trouvé" });
       }
 
-      const allRoomsOfType = await Room.find({ type });
-      if (!allRoomsOfType || allRoomsOfType.length === 0) {
-        return res.status(404).json({ message: "Aucune chambre de ce type n'existe" });
-      }
 
     // 2. Trouver les chambres déjà réservées pendant cette période
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
 
-    const conflictingReservations = await Reservation.find({
-      $or: [
-        // Réservations qui commencent pendant la période demandée
-        { 
-          checkInDate: { $gte: startDate, $lt: endDate },
-          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
-        },
-        // Réservations qui finissent pendant la période demandée
-        { 
-          checkOutDate: { $gt: startDate, $lte: endDate },
-          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
-        },
-        // Réservations qui englobent la période demandée
-        { 
-          checkInDate: { $lte: startDate },
-          checkOutDate: { $gte: endDate },
-          status: { $in: ["Due in", "Checked out", "Due out", "Checked in"] }
+    // Validate date objects
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date values",
+        details: {
+          checkInDate: { received: checkInDate, parsed: startDate.toString() },
+          checkOutDate: { received: checkOutDate, parsed: endDate.toString() }
         }
-      ]
-    });
-
-    // 3. Extraire les IDs des chambres non disponibles
-    const unavailableRoomIds = conflictingReservations.map(res => res.roomNumber.toString());
-
-    // 4. Filtrer pour garder seulement les chambres disponibles
-    const availableRooms =  allRoomsOfType.filter(room => 
-      !unavailableRoomIds.includes(room.roomNumber.toString() 
-    ))
-  
-    if (availableRooms.length === 0) {
-      return res.status(400).json({ 
-        message: "Aucune chambre de ce type n'est disponible pour ces dates ou avec le statut requis" 
       });
     }
-    
-    const availableRoom = availableRooms[0];
-    console.log(availableRoom);
 
-      // 4. Création de la réservation
-      const newReservation = await Reservation.create({
-        email,
-        roomNumber: availableRoom.roomNumber,
-        checkInDate,
-        checkOutDate,
-        roomType: availableRoom.type,
-        totalPrice: availableRoom.price
+    // Validate date sequence
+    if (startDate >= endDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-out date must be after check-in date",
+        dates: {
+          checkIn: startDate.toISOString(),
+          checkOut: endDate.toISOString()
+        }
       });
+    }
 
-      await newReservation.save();
+    // Rest of your existing room availability logic...
+    const conflictingReservations = await Reservation.find({
+      $or: [
+        { checkInDate: { $gte: startDate, $lt: endDate } },
+        { checkOutDate: { $gt: startDate, $lte: endDate } },
+        { checkInDate: { $lte: startDate }, checkOutDate: { $gte: endDate } }
+      ],
+      status: { $in: ["Due in", "Checked in", "Due out"] }
+    });
+
+
+    // 4. Traitement pour chaque type de chambre demandé
+    const reservations = [];
+    let totalPrice = 0;
+
+    for (const request of roomsRequested) {
+      const { type, quantity } = request;
+
+      // Trouver toutes les chambres de ce type
+      const allRoomsOfType = await Room.find({ type });
+      if (!allRoomsOfType || allRoomsOfType.length === 0) {
+        return res.status(404).json({ message: `Aucune chambre de type ${type} n'existe` });
+      }
+    
+
+    // 4. Filtrer pour garder seulement les chambres disponibles
+    const availableRooms = allRoomsOfType.filter(room => 
+      !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
+    );
+  
+    if (availableRooms.length < quantity) {
+        return res.status(400).json({ 
+          message: `Seulement ${availableRooms.length} chambre(s) de type ${type} disponible(s), mais ${quantity} demandée(s)`
+        });
+      }
+
+
+  // Créer les réservations pour la quantité demandé
+      for (let i = 0; i < quantity; i++) {
+        const room = availableRooms[i];
+        const reservation = await Reservation.create({
+          email,
+          roomNumber: room.roomNumber,
+          checkInDate,
+          checkOutDate,
+          totalPrice: room.price,
+          status: "Due in"
+        });
+        reservations.push({
+      _id: reservation._id,
+      roomNumber: room.roomNumber,
+      roomType: room.type,  // Stocké temporairement pour l'email
+      price: room.price
+    });
+        totalPrice += room.price;
+      }
+    }
       
       const user = await User.findOne({email});
       
@@ -210,21 +238,30 @@ exports.creatReservation = async(req, res) =>{
     const mailOptions = {
       from: config.email.user,
       to: user.email,
-      subject: 'Confirmation de votre réservation',
+      subject: 'Confirmation de vos réservations',
       html: `
         <h1>Confirmation de réservation</h1>
         <p>Bonjour ${user.fullName},</p>
-        <p>Votre réservation a bien été enregistrée :</p>
+        <p>Vos réservations ont bien été enregistrées :</p>
         <ul>
-          <li>Référence de reservation: ${newReservation._id}</li>
-          <li>numero de la Chambre: ${availableRoom.roomNumber}</li>
+          <li>Nombre de chambres: ${reservations.length}</li>
           <li>Arrivée: ${new Date(checkInDate).toLocaleDateString()}</li>
           <li>Départ: ${new Date(checkOutDate).toLocaleDateString()}</li>
-          <li>Prix total: ${newReservation.totalPrice} €</li>
+          <li>Prix total: ${totalPrice} €</li> <!-- Ajout du prix total -->
+        </ul>
+        <h3>Détails des chambres :</h3>
+        <ul>
+          ${reservations.map(res => `
+            <li>
+               Chambre ${res.roomNumber} (${res.roomType})<br>
+              <br>Référence: ${res._id}
+            </li>
+          `).join('')}
         </ul>
         <p>Merci pour votre confiance !</p>
       `
     };
+
 
     try {
         await transporter.sendMail(mailOptions);
@@ -234,7 +271,12 @@ exports.creatReservation = async(req, res) =>{
         // Ne pas renvoyer d'erreur au client pour un échec d'email
       }
 
-    res.status(201).json(newReservation);
+    res.status(201).json({
+      success: true,
+      message: `${reservations.length} chambre(s) réservée(s) avec succès`,
+      reservations,
+      totalPrice
+    });
       
     }
     catch(error){
