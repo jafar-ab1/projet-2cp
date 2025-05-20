@@ -194,6 +194,7 @@ exports.creatReservation = async(req, res) =>{
 
     // 4. Traitement pour chaque type de chambre demandé
     const reservations = [];
+    let totalPrice = 0;
 
     for (const request of roomsRequested) {
       const { type, quantity } = request;
@@ -217,7 +218,7 @@ exports.creatReservation = async(req, res) =>{
       }
 
 
-  // Créer les réservations pour la quantité demandée
+  // Créer les réservations pour la quantité demandé
       for (let i = 0; i < quantity; i++) {
         const room = availableRooms[i];
         const reservation = await Reservation.create({
@@ -225,10 +226,16 @@ exports.creatReservation = async(req, res) =>{
           roomNumber: room.roomNumber,
           checkInDate,
           checkOutDate,
-          roomType: room.type,
-          price: room.price,
+          totalPrice: room.price,
           status: "Due in"
         });
+        reservations.push({
+      _id: reservation._id,
+      roomNumber: room.roomNumber,
+      roomType: room.type,  // Stocké temporairement pour l'email
+      price: room.price
+    });
+        totalPrice += room.price;
       }
     }
       
@@ -254,12 +261,13 @@ exports.creatReservation = async(req, res) =>{
           <li>Nombre de chambres: ${reservations.length}</li>
           <li>Arrivée: ${new Date(checkInDate).toLocaleDateString()}</li>
           <li>Départ: ${new Date(checkOutDate).toLocaleDateString()}</li>
+          <li>Prix total: ${totalPrice} €</li> <!-- Ajout du prix total -->
         </ul>
         <h3>Détails des chambres :</h3>
         <ul>
           ${reservations.map(res => `
             <li>
-              Chambre ${res.roomNumber} (${res.roomType})
+               Chambre ${res.roomNumber} (${res.roomType})<br>
               <br>Référence: ${res._id}
             </li>
           `).join('')}
@@ -280,7 +288,8 @@ exports.creatReservation = async(req, res) =>{
     res.status(201).json({
       success: true,
       message: `${reservations.length} chambre(s) réservée(s) avec succès`,
-      reservations
+      reservations,
+      totalPrice
     });
       
     }
