@@ -37,7 +37,7 @@ router.get('/rooms/:checkInDate/:checkOutDate', validate(ReservationRoomSchema, 
 router.get('/dash/occupancy/:year', reservationController.occupancyStatistics);
 
 
-router.post('/', protect, validate(createSchema), reservationController.creatReservation);
+router.post('/', protect, reservationController.creatReservation);
 
 
 router.put('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.modifyReservation);

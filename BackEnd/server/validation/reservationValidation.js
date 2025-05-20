@@ -40,11 +40,7 @@ const createSchema = Joi.object({
     'date.base': 'Date invalide',
     'date.greater': 'La date de départ doit être après la date d\'arrivée',
     'any.required': 'Date de départ est requise'
-  }),
-  type: Joi.string().required().valid('Standard', 'Deluxe', 'Suite').messages({
-    'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite'
-  }),
-
+  })
 });
 
 // Schéma pour la mise à jour
