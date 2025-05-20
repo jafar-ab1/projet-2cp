@@ -233,57 +233,38 @@ export const deleteReservation = async (email, roomNumber) => {
     throw error
   }
 }
-export const getRoomsForReservation = async (type, checkInDate, checkOutDate) => {
-  try {
-    // Helper function to validate and format dates
-    const formatAndValidateDate = (dateString) => {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        throw new Error(`Invalid date: ${dateString}`);
-      }
-      return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
-    };
 
-    // Format and validate dates
-    const formattedCheckIn = formatAndValidateDate(checkInDate);
-    const formattedCheckOut = formatAndValidateDate(checkOutDate);
+export const getRoomsForReservation = async (checkInDate, checkOutDate) => {
+  try {
+    // Validate date format
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(checkInDate) || !/^\d{4}-\d{2}-\d{2}$/.test(checkOutDate)) {
+      throw new Error("Dates must be in YYYY-MM-DD format");
+    }
 
     // Validate date sequence
-    if (new Date(formattedCheckIn) >= new Date(formattedCheckOut)) {
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+    if (startDate >= endDate) {
       throw new Error("Check-out date must be after check-in date");
     }
 
-    // Make API request
     const response = await api.get(
-      `/reservation/rooms/${type}/${formattedCheckIn}/${formattedCheckOut}`,
-      {
-        validateStatus: (status) => status < 500 // Reject only server errors
-      }
+      `/reservation/rooms/${checkInDate}/${checkOutDate}`
     );
-
-    // Handle 400 responses
-    if (response.status === 400) {
-      throw new Error(
-        response.data?.message || 
-        `Bad request: ${response.statusText}` || 
-        "Invalid request parameters"
-      );
+    
+    if (!response.data) {
+      throw new Error("No data received from server");
     }
-
+    
     return response.data;
   } catch (error) {
-    console.error("Room Availability API Error:", {
-      error: error.message,
-      request: {
-        type,
-        originalDates: { checkInDate, checkOutDate },
-        formattedDates: {
-          checkIn: new Date(checkInDate).toISOString().split('T')[0],
-          checkOut: new Date(checkOutDate).toISOString().split('T')[0]
-        }
-      },
-      response: error.response?.data
-    });
+    console.error("Error fetching available rooms:", error);
+    
+    // Enhance error message for date validation errors
+    if (error.response?.data?.message?.includes("Date invalide")) {
+      throw new Error("Invalid date format or sequence. Please check your dates.");
+    }
+    
     throw error;
   }
 };

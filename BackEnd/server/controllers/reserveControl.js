@@ -53,14 +53,12 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
     }
 }
 exports.getRoomsForReservation = async (req, res) => {
-  const {checkInDate, checkOutDate } = req.params;
+  const { checkInDate, checkOutDate } = req.params;
 
   try {
-    
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
 
-    // Validate date objects
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
       return res.status(400).json({
         success: false,
@@ -72,7 +70,6 @@ exports.getRoomsForReservation = async (req, res) => {
       });
     }
 
-    // Validate date sequence
     if (startDate >= endDate) {
       return res.status(400).json({
         success: false,
@@ -84,8 +81,8 @@ exports.getRoomsForReservation = async (req, res) => {
       });
     }
 
-    // Rest of your existing room availability logic...
     const allRoomsOfType = await Room.find();
+
     const conflictingReservations = await Reservation.find({
       $or: [
         { checkInDate: { $gte: startDate, $lt: endDate } },
@@ -95,40 +92,29 @@ exports.getRoomsForReservation = async (req, res) => {
       status: { $in: ["Due in", "Checked in", "Due out"] }
     });
 
-    const availableRooms = allRoomsOfType.filter(room => 
+    const availableRooms = allRoomsOfType.filter(room =>
       !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
     );
 
-    const countStandard = availableRooms.filter(room => room.type === "Standard").length;
+    // Group by type
+    const types = ["Standard", "Deluxe", "Suite"];
+    const roomsByType = types.map(type => {
+      const roomsOfType = availableRooms.filter(room => room.type === type);
+      const sampleRoom = roomsOfType[0];
 
-    const countDeluxe = availableRooms.filter(room => room.type === "Deluxe").length;
-
-    const countSuite = availableRooms.filter(room => room.type === "Suite").length;
-
-    const sampleStandard = availableRooms.find(room => room.type === "Standard");
-
-    const sampleDeluxe = availableRooms.find(room => room.type === "Deluxe");
-
-    const sampleSuite = availableRooms.find(room => room.type === "Suite");
-
+      return {
+        type,
+        rooms: [{
+          count: roomsOfType.length,
+          facilities: sampleRoom?.facilities || [],
+          price: sampleRoom?.price || 0
+        }]
+      };
+    });
 
     return res.status(200).json({
       success: true,
-    Deluxe: {
-     count: countDeluxe,
-     facilities: sampleDeluxe?.facilities || [], // Utilisation de l'opérateur optionnel ?.
-     price: sampleDeluxe?.price || 0
-      },
-    Standard: {
-      count: countStandard,
-      facilities: sampleStandard?.facilities || [],
-       price: sampleStandard?.price || 0
-    },
-  Suite: {
-    count: countSuite,
-    facilities: sampleSuite?.facilities || [],
-    price: sampleSuite?.price || 0
-  }
+      roomsByType
     });
 
   } catch (error) {
@@ -140,6 +126,7 @@ exports.getRoomsForReservation = async (req, res) => {
     });
   }
 };
+
 exports.creatReservation = async(req, res) =>{
   const email = req.user.email;
   const {checkInDate, checkOutDate, type} = req.body;
