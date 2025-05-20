@@ -90,10 +90,7 @@ const ReservationRoomSchema = Joi.object({
   checkOutDate: Joi.date().required().greater(Joi.ref('checkInDate')).messages({
     'date.base': 'Date invalide',
     'date.greater': 'Doit être après la date d\'arrivée'
-  }),
-  type: Joi.string().required().valid('Standard', 'Deluxe', 'Suite').messages({
-        'any.only': 'Le type de chambre doit être Standard, Deluxe ou Suite'
-      })
+  })
 })
 
 module.exports = {

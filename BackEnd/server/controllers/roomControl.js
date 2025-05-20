@@ -83,7 +83,7 @@ exports.countAllRooms = async (req, res) => {
 
 exports.creatRoom = async(req, res) => {
     try {
-        const { roomNumber, type, status0, floor } = req.body;
+        const { roomNumber, type, floor } = req.body;
         
         if (type === "Standard") {
             price = 100;
@@ -117,7 +117,7 @@ exports.creatRoom = async(req, res) => {
         const newRoom = new Room({
             roomNumber,
             type,
-            status0,
+            facilities,
             floor,
             price
         });

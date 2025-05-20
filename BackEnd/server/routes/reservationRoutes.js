@@ -31,7 +31,7 @@ router.get('/:email',validate(emailSchema, 'params'), reservationController.getR
 router.get('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.getReservationByEmailAndRoomNumber);
 
 
-router.get('/rooms/:type/:checkInDate/:checkOutDate', validate(ReservationRoomSchema, 'params'), reservationController.getRoomsForReservation)
+router.get('/rooms/:checkInDate/:checkOutDate', validate(ReservationRoomSchema, 'params'), reservationController.getRoomsForReservation)
 
 
 router.get('/dash/occupancy/:year', reservationController.occupancyStatistics);

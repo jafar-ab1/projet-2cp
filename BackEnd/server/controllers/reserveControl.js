@@ -53,20 +53,10 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
     }
 }
 exports.getRoomsForReservation = async (req, res) => {
-  const { type, checkInDate, checkOutDate } = req.params;
+  const {checkInDate, checkOutDate } = req.params;
 
   try {
-    // Validate date format (YYYY-MM-DD)
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(checkInDate) || !dateRegex.test(checkOutDate)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid date format. Please use YYYY-MM-DD",
-        received: { checkInDate, checkOutDate }
-      });
-    }
-
-    // Parse dates
+    
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
 
@@ -95,7 +85,7 @@ exports.getRoomsForReservation = async (req, res) => {
     }
 
     // Rest of your existing room availability logic...
-    const allRoomsOfType = await Room.find({ type });
+    const allRoomsOfType = await Room.find();
     const conflictingReservations = await Reservation.find({
       $or: [
         { checkInDate: { $gte: startDate, $lt: endDate } },
@@ -109,16 +99,36 @@ exports.getRoomsForReservation = async (req, res) => {
       !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
     );
 
+    const countStandard = availableRooms.filter(room => room.type === "Standard").length;
+
+    const countDeluxe = availableRooms.filter(room => room.type === "Deluxe").length;
+
+    const countSuite = availableRooms.filter(room => room.type === "Suite").length;
+
+    const sampleStandard = availableRooms.find(room => room.type === "Standard");
+
+    const sampleDeluxe = availableRooms.find(room => room.type === "Deluxe");
+
+    const sampleSuite = availableRooms.find(room => room.type === "Suite");
+
+
     return res.status(200).json({
       success: true,
-      availableRooms: availableRooms.map(room => ({
-        id: room._id,
-        roomNumber: room.roomNumber,
-        type: room.type,
-        price: room.price,
-        floor: room.floor,
-        facilities: room.facilities || []
-      }))
+    Deluxe: {
+     count: countDeluxe,
+     facilities: sampleDeluxe?.facilities || [], // Utilisation de l'opérateur optionnel ?.
+     price: sampleDeluxe?.price || 0
+      },
+    Standard: {
+      count: countStandard,
+      facilities: sampleStandard?.facilities || [],
+       price: sampleStandard?.price || 0
+    },
+  Suite: {
+    count: countSuite,
+    facilities: sampleSuite?.facilities || [],
+    price: sampleSuite?.price || 0
+  }
     });
 
   } catch (error) {
