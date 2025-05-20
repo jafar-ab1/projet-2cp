@@ -1,81 +1,104 @@
-import { useEffect, useState } from "react"
-import "./CheckOut.css"
-import PoliciesData from "../../../Policies.json"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from 'react';
+import './CheckOut.css';
+import PoliciesData from '../../../Policies.json';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../../hooks/auth/useAuth';
+import { createReservation } from '../../../api';
 
 function CheckOut() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { accessToken } = useAuth();
 
-  const [policies, setPolicies] = useState(PoliciesData)
-  const [reservedRooms, setReservedRooms] = useState([])
-  const [retrievedData, setRetrievedData] = useState(null)
-  const [branchPolicy, setBranchPolicy] = useState(null)
+  const [policies, setPolicies] = useState(PoliciesData);
+  const [reservedRooms, setReservedRooms] = useState([]);
+  const [retrievedData, setRetrievedData] = useState(null);
+  const [branchPolicy, setBranchPolicy] = useState(null);
   const [termsAgreed, setTermsAgreed] = useState({
     privacyTerms: false,
-  })
+  });
 
   useEffect(() => {
-    const storedRooms = localStorage.getItem("reservedRooms")
+    const storedRooms = localStorage.getItem('reservedRooms');
     if (storedRooms) {
-      setReservedRooms(JSON.parse(storedRooms))
+      setReservedRooms(JSON.parse(storedRooms));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const storedData = localStorage.getItem("bookingData")
+    const storedData = localStorage.getItem('bookingData');
     if (storedData) {
-      const parsedData = JSON.parse(storedData)
-      setRetrievedData(parsedData)
+      const parsedData = JSON.parse(storedData);
+      setRetrievedData(parsedData);
       if (parsedData?.selectedBranch) {
-        const matchingPolicy = policies.find((policy) => policy.Branch === parsedData.selectedBranch)
+        const matchingPolicy = policies.find(
+          (policy) => policy.Branch === parsedData.selectedBranch
+        );
         if (matchingPolicy) {
-          setBranchPolicy(matchingPolicy)
+          setBranchPolicy(matchingPolicy);
         }
       }
     }
-  }, [policies])
+  }, [policies]);
 
   const [Contact, setContact] = useState({
-    FirstName: "",
-    LastName: "",
+    FirstName: 'fdsfsf',
+    LastName: 'dsfs',
     Phone: null,
-    Email: "",
-  })
+    Email: 'sdfdsfdsfds',
+  });
 
   const [Address, setAddress] = useState({
-    Country: "",
-    Address: "",
-    City: "",
+    Country: 'sdfsf',
+    Address: 'sdfsfs',
+    City: 'sdfsfsdf',
     Code: null,
-  })
+  });
 
   const [Payment, setPayment] = useState({
     Card: null,
-    Expiration: "",
-    Name: "",
-  })
+    Expiration: 'dsfsdfsfs',
+    Name: 'sfsdfsf',
+  });
 
   const handleChange = (e, setState, state) => {
-    setState({ ...state, [e.target.name]: e.target.value })
-  }
+    setState({ ...state, [e.target.name]: e.target.value });
+  };
 
   const handleCheckboxChange = (e) => {
     setTermsAgreed({
       ...termsAgreed,
       [e.target.name]: e.target.checked,
-    })
-  }
+    });
+  };
 
   // Function to split the description into guarantee and cancel policies
   const splitDescription = (description) => {
-    if (!description) return { guarantee: "", cancel: "" }
+    if (!description) return { guarantee: '', cancel: '' };
 
-    const parts = description.split("Cancel Policy")
+    const parts = description.split('Cancel Policy');
     return {
-      guarantee: parts[0].replace("Guarantee Policy", "").trim(),
-      cancel: parts.length > 1 ? parts[1].trim() : "",
+      guarantee: parts[0].replace('Guarantee Policy', '').trim(),
+      cancel: parts.length > 1 ? parts[1].trim() : '',
+    };
+  };
+
+  const handleReservation = async () => {
+    if (accessToken == null) {
+      return navigate('/auth/sign-in', {
+        state: {
+          from: '/checkout',
+        },
+      });
     }
-  }
+
+    const data = await createReservation({
+      roomsRequested: reservedRooms,              // need only the rooms requested to be an non-empty array of rooms and then i can make the request
+      checkInDate: retrievedData.checkInDate,
+      checkOutDate: retrievedData.checkOutDate,
+    });
+
+    return console.log(data);
+  };
 
   return (
     <div className="checkout-container">
@@ -216,11 +239,13 @@ function CheckOut() {
 
             <div className="policy-details">
               <p className="guarantee-title">Guarantee Policy</p>
-              <p className="guarantee-text">{splitDescription(branchPolicy.Description).guarantee}</p>
+              <p className="guarantee-text">
+                {splitDescription(branchPolicy.Description).guarantee}
+              </p>
               <p className="cancel-title">Cancel Policy</p>
               <p className="cancel-text">
                 {splitDescription(branchPolicy.Description).cancel ||
-                  "Cancel within five days of arrival to avoid penalty."}
+                  'Cancel within five days of arrival to avoid penalty.'}
               </p>
             </div>
           </>
@@ -230,7 +255,9 @@ function CheckOut() {
       <div className="section acknowledgement-section">
         <h2>Acknowledgment</h2>
         <div className="terms-container">
-          <p>By completing this booking, I agree with the Booking Conditions.</p>
+          <p>
+            By completing this booking, I agree with the Booking Conditions.
+          </p>
           <input
             type="checkbox"
             id="privacy-terms"
@@ -242,10 +269,13 @@ function CheckOut() {
         </div>
       </div>
 
-      {termsAgreed.privacyTerms && <button className="checkout-btn">Confirm Booking</button>}
+      {termsAgreed.privacyTerms && (
+        <button onClick={handleReservation} className="checkout-btn">
+          Confirm Booking
+        </button>
+      )}
     </div>
-  )
+  );
 }
 
-export default CheckOut
-
+export default CheckOut;

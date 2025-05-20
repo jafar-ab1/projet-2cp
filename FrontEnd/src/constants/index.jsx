@@ -88,3 +88,8 @@ export const dinningList = dinning;
 
 import { wellnessThings } from './wellness';
 export const wellnessList = wellnessThings;
+
+export const LOCAL_STORAGE = {
+  ACCESS_TOKEN: 'hotel-access-token',
+  USER: 'hotel-user',
+};
