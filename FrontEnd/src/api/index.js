@@ -214,16 +214,6 @@ export const getReservationByEmailAndRoom = async (email, roomNumber) => {
   }
 }
 
-export const createReservation = async (reservationData) => {
-  try {
-    const response = await api.post("/reservation", reservationData)
-    return response.data
-  } catch (error) {
-    console.error("Error creating reservation:", error)
-    throw error
-  }
-}
-
 export const updateReservation = async (email, roomNumber, updateData) => {
   try {
     const response = await api.put(`/reservation/${email}/${roomNumber}`, updateData)
@@ -294,6 +284,26 @@ export const getRoomsForReservation = async (type, checkInDate, checkOutDate) =>
       },
       response: error.response?.data
     });
+    throw error;
+  }
+};
+export const createReservation = async (reservationData) => {
+  const token = localStorage.getItem("accessToken");
+
+  if (!token) {
+    throw new Error("Access token not found. Please log in.");
+  }
+
+  try {
+    const response = await api.post("/reservation", reservationData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Reservation failed:", error);
     throw error;
   }
 };

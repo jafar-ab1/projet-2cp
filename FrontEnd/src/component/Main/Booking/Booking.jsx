@@ -8,20 +8,20 @@ function Booking() {
     checkInDate: null,
     checkOutDate: null,
     selectedBranch: "choose your branch",
-    adults: 4,
-    children: 2,
+    adults: 1,
+    children: 0,
   })
 
   const [showCheckInCalendar, setShowCheckInCalendar] = useState(false)
   const [showCheckOutCalendar, setShowCheckOutCalendar] = useState(false)
   const [showBranchDropdown, setShowBranchDropdown] = useState(false)
   const [showGuestSelector, setShowGuestSelector] = useState(false)
-  const [currentMonth, setCurrentMonth] = useState(new Date(2025, 0)) // January 2025
+  const [currentMonth, setCurrentMonth] = useState(new Date())
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitMessage, setSubmitMessage] = useState("")
 
   const handleCheckAvailability = () => {
-    const { checkInDate, checkOutDate, selectedBranch, adults, children } = formData
+    const { checkInDate, checkOutDate, selectedBranch, adults } = formData
 
     // Basic validation
     if (!checkInDate || !checkOutDate || selectedBranch === "choose your branch" || adults < 1) {
@@ -29,11 +29,39 @@ function Booking() {
       return
     }
 
-    setSubmitMessage("") // Clear previous message
-    localStorage.setItem("bookingData", JSON.stringify(formData))
+    // Validate date sequence
+    if (new Date(checkInDate) >= new Date(checkOutDate)) {
+      setSubmitMessage("Check-out date must be after check-in date.")
+      return
+    }
+
+    // Validate dates are not in the past
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    if (new Date(checkInDate) < today) {
+      setSubmitMessage("Check-in date cannot be in the past.")
+      return
+    }
+
+    // Format dates consistently
+    const formattedData = {
+      ...formData,
+      checkInDate: formatDateForAPI(checkInDate),
+      checkOutDate: formatDateForAPI(checkOutDate)
+    }
+
+    setSubmitMessage("")
+    localStorage.setItem("bookingData", JSON.stringify(formattedData))
     navigate("/Choose")
   }
-  ;<button className="CheckAvailability">Check Availability</button>
+
+  const formatDateForAPI = (date) => {
+    const d = new Date(date)
+    const year = d.getFullYear()
+    const month = String(d.getMonth() + 1).padStart(2, '0')
+    const day = String(d.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }//hereeeeee
 
   // Function to update form data
   const updateFormData = (field, value) => {
@@ -145,6 +173,13 @@ function Booking() {
           <button onClick={handleNextMonth}>{"->"}</button>
         </div>
         <div className="calendar-grid">
+          {/* Day of week headers */}
+          {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+            <div key={day} className="calendar-day-header">
+              {day}
+            </div>
+          ))}
+          
           {days.map((dayObj, index) => (
             <div
               key={index}
