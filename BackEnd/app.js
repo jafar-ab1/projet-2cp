@@ -29,9 +29,6 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(config.db.connectionString)  
-.then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB', err));
 
 
 // Utilisation des routes
@@ -60,6 +57,12 @@ app.use((req, res) => {
 });
 
 
-app.listen(port, () => {
-  console.log(`Server is running at  : http://localhost:${port}`);
-});
+mongoose.connect(config.db.connectionString)  
+.then(() => {
+    console.log('Connected to MongoDB')
+    app.listen(port, () => {
+      console.log(`Server is running at  : http://localhost:${port}`);
+    });
+})
+.catch(err => console.error('Could not connect to MongoDB', err));
+
