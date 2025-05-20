@@ -52,28 +52,37 @@ exports.AddGuest = async (req, res) => {
 
         const {email , roomNumber} = req.body;
 
+
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: 'Utilisateur non trouvé' });
         }
 
-        const reservation = await Reservation.findOne({email, roomNumber})
+        const results = await Promise.all(roomNumber.map(async (roomNumber) => {
+            const reservation = await Reservation.findOne({ email, roomNumber });
+            
+            if (!reservation) {
+                return { roomNumber, success: false, message: 'Réservation non trouvée' };
+            }
 
-        if (!reservation) {
-            return res.status(404).json({ message: 'Réservation non trouvée' });
-        }
+            const checkInDate = new Date(reservation.checkInDate);
+            checkInDate.setHours(0, 0, 0, 0);
 
-       const checkInDate = new Date(reservation.checkInDate);
-        checkInDate.setHours(0, 0, 0, 0);
+            // Mise à jour de la réservation
+            reservation.status = "Checked in";
+            await reservation.save();
 
-       
+            // Mise à jour de la chambre
+            const room = await Room.findOne({ roomNumber });
+            if (!room) {
+                return { roomNumber, success: false, message: 'Chambre non trouvée' };
+            }
 
-        reservation.status = "Checked in";
-        await reservation.save();
-        const room = await Room.findOne({roomNumber});
-        if (!room) return res.status(404).json({message: 'room non trouver pour changer status'});
-        room.status1= "Occupied";
-        await room.save();
+            room.status1 = "Occupied";
+            await room.save();
+
+            return { roomNumber, success: true };
+        }));
 
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -83,26 +92,30 @@ exports.AddGuest = async (req, res) => {
             }
         });
 
+        const successfulReservations = results.filter(r => r.success);
+        const roomNumbersList = successfulReservations.map(r => r.roomNumber).join(', ');
+        const firstReservation = successfulReservations[0];
+
         const mailOptions = {
-            from: `"Hotel" <${config.hotel.hotelName}> <${config.email.user}>`,
+            from: `"${config.hotel.hotelName}" <${config.email.user}>`,
             to: email,
-            subject:`Confirmation de Check-In - Hotel <${config.hotel.hotelName}>`,
+            subject: `Confirmation de Check-In - ${config.hotel.hotelName}`,
             html: `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                     <h2 style="color: #2c3e50;">Bonjour ${user.fullName || ''},</h2>
-                    <p>Nous vous confirmons votre enregistrement (Check-In) à l'Hotel Sayé.</p>
+                    <p>Nous vous confirmons votre enregistrement (Check-In) à l'${config.hotel.hotelName}.</p>
                     
                     <h3 style="color: #2c3e50;">Détails de votre séjour :</h3>
                     <ul>
-                        <li><strong>Chambre :</strong> ${roomNumber}</li>
-                        <li><strong>Date d'arrivée :</strong> ${reservation.checkInDate.toLocaleDateString()}</li>
-                        <li><strong>Date de départ :</strong> ${reservation.checkOutDate.toLocaleDateString()}</li>
+                        <li><strong>Chambre(s) :</strong> ${roomNumbersList}</li>
+                        <li><strong>Date d'arrivée :</strong> ${firstReservation.checkInDate}</li>
+                        <li><strong>Date de départ :</strong> ${(firstReservation.checkOutDate)}</li>
                         <li><strong>Statut :</strong> Checked In</li>
                     </ul>
                     
                     <p>Nous vous souhaitons un agréable séjour parmi nous.</p>
                     
-                    <p>Cordialement,<br>L'équipe de l'Hotel Sayé</p>
+                    <p>Cordialement,<br>L'équipe de l'${config.hotel.hotelName}</p>
                     
                     <div style="margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
                         <p style="font-size: 12px; color: #7f8c8d;">
@@ -117,7 +130,6 @@ exports.AddGuest = async (req, res) => {
 
         res.status(200).json({
             message: 'Check-In effectué avec succès et email de confirmation envoyé',
-            reservation,
             user: email,
             room:  roomNumber
     });
