@@ -106,8 +106,11 @@ exports.getRoomsForReservation = async (req, res) => {
         type,
         rooms: [{
           count: roomsOfType.length,
-          facilities: sampleRoom?.facilities || [],
-          price: sampleRoom?.price || 0
+          facilities: sampleRoom?.facilities,
+          price: sampleRoom?.price,
+          bedType: sampleRoom?.bedType,
+          price: sampleRoom?.price,
+          size: sampleRoom?.size
         }]
       };
     });
