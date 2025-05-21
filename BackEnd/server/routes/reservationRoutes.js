@@ -28,7 +28,7 @@ router.get('/', reservationController.getAllReservations);
 router.get('/:email',validate(emailSchema, 'params'), reservationController.getReservationByEmail);
 
 
-router.get('/:email/:roomNumber',convertRoomNumberToArray, validate(emailAndRoomNumberSchema, 'params'), reservationController.getReservationByEmailAndRoomNumber);
+router.get('/:email/:roomNumber', reservationController.getReservationByEmailAndRoomNumber);
 
 
 router.get('/rooms/:checkInDate/:checkOutDate', validate(ReservationRoomSchema, 'params'), reservationController.getRoomsForReservation)

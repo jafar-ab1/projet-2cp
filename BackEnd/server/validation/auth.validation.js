@@ -20,8 +20,7 @@ export const registerUserValidationSchema = Joi.object({
         "string.min": "full-name length must be above 3",
         "string.max": "full-name length must be below 20",
         "any.required": "full-name is required",
-    }),
-    role :Joi.required().valid('Client', 'Admin')
+    })
 });
 
 export const loginUserValidationSchema = Joi.object({

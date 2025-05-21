@@ -7,14 +7,14 @@ const { sendVerificationEmail } = require('../services/emailService');
 // Inscription
 exports.register = async (req, res) => {
   try {
-    const {fullName, email, password, mobileNumber, role } = req.body;
+    const {fullName, email, password, mobileNumber} = req.body;
     
     // Vérifier si l'utilisateur existe déjà
     const found = await User.findOne({email});
     if(found) return res.status(401).json({message:`Email ${email} already exists`});
 
     // Créer un nouvel utilisateur
-    const user = new User({fullName, email, password, mobileNumber, role});
+    const user = new User({fullName, email, password, mobileNumber});
     await user.save();
 
     // Générer un token JWT
@@ -32,8 +32,7 @@ exports.register = async (req, res) => {
       user: {
         id: user._id,
         fullName: user.fullName,
-        email: user.email,
-        role: user.role
+        email: user.email
       }
      });
   } catch (error) {

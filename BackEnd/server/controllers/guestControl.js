@@ -3,6 +3,7 @@ const Room = require('../models/Room');
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
 const config = require('../../config');
+const reservation = require('../models/reservation');
 
 
 exports.getAll = async (req, res) => {
@@ -15,34 +16,53 @@ exports.getAll = async (req, res) => {
         res.status(500).json({ message: err.message })
     }
 }
-
 exports.getAllCheckInDueOut = async (req, res) => {
     try {
-        // Trouver toutes les réservations avec les statuts recherchés
+        // 1. Trouver toutes les réservations avec les statuts recherchés
         const reservations = await Reservation.find({
             status: { $in: ["Due out", "Checked in"] }
-        })
+        }).lean(); // Utilisation de lean() pour obtenir des objets JavaScript simples
 
-        // Si vous n'utilisez pas populate, vous devrez faire une jointure manuelle
-        const guestEmails = reservations.map(res => res.email);
-        
-        // Trouver les utilisateurs correspondants
+        if (reservations.length === 0) {
+            return res.status(404).json({ 
+                message: 'Aucune réservation trouvée avec ces statuts' 
+            });
+        }
+
+        // 2. Récupérer les emails uniques des clients
+        const guestEmails = [...new Set(reservations.map(res => res.email))];
+
+        // 3. Trouver les informations des clients correspondants
         const guests = await User.find({
             email: { $in: guestEmails },
             role: 'Client'
+        }).select('fullName email phoneNumber'); // Sélectionner uniquement les champs nécessaires
+
+        // 4. Fusionner les données des réservations avec les informations clients
+        const enhancedReservations = reservations.map(reservation => {
+            const guestInfo = guests.find(guest => guest.email === reservation.email) || {};
+            return {
+                ...reservation,
+                guestInfo: {
+                    fullName: guestInfo.fullName,
+                    email: guestInfo.email
+                }
+            };
         });
 
-        if (guests.length === 0) {
-            return res.status(404).json({ message: 'Aucun guest trouvé avec ces statuts de réservation' });
-        }
-
-        return res.status(200).json(guests);
+        return res.status(200).json({
+            count: enhancedReservations.length,
+            reservations: enhancedReservations
+        });
 
     } catch (error) {
-        console.error("Erreur:", error);
-        return res.status(500).json({ message: "Erreur interne du serveur" });
+        console.error("Erreur dans getAllCheckInDueOut:", error);
+        return res.status(500).json({ 
+            message: "Erreur interne du serveur",
+            error: error.message 
+        });
     }
-}
+};
 
 
 exports.AddGuest = async (req, res) => {
@@ -71,6 +91,8 @@ exports.AddGuest = async (req, res) => {
             // Mise à jour de la réservation
             reservation.status = "Checked in";
             await reservation.save();
+            console.log(reservation.status);
+            
 
             // Mise à jour de la chambre
             const room = await Room.findOne({ roomNumber });

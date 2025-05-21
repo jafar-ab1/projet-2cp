@@ -64,8 +64,8 @@ exports.getRoomsForReservation = async (req, res) => {
         success: false,
         message: "Invalid date values",
         details: {
-          checkInDate: { received: checkInDate, parsed: startDate.toString() },
-          checkOutDate: { received: checkOutDate, parsed: endDate.toString() }
+        checkInDate: { received: checkInDate, parsed: startDate.toString() },
+        checkOutDate: { received: checkOutDate, parsed: endDate.toString() }
         }
       });
     }
