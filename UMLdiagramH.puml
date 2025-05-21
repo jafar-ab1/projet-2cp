@@ -1,5 +1,4 @@
 @startuml HotelManagementSystem
-
 skinparam class {
     BackgroundColor #DCD7C9
     BorderColor #2C3930
@@ -16,16 +15,23 @@ class User {
     + email: String
     + password: String
     + mobileNumber: String
-    + role: String
-    ' Possible values: Client, Admin
+    + role: String <<Client,Admin>>
     --
-    + comparePassword(): Boolean
+    + register(): void
+    + login(): boolean
+    + updateProfile(): void
+    + changePassword(): void
+    + comparePassword(): boolean
 }
 
 class VerificationCode {
     + email: String
     + code: String
     + expiresAt: Date
+    --
+    + generateCode(): void
+    + verifyCode(): boolean
+    + isExpired(): boolean
 }
 
 class Branch {
@@ -33,11 +39,19 @@ class Branch {
     + location: String
     + email: String
     + phone: String
+    --
+    + addBranch(): void
+    + updateBranchInfo(): void
+    + getBranchDetails(): Branch
 }
 
 class Floor {
     + status: String <<Complété,À compléter>>
     + floorNumber: int
+    --
+    + addFloor(): void
+    + updateFloorStatus(): void
+    + listRooms(): Room[]
 }
 
 class Room {
@@ -45,14 +59,23 @@ class Room {
     + facilities: String[]
     + cleaningStatus: String <<Made up,Not made up>>
     + availabilityStatus: String <<Available,Occupied>>
-    + roomType: String
+    + roomNumber: String
     + floor: int
     + price: float
+    --
+    + addRoom(): void
+    + updateRoomStatus(): void
+    + getRoomDetails(): Room
+    + calculatePrice(): float
 }
 
 class Tarif {
     + roomType: String <<Standard,Deluxe,Suite>>
     + price: float
+    --
+    + setRoomPrice(): void
+    + getPriceByType(): float
+    + applySeasonalDiscount(): void
 }
 
 class Reservation {
@@ -61,34 +84,50 @@ class Reservation {
     + checkInDate: Date
     + checkOutDate: Date
     + roomType: String <<Standard,Deluxe,Suite>>
-    + status: String <<Ongoing,Finished>>
-    ' Possible values: Due in, Checked in, Due out, Checked out
+    + status: String <<Due in,Checked in,Due out,Checked out>>
+    --
+    + createReservation(): void
+    + cancelReservation(): void
+    + updateReservation(): void
+    + checkAvailability(): boolean
+    + calculateTotal(): float
 }
 
 class Payment {
-    + status: String
-    ' Possible values: In-progress, Completed
+    + status: String <<Pending,Completed,Failed>>
     + amount: float
     + paymentDate: Date
     + paymentMethod: String <<Credit_card,Paypal,Cash>>
+    --
+    + processPayment(): boolean
+    + generateReceipt(): String
+    + refundPayment(): boolean
 }
 
 ' ====== OPERATIONS ======
-
 class Maintenance {
     + roomNumber: String
     + issueDescription: String
     + email: String
     + status: String <<In-progress,Completed>>
     + resolutionDate: Date
+    --
+    + createMaintenanceRequest(): void
+    + updateMaintenanceStatus(): void
+    + assignTechnician(): void
+    + completeRequest(): void
 }
-
 
 class Feedback {
     + email: String
     + roomNumber: String
     + comment: String
     + date: Date
+    + rating: int
+    --
+    + submitFeedback(): void
+    + calculateAverageRating(): float
+    + getFeedbackByRoom(): Feedback[]
 }
 
 class Settings {
@@ -96,6 +135,10 @@ class Settings {
     + totalRooms: int
     + contactEmail: String
     + contactPhone: String
+    --
+    + updateSettings(): void
+    + getSystemConfig(): Settings
+    + backupDatabase(): void
 }
 
 class Deal {
@@ -103,6 +146,10 @@ class Deal {
     + discount: float
     + validFrom: Date
     + validTo: Date
+    --
+    + createDeal(): void
+    + applyDeal(): void
+    + checkValidity(): boolean
 }
 
 ' ====== RELATIONSHIPS ======
@@ -117,42 +164,18 @@ Reservation "0..*" --> "0..1" Deal : applique
 Room "1" --> "0..*" Maintenance : nécessite
 User "1" --> "0..*" Feedback : fournit
 Reservation "1" --> "0..1" Feedback : a
-@enduml
-' ====== GROUPING ======
-package "Système Central" {
-    User
-    VerificationCode
-    Settings
-}
-
-package "Structure Hôtelière" {
-    Branch
-    Floor
-    Room
-    Tarif
-}
-
-package "Système de Réservation" {
-    Reservation
-    Deal
-    Payment
-}
-
-package "Opérations" {
-    Maintenance
-    Feedback
-}
-
-note top of User
-  <b>Système d'authentification</b>
-  Utilise bcrypt pour le hachage
-  Pré-sauvegarde pour le chiffrement
-end note
 
 note right of Reservation
-  <b>Cycle de réservation</b>
-  Transitions d'état :
-  Due in → Checked in → Due out → Checked out
+  **Reservation Workflow**:
+  1. Create reservation
+  2. Assign room
+  3. Process payment
+  4. Check-in/out
+end note
+
+note bottom of User
+  **User Roles**:
+  - Admin: Full access
+  - Client: Booking only
 end note
 @enduml
-
