@@ -4,6 +4,7 @@ const Room = require('../models/Room')
 
 const nodemailer = require('nodemailer');
 const config = require('../../config');
+const { type } = require('os');
 
 
 exports.getAllReservations = async (req, res) => {
@@ -129,28 +130,25 @@ exports.getRoomsForReservation = async (req, res) => {
     });
   }
 };
-
-exports.creatReservation = async(req, res) =>{
+exports.creatReservation = async (req, res) => {
   const email = req.user.email;
-  const {checkInDate, checkOutDate, roomsRequested} = req.body; //roomsRequested est un tableau [type, quantite]
-    
+  const { checkInDate, checkOutDate, roomsRequested } = req.body;
+
   try {
-      // 1. Vérification de l'utilisateur (obligatoire)
-      const userValide = await User.findOne({ email });
-      if (!userValide) {
-          return res.status(404).json({ message: "Utilisateur non trouvé" });
-      }
+    // 1. Vérification de l'utilisateur
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
 
-
-    // 2. Trouver les chambres déjà réservées pendant cette période
+    // 2. Validation des dates
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
 
-    // Validate date objects
     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
       return res.status(400).json({
         success: false,
-        message: "Invalid date values",
+        message: "Dates invalides",
         details: {
           checkInDate: { received: checkInDate, parsed: startDate.toString() },
           checkOutDate: { received: checkOutDate, parsed: endDate.toString() }
@@ -158,19 +156,14 @@ exports.creatReservation = async(req, res) =>{
       });
     }
 
-    // Validate date sequence
     if (startDate >= endDate) {
       return res.status(400).json({
         success: false,
-        message: "Check-out date must be after check-in date",
-        dates: {
-          checkIn: startDate.toISOString(),
-          checkOut: endDate.toISOString()
-        }
+        message: "La date de check-out doit être après la date de check-in"
       });
     }
 
-    // Rest of your existing room availability logic...
+    // 3. Trouver les réservations en conflit
     const conflictingReservations = await Reservation.find({
       $or: [
         { checkInDate: { $gte: startDate, $lt: endDate } },
@@ -180,10 +173,10 @@ exports.creatReservation = async(req, res) =>{
       status: { $in: ["Due in", "Checked in", "Due out"] }
     });
 
-
-    // 4. Traitement pour chaque type de chambre demandé
+    // 4. Traitement des réservations
     const reservations = [];
     let totalPrice = 0;
+    const roomDetails = []; // Pour stocker les infos des chambres
 
     for (const request of roomsRequested) {
       const { type, quantity } = request;
@@ -191,105 +184,231 @@ exports.creatReservation = async(req, res) =>{
       // Trouver toutes les chambres de ce type
       const allRoomsOfType = await Room.find({ type });
       if (!allRoomsOfType || allRoomsOfType.length === 0) {
-        return res.status(404).json({ message: `Aucune chambre de type ${type} n'existe` });
+        return res.status(404).json({ message: `Aucune chambre de type ${type} disponible` });
       }
-    
 
-    // 4. Filtrer pour garder seulement les chambres disponibles
-    const availableRooms = allRoomsOfType.filter(room => 
-      !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
-    );
-  
-    if (availableRooms.length < quantity) {
-        return res.status(400).json({ 
-          message: `Seulement ${availableRooms.length} chambre(s) de type ${type} disponible(s), mais ${quantity} demandée(s)`
+      // Filtrer les chambres disponibles
+      const availableRooms = allRoomsOfType.filter(room =>
+        !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
+      );
+
+      if (availableRooms.length < quantity) {
+        return res.status(400).json({
+          message: `Seulement ${availableRooms.length} chambre(s) de type ${type} disponible(s)`
         });
       }
 
-
-  // Créer les réservations pour la quantité demandé
+      // Créer les réservations
       for (let i = 0; i < quantity; i++) {
         const room = availableRooms[i];
         const reservation = await Reservation.create({
           email,
           roomNumber: room.roomNumber,
-          checkInDate,
-          checkOutDate,
+          checkInDate: startDate,
+          checkOutDate: endDate,
           totalPrice: room.price,
           status: "Due in"
         });
-        reservations.push({
-      _id: reservation._id,
-      roomNumber: room.roomNumber,
-      roomType: room.type,  // Stocké temporairement pour l'email
-      price: room.price
-    });
+
+        reservations.push(reservation);
+        roomDetails.push({
+          number: room.roomNumber,
+          type: room.type,
+          price: room.price
+        });
         totalPrice += room.price;
       }
     }
-      
-      const user = await User.findOne({email});
-      
-      const transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: config.email.user,
-            pass: config.email.password,
-          }
-        });
+
+    // 5. Envoi de l'email de confirmation
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: config.email.user,
+        pass: config.email.password
+      }
+    });
 
     const mailOptions = {
-      from: config.email.user,
+      from: `"${config.hotel.hotelName}" <${config.email.user}>`,
       to: user.email,
-      subject: 'Confirmation de vos réservations',
+      subject: `réservation - ${config.hotel.hotelName}`,
       html: `
-        <h1>Confirmation de réservation</h1>
-        <p>Bonjour ${user.fullName},</p>
-        <p>Vos réservations ont bien été enregistrées :</p>
-        <ul>
-          <li>Nombre de chambres: ${reservations.length}</li>
-          <li>Arrivée: ${new Date(checkInDate).toLocaleDateString()}</li>
-          <li>Départ: ${new Date(checkOutDate).toLocaleDateString()}</li>
-          <li>Prix total: ${totalPrice} €</li> <!-- Ajout du prix total -->
-        </ul>
-        <h3>Détails des chambres :</h3>
-        <ul>
-          ${reservations.map(res => `
-            <li>
-               Chambre ${res.roomNumber} (${res.roomType})<br>
-              <br>Référence: ${res._id}
-            </li>
-          `).join('')}
-        </ul>
-        <p>Merci pour votre confiance !</p>
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <style type="text/css">
+        /* Base Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f7f7f7;
+        }
+        
+        /* Email Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Header */
+        .email-header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .hotel-logo {
+            max-width: 150px;
+            height: auto;
+        }
+        
+        /* Content */
+        .email-content {
+            padding: 30px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .booking-details {
+            background: #f8fafc;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: #2c3e50;
+        }
+        
+        /* Room List */
+        .room-list {
+            margin: 20px 0;
+        }
+        
+        .room-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Footer */
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .social-links {
+            margin: 15px 0;
+        }
+        
+        .social-icon {
+            margin: 0 10px;
+        }
+        
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-content {
+                padding: 20px;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+        </head>
+        <body>
+            <div class="email-container">
+                <div class="email-header">
+                    <h1>Confirmation de réservation</h1>
+                </div>
+                <div class="email-content">
+                    <p>Bonjour ${user.fullName || 'Cher Client'},</p>
+                    <p>Votre réservation a bien été enregistrée :</p>
+                    
+                    <div class="booking-details">
+                        <h3>Détails du séjour</h3>
+                        <p><strong>Dates :</strong> ${startDate.toLocaleDateString('fr-FR')} au ${endDate.toLocaleDateString('fr-FR')}</p>
+                        <p><strong>Total :</strong> ${totalPrice} €</p>
+                        
+                        <h4>Chambres réservées :</h4>
+                        <ul>
+                            ${roomDetails.map(room => `
+                                <li>
+                                    Chambre ${room.number} (${room.type}) - ${room.price} €
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    
+                    <p>Nous vous remercions pour votre confiance.</p>
+                </div>
+                <div class="email-footer">
+                    <p>${config.hotel.hotelName}</p>
+                </div>
+            </div>
+        </body>
+        </html>
       `
     };
 
-
     try {
-        await transporter.sendMail(mailOptions);
-        console.log("Email de confirmation envoyé");
-      } catch (emailError) {
-        console.error("Erreur d'envoi d'email:", emailError);
-        // Ne pas renvoyer d'erreur au client pour un échec d'email
-      }
+      await transporter.sendMail(mailOptions);
+      console.log("Email de confirmation envoyé");
+    } catch (emailError) {
+      console.error("Erreur d'envoi d'email:", emailError);
+    }
 
+    // 6. Réponse finale
     res.status(201).json({
       success: true,
       message: `${reservations.length} chambre(s) réservée(s) avec succès`,
-      reservations,
+      reservations: reservations.map(res => ({
+        id: res._id,
+        roomNumber: res.roomNumber,
+        checkInDate: res.checkInDate,
+        checkOutDate: res.checkOutDate,
+        status: res.status
+      })),
       totalPrice
     });
-      
-    }
-    catch(error){
-        console.error("Erreur lors de la création:", error);
-    res.status(500).json({ 
+
+  } catch (error) {
+    console.error("Erreur lors de la création:", error);
+    res.status(500).json({
       message: "Erreur lors de la création de la réservation",
-      error: error.message 
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
-    }
-}
+  }
+};
 
 exports.modifyStatusDueOut = async (req, res) => {
   try {

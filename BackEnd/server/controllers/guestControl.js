@@ -116,36 +116,193 @@ exports.AddGuest = async (req, res) => {
 
         const successfulReservations = results.filter(r => r.success);
         const roomNumbersList = successfulReservations.map(r => r.roomNumber).join(', ');
-        const firstReservation = successfulReservations[0];
+
+        const number=(successfulReservations[0].roomNumber);
+        
+
+        const reservation = await Reservation.findOne({ email, roomNumber: number });
+        const checkInDate = new Date(reservation.checkInDate);
+
+        const checkOutDate = new Date(reservation.checkOutDate);
+
 
         const mailOptions = {
             from: `"${config.hotel.hotelName}" <${config.email.user}>`,
             to: email,
             subject: `Confirmation de Check-In - ${config.hotel.hotelName}`,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                    <h2 style="color: #2c3e50;">Bonjour ${user.fullName || ''},</h2>
-                    <p>Nous vous confirmons votre enregistrement (Check-In) à l'${config.hotel.hotelName}.</p>
-                    
-                    <h3 style="color: #2c3e50;">Détails de votre séjour :</h3>
-                    <ul>
-                        <li><strong>Chambre(s) :</strong> ${roomNumbersList}</li>
-                        <li><strong>Date d'arrivée :</strong> ${firstReservation.checkInDate}</li>
-                        <li><strong>Date de départ :</strong> ${(firstReservation.checkOutDate)}</li>
-                        <li><strong>Statut :</strong> Checked In</li>
-                    </ul>
-                    
-                    <p>Nous vous souhaitons un agréable séjour parmi nous.</p>
-                    
-                    <p>Cordialement,<br>L'équipe de l'${config.hotel.hotelName}</p>
-                    
-                    <div style="margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">
-                        <p style="font-size: 12px; color: #7f8c8d;">
-                            Cet email a été envoyé automatiquement, merci de ne pas y répondre.
-                        </p>
-                    </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        /* Base Styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f7f7f7;
+        }
+        
+        /* Email Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Header */
+        .email-header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .hotel-logo {
+            max-width: 150px;
+            height: auto;
+        }
+        
+        /* Content */
+        .email-content {
+            padding: 30px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .booking-details {
+            background: #f8fafc;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: #2c3e50;
+        }
+        
+        /* Room List */
+        .room-list {
+            margin: 20px 0;
+        }
+        
+        .room-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eaeaea;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Footer */
+        .email-footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .social-links {
+            margin: 15px 0;
+        }
+        
+        .social-icon {
+            margin: 0 10px;
+        }
+        
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-content {
+                padding: 20px;
+            }
+            
+            .detail-item {
+                flex-direction: column;
+            }
+            
+            .detail-label {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <img src="https://example.com/logo.png" alt="${config.hotel.hotelName}" class="hotel-logo">
+            <h1 style="margin: 20px 0 0; font-size: 24px;">Confirmation de Check-In</h1>
+        </div>
+        
+        <div class="email-content">
+            <div class="greeting">
+                <p>Bonjour <strong>${user.fullName || 'Cher Client'}</strong>,</p>
+                <p>Nous vous confirmons votre enregistrement à l'hôtel ${config.hotel.hotelName}.</p>
+            </div>
+            
+            <div class="booking-details">
+                <h3 style="margin-top: 0; color: #2c3e50;">Détails de votre séjour</h3>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Référence :</span>
+                    <span>${reservation._id}</span>
                 </div>
-            `
+                
+                <div class="detail-item">
+                    <span class="detail-label">Date d'arrivée :</span>
+                    <span>${new Date(checkInDate).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Date de départ :</span>
+                    <span>${new Date(checkOutDate).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                </div>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Statut :</span>
+                    <span style="color: #27ae60; font-weight: 600;">Checked In</span>
+                </div>
+            </div>
+            
+            <div class="room-list">
+                <h4 style="margin-bottom: 15px; color: #2c3e50;">Vos chambres :</h4>
+                ${roomNumbersList}
+            </div>
+            
+            <p style="margin-top: 25px;">Nous vous souhaitons un excellent séjour parmi nous. N'hésitez pas à contacter la réception pour toute demande spéciale.</p>
+            
+            <p style="margin-top: 20px;">À bientôt,</p>
+        </div>
+        
+        <div class="email-footer">
+            <p>${config.hotel.hotelName}</p>
+            <p>Tél: ${config.hotel.phone} | Email: ${config.hotel.contactEmail}</p>
+            
+            <p style="font-size: 12px; color: #bdc3c7; margin-top: 20px;">
+                Cet email a été envoyé automatiquement, merci de ne pas y répondre.
+                <br>
+                © ${new Date().getFullYear()} ${config.hotel.hotelName}. Tous droits réservés.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+`
         };
 
         await transporter.sendMail(mailOptions);
