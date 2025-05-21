@@ -1,0 +1,35 @@
+@startuml
+start
+
+:Connexion ou inscription utilisateur;
+if (Type d'utilisateur ?) then (Client)
+  :Afficher tableau de bord client;
+  :Recherche chambre;
+  :Vérifier disponibilité;
+  if (Chambre disponible ?) then (Oui)
+    :Remplir formulaire de réservation;
+    :Procéder au paiement;
+    if (Paiement réussi ?) then (Oui)
+      :Envoyer confirmation et facture;
+      :Demander feedback;
+    else (Non)
+      :Afficher erreur paiement;
+      :Recommencer paiement;
+    endif
+  else (Non)
+    :Afficher indisponibilité;
+  endif
+elseif (Staff)
+  :Afficher tableau de bord staff;
+  :Gérer réservations;
+  :Check-in/Check-out;
+  :Créer requête maintenance;
+elseif (Admin)
+  :Afficher tableau de bord admin;
+  :Gérer branches/étages;
+  :Gérer tarifs/promos;
+  :Consulter rapports;
+endif
+
+stop
+@enduml
