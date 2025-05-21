@@ -177,7 +177,6 @@ exports.checkDailyDueOut = async () => {
   }
 };
 
-
 exports.sendCheckoutEmailAndDelete = async (req, res) => {
     try {
         const { email } = req.params;
@@ -186,7 +185,6 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
 
         const deleteAt = new Date();
         deleteAt.setDate(deleteAt.getDate() + 2);
-
 
         // 1. Configuration du transporteur email
         const transporter = nodemailer.createTransport({
@@ -197,49 +195,71 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
             }
         });
 
-        // 2. Trouver la réservation avec status "Due out"
-        const reservation = await Reservation.findOne({ 
+        // 2. Trouver TOUTES les réservations avec status "Due out" pour cet email
+        const reservations = await Reservation.find({ 
             email,
             status: "Due out"
         });
 
-        if (!reservation) {
+        if (!reservations || reservations.length === 0) {
             return res.status(404).json({ 
                 message: "Aucune réservation avec statut 'Due out' trouvée pour cet email" 
             });
         }
 
-        // 3. Mettre à jour la chambre
-        for (const roomNumber of reservation.roomNumber) {
-         const room = await Room.findOneAndUpdate(
-            { roomNumber: roomNumber },
-            { status1: "Available" },
-            { new: true }
-        );
+        const user = await User.findOne({ email });
+        let allRooms = [];
+        let reservationsDetails = [];
 
-        const reservation = await Reservation.findOneAndUpdate(
-                {roomNumber},
+        // 3. Traiter chaque réservation
+        for (const reservation of reservations) {
+            // Mettre à jour toutes les chambres de cette réservation
+            for (const roomNumber of reservation.roomNumber) {
+                const room = await Room.findOneAndUpdate(
+                    { roomNumber: roomNumber },
+                    { status1: "Available" },
+                    { new: true }
+                );
+                
+                if (!room) {
+                    console.warn(`Chambre ${roomNumber} non trouvée`);
+                    continue;
+                }
+                allRooms.push(roomNumber);
+            }
+
+            // Mettre à jour le statut de la réservation
+            await Reservation.findByIdAndUpdate(
+                reservation._id,
                 { 
                     status: "Checked out",
-                    toDeleteAt: deleteAt // Date programmée de suppression
-                },
-                { new: true }
+                    toDeleteAt: deleteAt
+                }
             );
-        
-        if (!room) {
-          return res.status(404).json({ 
-            message: "Chambre non trouvée" 
-          });
+
+            // Préparer les détails pour l'email
+            reservationsDetails.push({
+                id: reservation._id,
+                rooms: reservation.roomNumber,
+                checkIn: new Date(reservation.checkInDate).toLocaleDateString('fr-FR'),
+                checkOut: new Date(reservation.checkOutDate).toLocaleDateString('fr-FR')
+            });
         }
-        await room.save();
-      }
 
-      const user = await User.findOne({ email: reservation.email });
+        // 4. Générer le contenu HTML pour l'email
+        const reservationsHtml = reservationsDetails.map(res => `
+            <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+                <h3 style="margin-top: 0; color: #2c3e50;">Réservation #${res.id.toString().substring(0, 8)}</h3>
+                <p><strong>Chambres :</strong> ${res.rooms.join(', ')}</p>
+                <p><strong>Arrivée :</strong> ${res.checkIn}</p>
+                <p><strong>Départ :</strong> ${res.checkOut}</p>
+            </div>
+        `).join('');
 
-        // 4. Envoyer l'email avant suppression
+        // 5. Envoyer l'email récapitulatif
         const mailOptions = {
             from: `"${config.hotel.hotelName}" <${config.email.user}>`,
-            to: reservation.email,
+            to: email,
             subject: `Confirmation de départ - ${config.hotel.hotelName}`,
             html: `
                 <!DOCTYPE html>
@@ -250,7 +270,6 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
                         .container { max-width: 600px; margin: 20px auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
                         .header { background: linear-gradient(135deg, #2c3e50, #3498db); color: white; padding: 30px; text-align: center; }
                         .content { padding: 30px; }
-                        .info-box { background: #f8f9fa; border-left: 4px solid #3498db; padding: 20px; margin: 25px 0; border-radius: 0 5px 5px 0; }
                         .footer { background: #2c3e50; color: white; padding: 20px; text-align: center; font-size: 14px; }
                         .highlight { color: #e74c3c; font-weight: bold; }
                     </style>
@@ -266,14 +285,9 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
                             <p>Bonjour <span class="highlight">${user?.fullName || 'Client'}</span>,</p>
                             
                             <p>Nous confirmons votre départ de notre hôtel.</p>
+                            <p>Voici le récapitulatif de vos réservations :</p>
                             
-                            <div class="info-box">
-                                <h3 style="margin-top: 0; color: #2c3e50;">Détails de votre séjour</h3>
-                                <p><strong>N° Réservation :</strong> ${reservation._id}</p>
-                                <p><strong>Chambre :</strong> ${reservation.roomNumber}</p>
-                                <p><strong>Arrivée :</strong> ${new Date(reservation.checkInDate).toLocaleDateString('fr-FR')}</p>
-                                <p><strong>Départ :</strong> ${new Date(reservation.checkOutDate).toLocaleDateString('fr-FR')}</p>
-                            </div>
+                            ${reservationsHtml}
                             
                             <p>Nous espérons que vous avez passé un agréable séjour parmi nous.</p>
                             
@@ -292,11 +306,11 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
 
         await transporter.sendMail(mailOptions);
         
-
         return res.status(200).json({
-            message: "Checkout confirmé, email envoyé et données supprimées",
+            message: `Checkout confirmé pour ${reservations.length} réservation(s), email envoyé`,
             emailSent: true,
-            userDeleted: true
+            reservationsUpdated: reservations.length,
+            roomsUpdated: allRooms.length
         });
 
     } catch (error) {
@@ -306,7 +320,7 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
             error: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
-};  
+};    
 
 exports.suppUser = async(req, res)=>{
     try{
