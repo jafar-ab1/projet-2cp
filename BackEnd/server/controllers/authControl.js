@@ -7,7 +7,7 @@ const { sendVerificationEmail } = require('../services/emailService');
 // Inscription
 exports.register = async (req, res) => {
   try {
-    const {fullName, email, password, mobileNumber} = req.body;
+    const {fullName, email, password, mobileNumber } = req.body;
     
     // Vérifier si l'utilisateur existe déjà
     const found = await User.findOne({email});
@@ -32,8 +32,7 @@ exports.register = async (req, res) => {
       user: {
         id: user._id,
         fullName: user.fullName,
-        email: user.email
-      }
+        email: user.email      }
      });
   } catch (error) {
     console.log(error);

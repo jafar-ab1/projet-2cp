@@ -8,7 +8,7 @@ const reservation = require('../models/reservation');
 
 exports.getAll = async (req, res) => {
     try{
-        const guest = new User.find({role: 'Client'});
+        const guest =await User.find({role: 'Client'});
         if (!guest) res.status(400).json({message:'guest non trouvé'});
         res.status(200).json(guest)
     }
