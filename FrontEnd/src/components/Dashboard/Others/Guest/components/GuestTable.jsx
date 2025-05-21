@@ -1,53 +1,54 @@
-const GuestTable = ({ guests }) => {
-    return (
-      <div className="table-container">
-        <table className="styled-table">
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Name</th>
-              <th>Room number</th>
-              <th>Total amount</th>
-              <th>Guest statut</th>
-              <th>Room statut</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {guests.length > 0 ? (
-              guests.map((guest, index) => (
-                <tr key={index}>
-                  <td>{guest.email}</td>
-                  <td>{guest.name}</td>
-                  <td>{guest.room}</td>
-                  <td>{guest.total}</td>
-                  <td>
-                    <span className={`status-badge ${guest.guestStatus.toLowerCase()}`}>
-                      {guest.guestStatus}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${guest.roomStatus.toLowerCase()}`}>
-                      {guest.roomStatus}
-                    </span>
-                  </td>
-                  <td className="actions">
-                    <button className="action-button">⋮</button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="no-data">
-                  No guests found
+const GuestTable = ({ guests = [], onCheckOut }) => {
+  return (
+    <div className="table-container">
+      <table className="styled-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Room Number</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {guests.length > 0 ? (
+            guests.map((guest, index) => (
+              <tr key={index}>
+                <td>{guest.email}</td>
+                <td>{guest.fullName}</td>
+                <td>{Array.isArray(guest.roomNumber) ? guest.roomNumber.join(", ") : guest.roomNumber}</td>
+                <td>
+                  <span
+                    className={`status-badge ${guest.status ? guest.status.toLowerCase().replace(/\s+/g, "-") : "unknown"}`}
+                  >
+                    {guest.status}
+                  </span>
+                </td>
+                <td className="actions">
+                  <div className="action-buttons">
+                    <button
+                      className="action-button checkout-btn"
+                      onClick={() => onCheckOut(guest)}
+                      title="Check Out Guest"
+                    >
+                      Check Out
+                    </button>
+                  </div>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    )
-  }
-  
-  export default GuestTable
-  
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="no-data">
+                No guests found
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+export default GuestTable

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateGuest } from "../../../../../api/index";
+import {updateGuest } from "../../../../../api/index";
 
 const EditGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   const [searchEmail, setSearchEmail] = useState("");

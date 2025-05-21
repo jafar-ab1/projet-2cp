@@ -104,26 +104,47 @@ export const getGuestByEmail = async (email) => {
     console.error('Error fetching guest:', error);
     throw error;
   }
-};
-export const addGuest = async (data) => {
+};export const getAllCheckInDueOutGuests = async () => {
   try {
-    const response = await api.post('/guest/addGuest', data);
+    const response = await api.get('/guest/checkIn/dueOut');
     return response.data;
   } catch (error) {
-    console.error('Error adding guest:', error);
+    console.error('Error fetching checked-in/due-out guests:', error);
     throw error;
   }
 };
 
-export const updateGuest = async (email, guestData) => {
+export const addGuest = async (guestData) => {
   try {
-    const response = await api.put(`/user/${email}`, guestData);
+    const response = await api.post('/guest/addGuest', guestData);
     return response.data;
   } catch (error) {
-    console.error('Error updating guest:', error);
+    console.error('Add guest failed:', error);
     throw error;
   }
 };
+export const updateGuest = async (email, updateData) => {
+  try {
+    const response = await api.put(`/user/${email}`, updateData)
+    return response.data
+  } catch (error) {
+    console.error("Error updating guest:", error)
+    throw error
+  }
+}
+
+export const sendCheckoutEmail = async (email, roomNumber) => {
+  try {
+    const response = await api.get(`/user/checkOut/${email}/${roomNumber}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error sending checkout email:', error);
+    throw error;
+  }
+};
+
+
+
 
 export const deleteGuest = async (email) => {
   try {
@@ -135,15 +156,9 @@ export const deleteGuest = async (email) => {
   }
 };
 
-export const sendCheckoutEmail = async (email, roomNumber) => {
-  try {
-    const response = await api.get(`/user/checkOut/${email}/${roomNumber}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error sending checkout email:', error);
-    throw error;
-  }
-};
+
+
+
 
 // Room routes
 export const addRoom = async (roomData) => {
