@@ -104,61 +104,74 @@ export const getGuestByEmail = async (email) => {
     console.error('Error fetching guest:', error);
     throw error;
   }
-};export const getAllCheckInDueOutGuests = async () => {
-  try {
-    const response = await api.get('/guest/checkIn/dueOut');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching checked-in/due-out guests:', error);
-    throw error;
-  }
-};
+}
 
-export const addGuest = async (guestData) => {
+export const getAllCheckInDueOutGuests = async () => {
   try {
-    const response = await api.post('/guest/addGuest', guestData);
-    return response.data;
-  } catch (error) {
-    console.error('Add guest failed:', error);
-    throw error;
-  }
-};
-export const updateGuest = async (email, updateData) => {
-  try {
-    const response = await api.put(`/user/${email}`, updateData)
+    const response = await api.get("/guest/checkIn/dueOut")
     return response.data
   } catch (error) {
-    console.error("Error updating guest:", error)
+    console.error("Error fetching checked-in/due-out guests:", error)
     throw error
   }
 }
 
+export const addGuest = async (guestData) => {
+  try {
+    const response = await api.post("/guest/addGuest", guestData)
+    return response.data
+  } catch (error) {
+    console.error("Add guest failed:", error)
+    throw error
+  }
+}
+export const updateGuest = async (email, roomNumber, newRoomType) => {
+  try {
+    const response = await fetch(`/guest/update/${email}/${roomNumber}/${newRoomType}`, {
+      method: "PUT",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Erreur lors de la modification du client");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erreur updateGuest:", error.message);
+    throw error;
+  }
+};
+
+
 export const sendCheckoutEmail = async (email, roomNumber) => {
   try {
-    const response = await api.get(`/user/checkOut/${email}/${roomNumber}`);
+    const response = await api.get(`/user/checkOut/${email}/${roomNumber}`)
+    return response.data
+  } catch (error) {
+    console.error("Error sending checkout email:", error)
+    throw error
+  }
+}
+export const sendCheckoutEmailAndDelete = async (email) => {
+  try {
+    const response = await api.put(`/guest/checkOut/${email}`);
     return response.data;
   } catch (error) {
-    console.error('Error sending checkout email:', error);
+    console.error("Error sending checkout email and deleting guest:", error);
     throw error;
   }
 };
-
-
-
-
 export const deleteGuest = async (email) => {
   try {
-    const response = await api.delete(`/user/${email}`);
-    return response.data;
+    const response = await api.delete(`/user/${email}`)
+    return response.data
   } catch (error) {
-    console.error('Error deleting guest:', error);
-    throw error;
+    console.error("Error deleting guest:", error)
+    throw error
   }
-};
-
-
-
-
+}
 
 // Room routes
 export const addRoom = async (roomData) => {

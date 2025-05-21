@@ -1,7 +1,7 @@
-"use client"
 
 import { useState } from "react"
 import { addGuest } from "../../../../../api/index"
+
 
 const AddGuestModal = ({ onClose, refreshGuests }) => {
   const [formData, setFormData] = useState({

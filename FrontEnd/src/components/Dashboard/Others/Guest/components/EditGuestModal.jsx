@@ -1,58 +1,88 @@
 import { useState } from "react";
-import {updateGuest } from "../../../../../api/index";
+import { updateGuest } from "../../../../../api/index";
 
 const EditGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   const [searchEmail, setSearchEmail] = useState("");
+  const [searchRoomNumber, setSearchRoomNumber] = useState("");
   const [matchingGuests, setMatchingGuests] = useState([]);
-  const [editableGuests, setEditableGuests] = useState([]);
+  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [selectedRoomType, setSelectedRoomType] = useState("");
+  const [availableRoomTypes, setAvailableRoomTypes] = useState(["Standard", "Deluxe", "Suite"]);
   const [didSearch, setDidSearch] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSearch = () => {
     setDidSearch(true);
     setError("");
+    setSuccess("");
 
-    if (!searchEmail.trim()) {
+    if (!searchEmail.trim() || !searchRoomNumber.trim()) {
       setMatchingGuests([]);
-      setEditableGuests([]);
+      setSelectedGuest(null);
+      setError("Please enter both email and room number");
       return;
     }
 
-    const found = allGuests.filter((g) => 
-      g.email.toLowerCase() === searchEmail.toLowerCase().trim()
-    );
+    const found = allGuests.filter((g) => {
+      const emailMatch = g.email?.toLowerCase() === searchEmail.toLowerCase().trim();
+      const roomMatch = Array.isArray(g.roomNumber)
+        ? g.roomNumber.some(rn => rn.toString() === searchRoomNumber.trim())
+        : g.roomNumber?.toString() === searchRoomNumber.trim();
+      
+      return emailMatch && roomMatch;
+    });
 
     setMatchingGuests(found);
-    setEditableGuests(JSON.parse(JSON.stringify(found)));
+    if (found.length > 0) {
+      setSelectedGuest(found[0]);
+      // Default to the current room type
+      if (found[0].roomType) {
+        setSelectedRoomType(found[0].roomType);
+      } else {
+        setSelectedRoomType("Standard"); // Default if no room type is specified
+      }
+    } else {
+      setSelectedGuest(null);
+      setError("No guest found with that email and room number");
+    }
   };
 
-  const handleInputChange = (index, field, value) => {
-    const updatedGuests = [...editableGuests];
-    updatedGuests[index][field] = value;
-    setEditableGuests(updatedGuests);
+  const handleRoomTypeChange = (e) => {
+    setSelectedRoomType(e.target.value);
   };
 
   const handleConfirm = async () => {
-    if (editableGuests.length === 0) return;
+    if (!selectedGuest || !selectedGuest.email || !searchRoomNumber || !selectedRoomType) {
+      setError("Missing required information. Please select a guest and room type.");
+      return;
+    }
 
     setIsLoading(true);
     setError("");
+    setSuccess("");
 
     try {
-      for (const guest of editableGuests) {
-        await updateGuest(guest._id, {
-          fullName: guest.fullName,
-          email: guest.email,
-          phone: guest.phone,
-          roomNumber: guest.roomNumber,
-          status: guest.status
-        });
-      }
+      const result = await updateGuest(selectedGuest.email, searchRoomNumber, selectedRoomType);
+
+      setSuccess(
+        `Room updated successfully! ${result.roomChange?.typeUpgrade ? "Guest has been upgraded to a better room." : ""}`
+      );
       await refreshGuests();
-      onClose();
+
+      // Don't close the modal immediately on success to show the success message
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update guest");
+      console.error("Update error:", err);
+      setError(err.response?.data?.message || "Failed to update guest room");
+
+      // If there are allowed changes in the error response, update the available room types
+      if (err.response?.data?.allowedChanges?.allowedNewTypes) {
+        setAvailableRoomTypes(err.response.data.allowedChanges.allowedNewTypes);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -61,38 +91,49 @@ const EditGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   return (
     <div className="modal-overlay">
       <div className="edit-modal">
-        <div className="edit-header">EDIT</div>
+        <div className="edit-header">Change Guest Room</div>
 
         <div className="search-container">
-          <input
-            type="text"
-            placeholder="enter email address"
-            value={searchEmail}
-            onChange={(e) => setSearchEmail(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-            disabled={isLoading}
-          />
-          <button className="search-button" onClick={handleSearch} disabled={isLoading}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </button>
+          <div className="search-input-group">
+            <input
+              type="text"
+              placeholder="Enter email address"
+              value={searchEmail}
+              onChange={(e) => setSearchEmail(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+              disabled={isLoading}
+            />
+            <input
+              type="text"
+              placeholder="Enter room number"
+              value={searchRoomNumber}
+              onChange={(e) => setSearchRoomNumber(e.target.value)}
+              onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+              disabled={isLoading}
+            />
+            <button className="search-button" onClick={handleSearch} disabled={isLoading}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
         </div>
 
         {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
 
-        {matchingGuests.length === 0 && didSearch && (
+        {matchingGuests.length === 0 && didSearch && !error && (
           <div className="no-result">
             <div className="search-icon">
               <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -109,57 +150,52 @@ const EditGuestModal = ({ onClose, allGuests, refreshGuests }) => {
           </div>
         )}
 
-        {matchingGuests.length > 0 && (
+        {selectedGuest && (
           <div className="guest-result">
-            <table className="result-table">
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Name</th>
-                  <th>Room</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {editableGuests.map((guest, index) => (
-                  <tr key={index}>
-                    <td>{guest.email}</td>
-                    <td>
-                      <input
-                        type="text"
-                        value={guest.fullName}
-                        onChange={(e) => handleInputChange(index, "fullName", e.target.value)}
-                        className="edit-input"
-                        disabled={isLoading}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="text"
-                        value={guest.roomNumber}
-                        onChange={(e) => handleInputChange(index, "roomNumber", e.target.value)}
-                        className="edit-input"
-                        disabled={isLoading}
-                      />
-                    </td>
-                    <td>
-                      <select
-                        value={guest.status}
-                        onChange={(e) => handleInputChange(index, "status", e.target.value)}
-                        className="edit-select"
-                        disabled={isLoading}
-                      >
-                        <option value="Checked In">Checked In</option>
-                        <option value="Checked Out">Checked Out</option>
-                      </select>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="guest-info">
+              <h3>Guest Information</h3>
+              <p>
+                <strong>Name:</strong> {selectedGuest.fullName}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedGuest.email}
+              </p>
+              <p>
+                <strong>Current Room:</strong>{" "}
+                {Array.isArray(selectedGuest.roomNumber)
+                  ? selectedGuest.roomNumber.join(", ")
+                  : selectedGuest.roomNumber}
+              </p>
+              <p>
+                <strong>Status:</strong> {selectedGuest.status || "Checked In"}
+              </p>
+            </div>
+
+            <div className="room-type-selection">
+              <h3>Select New Room Type</h3>
+              <p className="info-text">Note: You can only upgrade a guest to a better room type, not downgrade.</p>
+
+              <div className="form-group">
+                <label htmlFor="roomType">Room Type:</label>
+                <select
+                  id="roomType"
+                  value={selectedRoomType}
+                  onChange={handleRoomTypeChange}
+                  className="edit-select"
+                  disabled={isLoading}
+                >
+                  {availableRoomTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
             <div className="done-button-container">
               <button className="done-button" onClick={handleConfirm} disabled={isLoading}>
-                {isLoading ? "Saving..." : "DONE"}
+                {isLoading ? "Updating Room..." : "Change Room"}
               </button>
             </div>
           </div>

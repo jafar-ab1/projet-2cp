@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { deleteGuest } from "../../../../../api/index";
+import { sendCheckoutEmailAndDelete } from "../../../../../api/index";
+
 
 const RemoveGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   const [removeEmail, setRemoveEmail] = useState("");
@@ -8,32 +9,39 @@ const RemoveGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
 
   const handleRemoveSearch = () => {
-    setError("");
+    setError("")
     setFoundGuests(
-      removeEmail.trim() 
-        ? allGuests.filter(g => g.email.toLowerCase().includes(removeEmail.toLowerCase().trim()))
-        : []
-    );
-  };
+      removeEmail.trim()
+        ? allGuests.filter((g) => g.email?.toLowerCase().includes(removeEmail.toLowerCase().trim()))
+        : [],
+    )
+  }
 
   const handleRemoveGuest = async () => {
-    if (!selectedGuest?._id) return;
+    if (!selectedGuest?.email) {
+      setError("No guest selected");
+      return;
+    }
 
     setIsLoading(true);
     setError("");
+    setSuccess("");
 
     try {
-      await deleteGuest(selectedGuest._id);
+      await sendCheckoutEmailAndDelete(selectedGuest.email);
+      setSuccess("Guest checked out successfully. A confirmation email has been sent.");
       await refreshGuests();
-      setRemoveEmail("");
-      setFoundGuests([]);
-      setSelectedGuest(null);
-      setShowConfirmation(false);
-      onClose();
+      
+      setTimeout(() => {
+        onClose();
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to remove guest");
+      console.error("Checkout error:", err);
+      setError(err.response?.data?.message || "Failed to check out guest");
     } finally {
       setIsLoading(false);
     }
@@ -42,98 +50,110 @@ const RemoveGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   return (
     <div className="modal-overlay">
       <div className="edit-modal">
-        <div className="edit-header">Removing Guest</div>
-
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="enter email address"
-            value={removeEmail}
-            onChange={(e) => setRemoveEmail(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && handleRemoveSearch()}
-            disabled={isLoading || showConfirmation}
-          />
-          <button 
-            className="search-button" 
-            onClick={handleRemoveSearch} 
-            disabled={isLoading || showConfirmation}
-          >
-            Search
-          </button>
+        <div className="modal-header">
+          <h2>Check Out Guest</h2>
+          <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-
-        {foundGuests.length === 0 && removeEmail && !showConfirmation && (
-          <div className="no-result">
-            <p>No matching result</p>
-          </div>
-        )}
-
-        {foundGuests.length > 0 && !showConfirmation && (
-          <div className="guest-result">
-            <table className="result-table">
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Name</th>
-                  <th>Room</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foundGuests.map((guest) => (
-                  <tr
-                    key={guest._id}
-                    className="guest-row"
-                    onClick={() => {
-                      setSelectedGuest(guest);
-                      setShowConfirmation(true);
-                    }}
-                  >
-                    <td>{guest.email}</td>
-                    <td>{guest.fullName}</td>
-                    <td>{guest.roomNumber}</td>
-                    <td>{guest.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {selectedGuest && showConfirmation && (
-          <div className="confirmation-dialog">
-            <h3>Remove this guest?</h3>
-            <p>
-              <strong>Name:</strong> {selectedGuest.fullName}<br />
-              <strong>Email:</strong> {selectedGuest.email}<br />
-              <strong>Room:</strong> {selectedGuest.roomNumber}
-            </p>
-            <div className="confirmation-buttons">
+        {!showConfirmation ? (
+          <>
+            <div className="search-container">
+              <input
+                type="text"
+                placeholder="Enter guest email"
+                value={removeEmail}
+                onChange={(e) => setRemoveEmail(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && handleRemoveSearch()}
+                disabled={isLoading}
+              />
               <button 
-                className="yes-button" 
-                onClick={handleRemoveGuest} 
+                className="search-btn"
+                onClick={handleRemoveSearch}
                 disabled={isLoading}
               >
-                {isLoading ? "Removing..." : "YES"}
+                Search
+              </button>
+            </div>
+
+            {error && <div className="error-message">{error}</div>}
+            {success && <div className="success-message">{success}</div>}
+
+            {foundGuests.length > 0 && (
+              <div className="guest-results">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Room</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {foundGuests.map((guest) => (
+                      <tr key={guest.email}>
+                        <td>{guest.fullName}</td>
+                        <td>{guest.email}</td>
+                        <td>
+                          {Array.isArray(guest.roomNumber)
+                            ? guest.roomNumber.join(", ")
+                            : guest.roomNumber}
+                        </td>
+                        <td>
+                          <button
+                            className="select-btn"
+                            onClick={() => {
+                              setSelectedGuest(guest);
+                              setShowConfirmation(true);
+                            }}
+                          >
+                            Select
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {foundGuests.length === 0 && removeEmail && (
+              <div className="no-results">No guests found matching "{removeEmail}"</div>
+            )}
+          </>
+        ) : (
+          <div className="confirmation-dialog">
+            <h3>Confirm Check Out</h3>
+            <div className="guest-details">
+              <p><strong>Name:</strong> {selectedGuest.fullName}</p>
+              <p><strong>Email:</strong> {selectedGuest.email}</p>
+              <p>
+                <strong>Room:</strong>{" "}
+                {Array.isArray(selectedGuest.roomNumber)
+                  ? selectedGuest.roomNumber.join(", ")
+                  : selectedGuest.roomNumber}
+              </p>
+            </div>
+            <p className="warning-message">
+              This will check out the guest, send a confirmation email, and mark the room as available.
+            </p>
+            
+            <div className="confirmation-buttons">
+              <button
+                className="confirm-btn"
+                onClick={handleRemoveGuest}
+                disabled={isLoading}
+              >
+                {isLoading ? "Processing..." : "Confirm Check Out"}
               </button>
               <button
-                className="no-button"
+                className="cancel-btn"
                 onClick={() => setShowConfirmation(false)}
                 disabled={isLoading}
               >
-                NO
+                Cancel
               </button>
             </div>
-          </div>
-        )}
-
-        {!showConfirmation && !isLoading && (
-          <div className="modal-buttons">
-            <button className="cancel-button" onClick={onClose}>
-              Cancel
-            </button>
           </div>
         )}
       </div>
