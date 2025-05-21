@@ -162,27 +162,155 @@ exports.AddGuest = async (req, res) => {
 }
 
 exports.editGuest = async (req, res) => {
-    try{
-  const {email} = req.params;
+    try {
+        const { email, roomNumber, type } = req.params;
 
-    const user = await User.findOne({email});
-    if (!user) return res.status(404).json({message: "user non trouvé"});      
+        // 1. Configuration du transporteur email
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: config.email.user,
+                pass: config.email.password
+            }
+        });
 
-    const reservation = await Reservation.find(
-        {email},
-        {status: "Checked in"}
-    );
-    if (!reservation) return res.status(404).json({message:'reservation non trouvé'});
-    res.status(200).json(reservation);
 
-    reservation = await Reservation.findOneAndUpdate({email}, req.body, {new:true});
-        if (!reservation) return res.status(404).json({message:'reservation non trouvé'});
-        res.status(200).json(reservation);
-}
-catch(error){
-    res.status(500).json({ message: error.message });
-}
-}
+        // 1. Vérification de l'utilisateur
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "Utilisateur non trouvé" });
+        }
+
+        // 2. Trouver la réservation active
+        const reservation = await Reservation.findOne({
+            email,
+            roomNumber,
+            status: "Checked in"
+        });
+        if (!reservation) {
+            return res.status(404).json({ message: "Aucune réservation active trouvée" });
+        }
+
+        const countType = await Room.countDocuments({type: type, status1: "Available"});
+        if (countType === 0) {
+            return res.status(404).json({ message: "Aucune chambre de ce type trouvée" });
+        }
+
+        const newRoom = await Room.findOne({ type: type, status1: "Available" });
+        const newRoomNumber = newRoom.roomNumber;
+
+        // 5. Logique de changement de type de chambre
+        const roomTypeHierarchy = {
+            'Standard': 1,
+            'Deluxe': 2,
+            'Suite': 3
+        };
+        const currentRoom = await Room.findOne({ roomNumber: reservation.roomNumber });
+        const oldRoomNumber = reservation.roomNumber;
+
+        const currentTypeLevel = roomTypeHierarchy[currentRoom.type];
+        const newTypeLevel = roomTypeHierarchy[type];
+
+        // Vérification des règles de changement
+        if (newTypeLevel < currentTypeLevel) {
+            return res.status(400).json({ 
+                message: "Changement non autorisé : vous ne pouvez pas descendre de catégorie de chambre",
+                allowedChanges: {
+                    currentType: currentRoom.type,
+                    allowedNewTypes: Object.keys(roomTypeHierarchy)
+                        .filter(type => roomTypeHierarchy[type] >= currentTypeLevel)
+                }
+            });
+        }
+
+        // 6. Vérifier disponibilité de la nouvelle chambre
+        const conflictingReservation = await Reservation.findOne({
+            roomNumber: newRoomNumber,
+            status: { $in: ["Checked in", "Due out"] }
+        });
+        if (conflictingReservation) {
+            return res.status(409).json({ 
+                message: "La chambre demandée est déjà occupée",
+                availableRooms: await this.findAvailableRooms(currentRoom.type) // Fonction à implémenter
+            });
+        }
+
+        // 7. Effectuer le changement
+        const updatedReservation = await Reservation.findOneAndUpdate(
+            { _id: reservation._id },
+            { 
+                roomNumber: newRoomNumber},
+            { new: true }
+        );
+
+        // 8. Mettre à jour les statuts des chambres
+        await Room.findOneAndUpdate(
+            { roomNumber: reservation.roomNumber },
+            { status1: "Available" }
+        );
+        await Room.findOneAndUpdate(
+            { roomNumber: newRoomNumber },
+            { status1: "Occupied" }
+        );
+
+          const mailOptions = {
+            from: `"${config.hotel.hotelName}" <${config.email.user}>`,
+            to: email,
+            subject: `Modification de votre chambre - ${config.hotel.hotelName}`,
+            html: `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <style>
+                        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                        .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+                        .header { background-color: #f8f9fa; padding: 10px; text-align: center; border-bottom: 1px solid #eee; }
+                        .content { padding: 20px; }
+                        .highlight { color: #e74c3c; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h2>Modification de votre réservation</h2>
+                        </div>
+                        <div class="content">
+                            <p>Bonjour ${user.fullName || 'Client'},</p>
+                            <p>Nous vous informons que votre numéro de chambre a été modifié :</p>
+                            <p><strong>Ancienne chambre :</strong> ${oldRoomNumber} (${currentRoom.type})</p>
+                            <p><strong>Nouvelle chambre :</strong> ${newRoomNumber} (${newRoom.type})</p>
+                            ${newTypeLevel > currentTypeLevel ? 
+                                `<p class="highlight">Félicitations ! Vous avez été upgradé à une chambre de catégorie supérieure.</p>` : ''}
+                            <p>Pour toute question, veuillez contacter la réception.</p>
+                            <p>Cordialement,<br>L'équipe de ${config.hotel.hotelName}</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `
+        };
+
+        await transporter.sendMail(mailOptions);
+
+
+        return res.status(200).json({
+            message: "Chambre changée avec succès",
+            reservation: updatedReservation,
+            roomChange: {
+                from: currentRoom.roomNumber,
+                to: newRoom.roomNumber,
+                typeUpgrade: newTypeLevel > currentTypeLevel
+            }
+        });
+
+    } catch (error) {
+        console.error("Erreur dans editGuest:", error);
+        return res.status(500).json({ 
+            message: "Erreur serveur",
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+    }
+};
 
 
 exports.deleteGuest = async(req, res)=>{
