@@ -3,7 +3,8 @@ skinparam usecase {
     BackgroundColor #FFFFFF
     BorderColor #6F826A
     FontColor #1A1A19
-    FontSize 14
+    FontSize 15
+    FontStyle bold
     ArrowColor #6F826A
     ActorBorderColor #6F826A
     ActorFontColor #6F826A
@@ -13,12 +14,25 @@ skinparam usecase {
 skinparam rectangle {
     BackgroundColor #FFFFFF
     BorderColor #6F826A
-    FontColor #6F826A
+    FontColor #5F939A
+    FontStyle bold
 }
 
+' ====== CUSTOM ARROW STYLES ======
 skinparam arrow {
     Color #6F826A
     FontColor #6F826A
+    FontStyle bold
+}
+skinparam arrow<<include>> {
+    Color #3A5F0B
+    FontColor #3A5F0B
+    Style Bold
+}
+skinparam arrow<<extend>> {
+    Color #8B0000
+    FontColor #8B0000
+    Style Dashed
 }
 
 ' ====== ACTORS ======
@@ -27,37 +41,55 @@ actor Guest << (S,#BF9264) >>
 actor Client << (S,#6F826A) >>
 actor Receptionist << (S,#BBD8A3) >>
 actor Administrator << (S,#92817A) >>
-actor "Maintenance Staff" << (S, #A9B388) >> as MaintenanceStaff
+actor "Maintenance Staff" << (S,#A9B388) >> as MaintenanceStaff
 
 ' ====== SYSTEM BOUNDARY ======
 rectangle "Hotel Management System" #DCD7C9 {
-    ' ====== USE CASES ======
-    (Search Rooms) as UC1 #6F826A
-    (Make Reservation) as UC2 #6F826A
-    (Cancel Reservation) as UC3 #6F826A
-    (Register Account) as UC4 #BF9264
-    (Login) as UC5 #BF9264
-    (View Booking Details) as UC6 #6F826A
-    (Submit Feedback) as UC7 #6F826A
-    
-    (Check-in Guest) as UC8 #BBD8A3
-    (Check-out Guest) as UC9 #BBD8A3
-    (Process Payment) as UC10 #BBD8A3
-    (Manage Room Assignments) as UC11 #BBD8A3
-    (View Room Status) as UC12 #BBD8A3
-    
-    (Manage Rooms) as UC13 #92817A
-    (Manage Tariffs) as UC14 #92817A
-    (Generate Reports) as UC15 #92817A
-    (Manage Users) as UC16 #92817A
-    (Configure System) as UC17 #92817A
-    
-    (Request Maintenance) as UC18 #A9B388
-    (Update Maintenance Status) as UC19 #A9B388
-    (View Maintenance Requests) as UC20 #A9B388
+    ' ====== GROUPED USE CASES ======
+    rectangle "Guest Actions" #F5F5F5 {
+        (Search Rooms) as UC1 #BF9264
+        (Register Account) as UC4 #BF9264
+        (Login) as UC5 #BF9264
+    }
+
+    rectangle "Client Actions" #F5F5F5 {
+        (Make Reservation) as UC2 #6F826A
+        (Cancel Reservation) as UC3 #6F826A
+        (View Booking Details) as UC6 #6F826A
+        (Submit Feedback) as UC7 #6F826A
+    }
+
+    rectangle "Receptionist Actions" #F5F5F5 {
+        (Check-in Guest) as UC8 #BBD8A3
+        (Check-out Guest) as UC9 #BBD8A3
+        (Process Payment) as UC10 #BBD8A3
+        (Manage Room Assignments) as UC11 #BBD8A3
+        (View Room Status) as UC12 #BBD8A3
+    }
+
+    rectangle "Admin Actions" #F5F5F5 {
+        (Manage Rooms) as UC13 #92817A
+        (Manage Tariffs) as UC14 #92817A
+        (Generate Reports) as UC15 #92817A
+        (Manage Users) as UC16 #92817A
+        (Configure System) as UC17 #92817A
+    }
+
+    rectangle "Maintenance" #F5F5F5 {
+        (Request Maintenance) as UC18 #A9B388
+        (Update Maintenance Status) as UC19 #A9B388
+        (View Maintenance Requests) as UC20 #A9B388
+    }
 
     ' ====== RELATIONSHIPS ======
-   
+    UC2 ..> UC10 : <<include>> 
+    UC2 ..> UC6 : <<include>>  
+    UC3 ..> UC6 : <<include>>  
+    UC8 ..> UC6 : <<include>> 
+    UC9 ..> UC6 : <<include>> 
+    UC7 ..> UC6 : <<extend>>   
+    UC19 ..> UC20 : <<include>>
+}
 
 ' ====== ACTOR CONNECTIONS ======
 Guest -[#BF9264]-> UC1
@@ -91,7 +123,6 @@ MaintenanceStaff -[#A9B388]-> UC18
 MaintenanceStaff -[#A9B388]-> UC19
 MaintenanceStaff -[#A9B388]-> UC20
 
-' ====== LEGEND ======
-
+'
 
 @enduml
