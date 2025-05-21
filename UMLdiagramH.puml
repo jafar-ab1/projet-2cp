@@ -1,0 +1,158 @@
+@startuml HotelManagementSystem
+
+skinparam class {
+    BackgroundColor #DCD7C9
+    BorderColor #2C3930
+    ArrowColor #A27B5C
+    FontColor #3F4F44
+    FontSize 13
+    HeaderBackgroundColor #A27B5C
+    HeaderFontColor #DCD7C9
+}
+
+' ====== MAIN ENTITIES ======
+class User {
+    + fullName: String
+    + email: String
+    + password: String
+    + mobileNumber: String
+    + role: String
+    ' Possible values: Client, Admin
+    --
+    + comparePassword(): Boolean
+}
+
+class VerificationCode {
+    + email: String
+    + code: String
+    + expiresAt: Date
+}
+
+class Branch {
+    + name: String <<Alger,Annaba,Oran>>
+    + location: String
+    + email: String
+    + phone: String
+}
+
+class Floor {
+    + status: String <<Complété,À compléter>>
+    + floorNumber: int
+}
+
+class Room {
+    + type: String <<Standard,Deluxe,Suite>>
+    + facilities: String[]
+    + cleaningStatus: String <<Made up,Not made up>>
+    + availabilityStatus: String <<Available,Occupied>>
+    + roomType: String
+    + floor: int
+    + price: float
+}
+
+class Tarif {
+    + roomType: String <<Standard,Deluxe,Suite>>
+    + price: float
+}
+
+class Reservation {
+    + email: String
+    + roomNumber: String[]
+    + checkInDate: Date
+    + checkOutDate: Date
+    + roomType: String <<Standard,Deluxe,Suite>>
+    + status: String <<Ongoing,Finished>>
+    ' Possible values: Due in, Checked in, Due out, Checked out
+}
+
+class Payment {
+    + status: String
+    ' Possible values: In-progress, Completed
+    + amount: float
+    + paymentDate: Date
+    + paymentMethod: String <<Credit_card,Paypal,Cash>>
+}
+
+' ====== OPERATIONS ======
+
+class Maintenance {
+    + roomNumber: String
+    + issueDescription: String
+    + email: String
+    + status: String <<In-progress,Completed>>
+    + resolutionDate: Date
+}
+
+
+class Feedback {
+    + email: String
+    + roomNumber: String
+    + comment: String
+    + date: Date
+}
+
+class Settings {
+    + hotelName: String
+    + totalRooms: int
+    + contactEmail: String
+    + contactPhone: String
+}
+
+class Deal {
+    + dealName: String
+    + discount: float
+    + validFrom: Date
+    + validTo: Date
+}
+
+' ====== RELATIONSHIPS ======
+User "1" --> "0..*" VerificationCode : génère
+Branch "1" --> "1..*" Floor : contient
+Floor "1" --> "1..*" Room : possède
+Room --> Tarif : référence
+User "1" --> "0..*" Reservation : effectue
+Room "1" --> "0..*" Reservation : assigné à
+Reservation "1" --> "1" Payment : a
+Reservation "0..*" --> "0..1" Deal : applique
+Room "1" --> "0..*" Maintenance : nécessite
+User "1" --> "0..*" Feedback : fournit
+Reservation "1" --> "0..1" Feedback : a
+@enduml
+' ====== GROUPING ======
+package "Système Central" {
+    User
+    VerificationCode
+    Settings
+}
+
+package "Structure Hôtelière" {
+    Branch
+    Floor
+    Room
+    Tarif
+}
+
+package "Système de Réservation" {
+    Reservation
+    Deal
+    Payment
+}
+
+package "Opérations" {
+    Maintenance
+    Feedback
+}
+
+note top of User
+  <b>Système d'authentification</b>
+  Utilise bcrypt pour le hachage
+  Pré-sauvegarde pour le chiffrement
+end note
+
+note right of Reservation
+  <b>Cycle de réservation</b>
+  Transitions d'état :
+  Due in → Checked in → Due out → Checked out
+end note
+@enduml
+
