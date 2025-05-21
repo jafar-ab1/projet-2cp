@@ -159,10 +159,41 @@ try{
 
         if (room.type === "Standard") {
             room.price = 100;
+            facilities = ["Lit connecté réglable par appli",
+        "Contrôle vocal Alexa/Google",
+        "Douche à chromatothérapie Bluetooth",
+        "Tablette tactile centrale",
+        "Cosmétiques bio personnalisés",
+        "Wi-Fi 4K ultra-rapide",
+        "Climatisation intelligente"];
+            bedType = "1 Queen bed or 2 Twin beds";
+            size = "25 m²";
+            capacity = 2;
+
         } else if (room.type === "Deluxe") {
             room.price = 200;
+            facilities = ["Mur végétal intelligent",
+        "Douche à effet forêt sensorielle",
+        "Écran artistique numérique",
+        "Rituel aromathérapie (5 huiles)",
+        "Machine à café barista",
+        "Mini-bar gastronomique",
+        "Peignoir en fibre de bambou"];
+            bedType = "1 King bed or 2 twin beds";
+            size = "35 m²";
+            capacity = 2;
+
+
         } else if (room.type === "Suite") {
             room.price = 300;
+            facilities = ["Plafond étoilé 4K",
+        "Station de mixage DJ Pro",
+        "Glacière à champagne intelligente",
+        "Système holographique 3D",
+        "Valet connecté (préparation habits)"];
+            bedType = "1 King bed + 1 sofa bed";
+            size = "50 m²";
+            capacity = 4;
         }
         await room.save();
 }

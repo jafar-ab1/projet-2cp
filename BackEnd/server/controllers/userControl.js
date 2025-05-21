@@ -184,6 +184,10 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
+        const deleteAt = new Date();
+        deleteAt.setDate(deleteAt.getDate() + 2);
+
+
         // 1. Configuration du transporteur email
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -213,11 +217,14 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
             { new: true }
         );
 
-        const reservation = await Reservation.findOne({roomNumber});
-        if (reservation) {
-          reservation.status = "Checked out";
-          await reservation.save();
-        }
+        const reservation = await Reservation.findOneAndUpdate(
+                {roomNumber},
+                { 
+                    status: "Checked out",
+                    toDeleteAt: deleteAt // Date programmée de suppression
+                },
+                { new: true }
+            );
         
         if (!room) {
           return res.status(404).json({ 
@@ -284,9 +291,7 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
         };
 
         await transporter.sendMail(mailOptions);
-
-        // 5. Supprimer la réservation et le guest
-        //await User.deleteOne({email });
+        
 
         return res.status(200).json({
             message: "Checkout confirmé, email envoyé et données supprimées",

@@ -17,6 +17,10 @@ router.get('/', guestControll.getAll);
 
 router.get('/checkIn/dueOut', guestControll.getAllCheckInDueOut);
 
+router.put('/update/:email', guestControll.updateGuest);
+
+router.delete('/delete/:email', guestControll.deleteGuest);
+
 
 module.exports = router;
 
