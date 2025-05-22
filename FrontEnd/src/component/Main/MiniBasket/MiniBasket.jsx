@@ -5,7 +5,8 @@ import BasketRoom from "./BasketRoom/BasketRoom";
 function MiniBasket({ 
   reservedRooms, 
   setReservedRooms,
-  bookingData
+  bookingData,
+  removeFromBasket
 }) {
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -26,18 +27,6 @@ function MiniBasket({
     );
   };
 
-  // Delete room function
-  const deleteRoomFromBasket = (id) => {
-    return setReservedRooms(prev => {
-      let i = 0;
-      while(i < prev.length) {
-        if(prev[i].id == id) break;
-        ++i; 
-      }
-      return prev.filter((room, index) => index != i);
-    });
-  };
-
   const nights = bookingData
     ? calculateNights(bookingData.checkInDate, bookingData.checkOutDate)
     : 0;
@@ -56,7 +45,7 @@ function MiniBasket({
         ) : (
           <div className="BasketContainer">
             {
-              reservedRooms.map((room, index) => <BasketRoom deleteRoomFromBasket={deleteRoomFromBasket} index={index} room={room} nights={nights} bookingData={bookingData} key={`${room.id}--${index}`} />)
+              reservedRooms.map((room, index) => <BasketRoom deleteRoomFromBasket={() => removeFromBasket(room)} index={index} room={room} nights={nights} bookingData={bookingData} key={`${room.id}--${index}`} />)
             }
           </div> 
         )}
