@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendVerificationEmail(email, code) {
     const mailOptions = {
-        from: 'UpTalent <no-reply@talentnetwork.com>', // Expéditeur
+        from: 'hotel <nepasrepondre325@gmail.com>', // Expéditeur
         to: email,
         subject: "✨ Confirm Your Email - UpTalent",
         html: `

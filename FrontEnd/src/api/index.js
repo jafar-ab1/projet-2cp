@@ -125,10 +125,10 @@ export const addGuest = async (guestData) => {
     throw error
   }
 }
-export const updateGuest = async (email, roomNumber, newRoomType) => {
+export const updateGuest = async (email, roomNumber, type) => {
   try {
-    const response = await fetch(`/guest/update/${email}/${roomNumber}/${newRoomType}`, {
-      method: "PUT",
+    const response = await fetch(`/guest/update/${email}/${roomNumber}/${type}`, {
+      method: "PUT"
     });
 
     if (!response.ok) {

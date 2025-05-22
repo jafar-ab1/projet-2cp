@@ -19,7 +19,9 @@ const config = {
   },
 
   hotel: {
-    hotelName: "hotel name"
+    hotelName: "hotel projet 2cp",
+    email: " ",
+    phoneNumber: "0770249254",
   },
   
   frontendUrl: "http://localhost:3000", // URL de votre frontend

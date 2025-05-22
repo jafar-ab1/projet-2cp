@@ -53,6 +53,8 @@ exports.getReservationByEmailAndRoomNumber = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+
 exports.getRoomsForReservation = async (req, res) => {
   const { checkInDate, checkOutDate } = req.params;
 
@@ -130,9 +132,12 @@ exports.getRoomsForReservation = async (req, res) => {
     });
   }
 };
+
+
+
 exports.creatReservation = async (req, res) => {
   const email = req.user.email;
-  const { checkInDate, checkOutDate, roomsRequested } = req.body;
+  const { checkInDate, checkOutDate, roomsRequested, adults, childrens } = req.body;
 
   try {
     // 1. Vérification de l'utilisateur
@@ -141,6 +146,7 @@ exports.creatReservation = async (req, res) => {
       return res.status(404).json({ message: "Utilisateur non trouvé" });
     }
 
+    
     // 2. Validation des dates
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
@@ -219,6 +225,33 @@ exports.creatReservation = async (req, res) => {
         totalPrice += room.price;
       }
     }
+
+    let countStandard =0;
+    let countDeluxe =0;
+    let countSuite =0;
+    let total=0;
+    const guest = adults + childrens;
+
+    for (const request of roomsRequested){
+
+      if (request.type=== "Standard"){
+        capacity=2;
+        countStandard= capacity*request.quantity;
+      }
+      else if (request.type=== "Deluxe"){
+        capacity=2;
+        countDeluxe= capacity*request.quantity;
+      }
+      else if (request.type= "Suite"){
+        capacity=4;
+        countSuite= capacity*request.quantity;
+      }
+      total = countStandard+countDeluxe+countSuite;
+    }
+    console.log(total);
+    if (total<guest) return res.status(404).json({message : "capacity reserver non compatible avec numero de guest"})
+
+
 
     // 5. Envoi de l'email de confirmation
     const transporter = nodemailer.createTransport({
@@ -450,6 +483,7 @@ exports.modifyStatusDueOut = async (req, res) => {
     });
   }
 };
+
 
 exports.modifyReservation = async(req, res) =>{
 try{
