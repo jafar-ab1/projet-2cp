@@ -8,13 +8,41 @@ import { getRoomsForReservation } from "../../../api/index.js";
 import "./Booking3.css";
 
 function Booking3() {
+  // localStorage.removeItem("reservedRooms");
+
   const [roomTypes, setRoomTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [bookingData, setBookingData] = useState(null);
-  const [reservedRooms, setReservedRooms] = useState([]);
   const [showBasket, setShowBasket] = useState(false);
   const navigate = useNavigate();
+  
+  const [reservedRooms, setReservedRooms] = useState(() => {
+    const storedReservedRooms = localStorage.getItem("reservedRooms");
+    if (storedReservedRooms) {
+      try {
+        const value = JSON.parse(storedReservedRooms);
+        if (value) return value;
+      } catch (err) {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  const [bookingData, setBookingData] = useState(() => {
+    const storedData = localStorage.getItem("bookingData");
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        return parsedData;
+      } catch (err) {
+        setError("Invalid booking data. Please start over.");
+        return null;
+      }
+    }
+    setError("Invalid booking data. Please start over.");
+    return null;
+  });
 
   const formatDate = (date) => {
     if (!date) return null;
@@ -46,31 +74,6 @@ function Booking3() {
   };
 
   useEffect(() => {
-    const storedData = localStorage.getItem("bookingData");
-    if (storedData) {
-      try {
-        const parsedData = JSON.parse(storedData);
-        parsedData.checkInDate = formatDate(parsedData.checkInDate);
-        parsedData.checkOutDate = formatDate(parsedData.checkOutDate);
-        setBookingData(parsedData);
-      } catch (err) {
-        console.error("Error parsing booking data:", err);
-        setError("Invalid booking data. Please start over.");
-      }
-    }
-
-    const storedReservedRooms = localStorage.getItem("reservedRooms");
-    if (storedReservedRooms) {
-      try {
-        const value = JSON.parse(storedReservedRooms);
-        if (value) setReservedRooms(value);
-      } catch (err) {
-        console.error("Error parsing reserved rooms:", err);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
     if (!bookingData) return;
 
     const fetchRoomTypes = async () => {
@@ -85,11 +88,8 @@ function Booking3() {
         const checkInDate = formatDate(bookingData.checkInDate);
         const checkOutDate = formatDate(bookingData.checkOutDate);
 
-        console.log("Fetching rooms for dates:", { checkInDate, checkOutDate }); // Debug log
 
         const response = await getRoomsForReservation(checkInDate, checkOutDate);
-        console.log("API Response:", response); // Debug log
-
         if (!response.success) {
           throw new Error(response.message || "No rooms available for selected dates");
         }
@@ -106,17 +106,6 @@ function Booking3() {
           availableRoomTypes.push(createSampleRoom(type, data));
         })
 
-        // if (response.Deluxe && response.Deluxe.count > 0) {
-        //   availableRoomTypes.Deluxe = [createSampleRoom("Deluxe", response.Deluxe)];
-        // }
-        // if (response.Standard && response.Standard.count > 0) {
-        //   availableRoomTypes.Standard = [createSampleRoom("Standard", response.Standard)];
-        // }
-        // if (response.Suite && response.Suite.count > 0) {
-        //   availableRoomTypes.Suite = [createSampleRoom("Suite", response.Suite)];
-        // }
-
-        console.log("Processed room types:", availableRoomTypes); // Debug log
         setRoomTypes(availableRoomTypes);
 
         if (availableRoomTypes.length === 0) {
@@ -146,8 +135,9 @@ function Booking3() {
     type: type,
     floor: getFloorByType(type),
     facilities: data.facilities || [],
-    count: data.count || 0
+    count: data.count || 0,
   });
+
   const getBedType = (roomType) => {
     const type = roomType.toLowerCase();
     if (type.includes("suite")) return "King Bed";
@@ -185,28 +175,47 @@ function Booking3() {
 
   const addToBasket = (room) => {
     setReservedRooms((prevRooms) => {
-      // Prevent adding the same room type multiple times
-      if (prevRooms.some(r => r.type === room.type)) {
-        return prevRooms;
+      const foundRoomIndex = prevRooms.findIndex(roomType => roomType.type === room.type)
+
+      if(foundRoomIndex != -1) {
+        if(prevRooms[foundRoomIndex].count <= 0) return prevRooms;
+        prevRooms[foundRoomIndex].reserved += 1;
+        prevRooms[foundRoomIndex].count -= 1;
+        return [
+          ...prevRooms
+        ];
       }
-      
+ 
       // Create a unique room number based on count
       const roomNumber = `${room.type.substring(0, 3).toUpperCase()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
-      
       return [...prevRooms, {
         ...room,
         roomNumber,
-        // Generate a unique ID for the reservation
-        reservationId: `${room.type.toLowerCase()}-${Date.now()}`
+        reserved: 1,
       }];
     });
   };
 
   const removeFromBasket = (roomType) => {
-    setReservedRooms(prevRooms => 
-      prevRooms.filter(room => room.type !== roomType.type)
-    );
+    setReservedRooms(prevRooms => {
+      const foundRoomIndex = prevRooms.findIndex(room => room.type === roomType.type);
+      prevRooms[foundRoomIndex].reserved -= 1;
+      if(prevRooms[foundRoomIndex].reserved == 0) {
+        prevRooms.splice(foundRoomIndex, 1);
+      }
+      console.log(prevRooms);
+      return [
+        ...prevRooms
+      ]
+    })
   };
+
+  useEffect(() => {
+    console.log("reserved rooms", reservedRooms);
+    return () => {
+      return localStorage.setItem("reservedRooms", JSON.stringify(reservedRooms));
+    }
+  }, [reservedRooms])
 
   if (!bookingData) {
     return <div className="loading-message">Loading booking details...</div>;
@@ -217,7 +226,7 @@ function Booking3() {
       <div className="Top">
         <BookingHeader
           hotelName="Your Hotel"
-          cartItems={reservedRooms.length}
+          cartItems={reservedRooms.map(room => room.reserved).reduce((prev, curr) => prev + curr, 0)}
           onCartClick={() => setShowBasket((prev) => !prev)}
         />
         <Booking31 bookingData={bookingData} />
@@ -229,6 +238,7 @@ function Booking3() {
             bookingData={bookingData}
             reservedRooms={reservedRooms}
             setReservedRooms={setReservedRooms}
+            removeFromBasket={removeFromBasket}
           />
           <button 
             className="ClosePopup" 
@@ -251,7 +261,6 @@ function Booking3() {
           <div className="AvailableRoomsByType">
             {roomTypes.length > 0 ? (
               roomTypes.map((roomType) => {
-                console.log(roomType);
                 return (
                 <div key={roomType.type} className="RoomTypeSection">
                   <h2 className="RoomTypeHeading">
@@ -261,8 +270,8 @@ function Booking3() {
                       <Room
                         key={`${roomType.id}-${roomType.type}`}
                         room={roomType}
-                        handleAddToBasketClick={() => addToBasket(room)}
-                        isAdded={reservedRooms.some(r => r.type === room.type)}
+                        handleAddToBasketClick={() => addToBasket(roomType)}
+                        isAdded={reservedRooms.some(r => r.type === roomType.type)}
                       />
                   </div>
                 </div>

@@ -11,16 +11,30 @@ export default function BasketRoom({
     
     return(
         <div key={`${room.id}-${index}`} className="RoomItem">
-            <h2 className="RoomNumber">
-                Room {index + 1}
+            <div
+                style={{
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "10px 0px"
+                }}
+            >
+                <h2
+                    style={{
+                        textAlign: "center",
+                    }}
+                    className="RoomNumber">
+                    {room.type} <span>({room.reserved})</span>
+                </h2>
                 <button 
-                className="DeleteButton" 
-                onClick={handleDelete}
-                aria-label="Delete room"
-                >
-                🗑️
+                    className="DeleteButton" 
+                    onClick={handleDelete}
+                    aria-label="Delete room"
+                    >
+                    🗑️
                 </button>
-            </h2>
+            </div>
             <div className="PDetail">
                 <p>{bookingData?.selectedBranch}, {room.title}</p>
                 <p>Dzd {(room.price * nights).toFixed(2)}</p>

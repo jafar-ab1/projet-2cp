@@ -83,6 +83,8 @@ function CheckOut() {
   };
 
   const handleReservation = async () => {
+    console.log(accessToken);
+
     if (accessToken == null) {
       return navigate('/auth/sign-in', {
         state: {
@@ -92,7 +94,10 @@ function CheckOut() {
     }
 
     const data = await createReservation({
-      roomsRequested: reservedRooms,              // need only the rooms requested to be an non-empty array of rooms and then i can make the request
+      roomsRequested: reservedRooms.map(roomType => ({
+        type: roomType.type,
+        quantity: roomType.reserved
+      })),
       checkInDate: retrievedData.checkInDate,
       checkOutDate: retrievedData.checkOutDate,
     });

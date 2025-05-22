@@ -4,143 +4,199 @@ const config = require("../../config.js");
 const VerificationCode = require('../models/VerificationCode');
 const { sendVerificationEmail } = require('../services/emailService');
 
-// Inscription
+// Registration
 exports.register = async (req, res) => {
   try {
-    const {fullName, email, password, mobileNumber } = req.body;
+    const { fullName, email, password, mobileNumber } = req.body;
     
-    // Vérifier si l'utilisateur existe déjà
-    const found = await User.findOne({email});
-    if(found) return res.status(401).json({message:`Email ${email} already exists`});
+    // Check if user already exists
+    const found = await User.findOne({ email });
+    if (found) return res.status(401).json({ message: `Email ${email} already exists` });
 
-    // Créer un nouvel utilisateur
-    const user = new User({fullName, email, password, mobileNumber});
+    // Create new user (not verified by default)
+    const user = new User({
+      fullName, 
+      email, 
+      password, 
+      mobileNumber,
+      isVerified: false
+    });
     await user.save();
 
-    // Générer un token JWT
-    const token = jwt.sign(
-      { id: user._id }, // Payload minimal
-      config.jwt.keys.secret, // Clé doit être identique partout
-      { 
-        algorithm: 'HS256', // Spécifiez explicitement
-        expiresIn: '1h' // Testez avec durée courte d'abord
-      }
-    );
-    console.log('Nouveau token généré:', token);
+    // Generate and send verification code
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    res.status(201).json({ token,
+    // Save verification code
+    await VerificationCode.findOneAndUpdate(
+      { email },
+      { code, expiresAt },
+      { upsert: true, new: true }
+    );
+
+    // Send verification email
+    await sendVerificationEmail(email, code);
+
+    res.status(201).json({ 
+      message: "User registered successfully. Please check your email for verification code.",
       user: {
         id: user._id,
         fullName: user.fullName,
-        email: user.email      }
-     });
+        email: user.email,
+        isVerified: user.isVerified
+      },
+      requiresVerification: true
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Erreur lors de l\'inscription.', error });
+    res.status(500).json({ message: 'Error during registration.', error });
   }
 };
 
-// Connexion
+// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Vérifier si l'utilisateur existe
+    // Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+      return res.status(401).json({ message: 'Email or password incorrect.' });
     }
 
-    // Vérifier le mot de passe
-    const iscorrect = await user.comparePassword(password);
-    if (!iscorrect) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+    // Verify password
+    const isCorrect = await user.comparePassword(password);
+    if (!isCorrect) {
+      return res.status(401).json({ message: 'Email or password incorrect.' });
     }
 
-    // Générer un token JWT
+    // Check if email is verified
+    if (!user.isVerified) {
+      return res.status(403).json({ 
+        message: 'Please verify your email before logging in.',
+        requiresVerification: true,
+        email: user.email
+      });
+    }
+
+    // Generate JWT token
     const token = jwt.sign(
-      { id: user._id }, // Payload minimal
-      config.jwt.keys.secret, // Clé doit être identique partout
+      { id: user._id },
+      config.jwt.keys.secret,
       { 
-        algorithm: 'HS256', // Spécifiez explicitement
-        expiresIn: '1h' // Testez avec durée courte d'abord
+        algorithm: 'HS256',
+        expiresIn: '1h'
       }
     );
-    console.log('Nouveau token généré:', token);
 
-    res.status(200).json({ token });
+    res.status(200).json({ 
+      token,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        isVerified: user.isVerified
+      }
+    });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la connexion.', error });
+    res.status(500).json({ message: 'Error during login.', error });
   }
 };
 
-
+// Send verification code
 exports.sendVerificationCode = async (req, res) => {
-    try {
-        const { email } = req.body;
-        
-        // Générer un code PIN aléatoire de 6 chiffres
-        const code = Math.floor(100000 + Math.random() * 900000).toString();
-
-        // Définir l’expiration (10 minutes)
-        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-
-        // Sauvegarder dans la base (supprime l'ancien code s'il existe)
-        await VerificationCode.findOneAndUpdate(
-            { email },
-            { code, expiresAt },
-            { upsert: true, new: true }
-        );
-
-        // Envoyer l’email
-        await sendVerificationEmail(email, code);
-
-        res.status(200).json({ message: "Verification code sent successfully." });
-
-    } catch (error) {
-        console.error("Error sending verification code:", error);
-        res.status(500).json({ message: "Internal server error" });
+  try {
+    const { email } = req.body;
+    
+    // Check if user exists
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
     }
+
+    // Check if user is already verified
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Email already verified." });
+    }
+    
+    // Generate 6-digit PIN
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    // Save verification code
+    await VerificationCode.findOneAndUpdate(
+      { email },
+      { code, expiresAt },
+      { upsert: true, new: true }
+    );
+
+    // Send email
+    await sendVerificationEmail(email, code);
+
+    res.status(200).json({ message: "Verification code sent successfully." });
+  } catch (error) {
+    console.error("Error sending verification code:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-
-// Verfication du code de confirmation
+// Verify email
 exports.verifyEmail = async (req, res) => {
   try {
     const { email, code } = req.body;
 
-    // Chercher le code dans la base
+    // Find verification code
     const verification = await VerificationCode.findOne({ email });
     if (!verification) {
-      return res.status(400).json({ message: "Aucun code de vérification trouvé." });
+      return res.status(400).json({ message: "No verification code found." });
     }
 
-    // Vérifier si le code est correct
+    // Verify code
     if (verification.code !== code) {
-      return res.status(400).json({ message: "Code invalide." });
+      return res.status(400).json({ message: "Invalid code." });
     }
 
-    // Vérifier si le code n'est pas expiré
+    // Check if code expired
     if (verification.expiresAt < new Date()) {
-      return res.status(400).json({ message: "Code expiré." });
+      return res.status(400).json({ message: "Code expired." });
     }
 
-    // Mettre à jour l'utilisateur pour le marquer comme vérifié
+    // Mark user as verified
     const user = await User.findOneAndUpdate(
       { email },
       { isVerified: true },
       { new: true }
     );
 
-    // Supprimer le code de vérification de la base
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Delete verification code
     await VerificationCode.deleteOne({ email });
 
+    // Generate JWT token now that email is verified
+    const token = jwt.sign(
+      { id: user._id },
+      config.jwt.keys.secret,
+      { 
+        algorithm: 'HS256',
+        expiresIn: '1h'
+      }
+    );
+
     res.status(200).json({
-      message: "Email vérifié avec succès !",
-      user
+      message: "Email verified successfully!",
+      token,
+      user: {
+        id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        isVerified: user.isVerified
+      }
     });
   } catch (error) {
-    console.error("Erreur lors de la vérification de l'email :", error);
-    res.status(500).json({ message: "Erreur serveur", error: error.message });
+    console.error("Error verifying email:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

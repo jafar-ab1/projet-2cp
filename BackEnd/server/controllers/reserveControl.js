@@ -527,7 +527,7 @@ exports.suppReservation = async(req, res) => {
 exports.occupancyStatistics = async (req, res) => {
   try {
    
-    const year = req.query.year || new Date().getFullYear();
+    const year = req.params.year || new Date().getFullYear();
     
     // Obtenir toutes les réservations pour l'année spécifiée
     const reservations = await Reservation.find({

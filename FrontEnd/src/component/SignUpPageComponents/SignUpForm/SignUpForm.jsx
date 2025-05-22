@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "../../../hooks/auth/useAuth";
 import { Link, useNavigate } from "react-router-dom";
-
 import styles from "./SignUpForm.module.css";
-
 import Form from "../../sharedComponents/Form/Form";
 import FormHeader from "../../sharedComponents/FormHeader/FormHeader";
 import FormFieldsContainer from "../../sharedComponents/FormFieldsContainer/FormFieldsContainer";
@@ -16,8 +14,7 @@ import { registerUserDataValidationSchema } from "../../../validation/auth/auth"
 
 export default function SignUpForm() {
     const navigate = useNavigate();
-
-    const { loading, err, accessToken, actions: { register } } = useAuth();
+    const { loading, err, accessToken, actions: { register, clearError } } = useAuth();
 
     const [formData, setFormData] = useState({
         mobileNumber: "",
@@ -54,6 +51,7 @@ export default function SignUpForm() {
     const handleChange = (setFieldFn) => {
         return (value) => {
             clearErrors();
+            clearError(); // Clear auth store errors
             setFieldFn(value);
         };
     };
@@ -63,38 +61,64 @@ export default function SignUpForm() {
         const validationResult = registerUserDataValidationSchema.safeParse(registerUserData);
 
         const { success } = validationResult;
-        if (success) {
-            return await register(formData);
+        if (!success) {
+            const fieldErrors = validationResult.error.formErrors.fieldErrors;
+            setFormDataError({
+                mobileNumber: fieldErrors?.mobileNumber?.[0] || "",
+                fullName: fieldErrors?.fullName?.[0] || "",
+                email: fieldErrors?.email?.[0] || "",
+                password: fieldErrors?.password?.[0] || "",
+                form: "Please correct the highlighted fields."
+            });
+            return;
         }
 
-        const fieldErrors = validationResult.error.formErrors.fieldErrors;
-        setFormDataError({
-            mobileNumber: fieldErrors?.mobileNumber?.[0] || "",
-            fullName: fieldErrors?.fullName?.[0] || "",
-            email: fieldErrors?.email?.[0] || "",
-            password: fieldErrors?.password?.[0] || "",
-            form: "Please correct the highlighted fields."
-        });
+        try {
+            const result = await register(formData);
+            
+            if (result.requiresVerification) {
+                toast.success(result.message || "Registration successful! Please verify your email.");
+                navigate("/verify-email", { 
+                    state: { email: result.email || formData.email }
+                });
+            } else if (result.success) {
+                // Direct success (shouldn't happen with new flow)
+                toast.success("Registration successful!");
+                navigate("/");
+            }
+        } catch (error) {
+            // Error handling is done in useEffect
+        }
     };
 
     const handleSignWithGoogleClick = async () => {
-        return;
+        toast.error("Google sign-in not implemented yet");
     };
 
+    // Handle errors from auth store
     useEffect(() => {
         if (!err) return;
+        
         const { status } = err;
-        if(status == 401) {
+        if (status === 401) {
             toast.error("Email already used");
+        } else if (status === 403 && err.requiresVerification) {
+            // User tried to login but needs verification
+            toast.error("Please verify your email before logging in");
+            navigate("/verify-email", { 
+                state: { email: err.email }
+            });
         } else {
             toast.error("Internal server error");
         }
-    }, [err]);
+    }, [err, navigate]);
 
+    // Redirect if already authenticated
     useEffect(() => {
-        if(!accessToken) return;
-        navigate("/");
-    }, [accessToken])
+        if (accessToken) {
+            navigate("/");
+        }
+    }, [accessToken, navigate]);
 
     if (loading) return <Loading />;
 
@@ -153,6 +177,7 @@ export default function SignUpForm() {
                 onClick={handleSignUpButtonClick}
                 text="Sign up"
                 type="button"
+                disabled={loading}
             />
             {formDataError.form && <p className={styles.error}>{formDataError.form}</p>}
             <div className={styles.footer}>

@@ -1,0 +1,134 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('../../../public/images/sign-in-page.cover.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 2rem;
+}
+
+.form {
+    max-width: 400px;
+    width: 100%;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+    text-align: center;
+}
+
+.instructions {
+    margin-bottom: 2rem;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.instructions strong {
+    display: block;
+    margin: 0.5rem 0;
+    color: #333;
+    font-weight: 500;
+}
+
+.inputField {
+    width: 100%;
+    padding: 0.9rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.inputField:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.primaryButton {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.primaryButton:hover {
+    background-color: #4338ca;
+}
+
+.primaryButton:disabled {
+    background-color: #c7d2fe;
+    cursor: not-allowed;
+}
+
+.secondaryButton {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: white;
+    color: #4f46e5;
+    border: 1px solid #4f46e5;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.secondaryButton:hover {
+    background-color: #eef2ff;
+}
+
+.resendSection {
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+}
+
+.footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.backButton {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.backButton:hover {
+    color: #333;
+    text-decoration: underline;
+}

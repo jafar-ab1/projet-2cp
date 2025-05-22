@@ -39,6 +39,27 @@ export const registerUser = async (registerUserData) => {
   }
 };
 
+// Email verification routes
+export const sendVerificationCode = async (email) => {
+  try {
+    const response = await api.post('/auth/send-verification-code', { email });
+    return response.data;
+  } catch (error) {
+    console.error('Send verification code failed:', error);
+    throw error;
+  }
+};
+
+export const verifyEmail = async (email, code) => {
+  try {
+    const response = await api.post('/auth/verify-email', { email, code });
+    return response.data;
+  } catch (error) {
+    console.error('Email verification failed:', error);
+    throw error;
+  }
+};
+
 // Dashboard routes
 export const getTodayCheckIns = async () => {
   const response = await api.get('/dash/today/in');
@@ -86,6 +107,20 @@ export const getAllFeedbacks = async () => {
 };
 
 // Guest routes
+export const updateGuest = async (email, roomNumber, type) => {
+  try {
+    const encodedEmail = encodeURIComponent(email)
+    const encodedRoomNumber = encodeURIComponent(roomNumber)
+    const encodedType = encodeURIComponent(type)
+
+    const response = await api.put(`/guest/update/${encodedEmail}/${encodedRoomNumber}/${encodedType}`)
+    return response.data
+  } catch (error) {
+    console.error("Error updating guest:", error)
+    throw error
+  }
+}
+
 export const getAllGuests = async () => {
   try {
     const response = await api.get('/user');
@@ -125,6 +160,7 @@ export const addGuest = async (guestData) => {
     throw error
   }
 }
+<<<<<<< HEAD
 export const updateGuest = async (email, roomNumber, type) => {
   try {
     const response = await fetch(`/guest/update/${email}/${roomNumber}/${type}`, {
@@ -144,6 +180,8 @@ export const updateGuest = async (email, roomNumber, type) => {
   }
 };
 
+=======
+>>>>>>> ac7087dcc798ed0b7e02cf90af785ce3a4961437
 
 export const sendCheckoutEmail = async (email, roomNumber) => {
   try {
@@ -154,15 +192,17 @@ export const sendCheckoutEmail = async (email, roomNumber) => {
     throw error
   }
 }
+
 export const sendCheckoutEmailAndDelete = async (email) => {
   try {
-    const response = await api.put(`/guest/checkOut/${email}`);
+    const response = await api.get(`/user/checkOut/${email}`);
     return response.data;
   } catch (error) {
     console.error("Error sending checkout email and deleting guest:", error);
     throw error;
   }
 };
+
 export const deleteGuest = async (email) => {
   try {
     const response = await api.delete(`/user/${email}`)
@@ -180,9 +220,7 @@ export const addRoom = async (roomData) => {
       roomNumber: roomData.roomNumber.toString(),
       type: roomData.type,
       floor: roomData.floor.toString(),
-
       status0: roomData.status0,
-      // status1 will be set by the backend
     };
 
     console.log('Sending room data:', formattedData);
@@ -225,7 +263,7 @@ export const getDealsByStatus = async (status) => {
   return response.data;
 };
 
-// NEWLY ADDED RESERVATION ROUTES
+// Reservation routes
 export const getAllReservations = async () => {
   try {
     const response = await api.get('/reservation');
@@ -281,12 +319,10 @@ export const deleteReservation = async (email, roomNumber) => {
 
 export const getRoomsForReservation = async (checkInDate, checkOutDate) => {
   try {
-    // Validate date format
     if (!/^\d{4}-\d{2}-\d{2}$/.test(checkInDate) || !/^\d{4}-\d{2}-\d{2}$/.test(checkOutDate)) {
       throw new Error("Dates must be in YYYY-MM-DD format");
     }
 
-    // Validate date sequence
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
     if (startDate >= endDate) {
@@ -305,7 +341,6 @@ export const getRoomsForReservation = async (checkInDate, checkOutDate) => {
   } catch (error) {
     console.error("Error fetching available rooms:", error);
     
-    // Enhance error message for date validation errors
     if (error.response?.data?.message?.includes("Date invalide")) {
       throw new Error("Invalid date format or sequence. Please check your dates.");
     }
@@ -313,7 +348,6 @@ export const getRoomsForReservation = async (checkInDate, checkOutDate) => {
     throw error;
   }
 };
-
 
 export const createReservation = async (reservationData) => {
   try {
