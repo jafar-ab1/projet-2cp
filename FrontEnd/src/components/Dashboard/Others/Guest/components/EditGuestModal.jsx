@@ -1,216 +1,280 @@
-import { useState } from "react";
-import { updateGuest } from "../../../../../api/index";
 
-const EditGuestModal = ({ onClose, allGuests, refreshGuests }) => {
-  const [searchEmail, setSearchEmail] = useState("");
-  const [searchRoomNumber, setSearchRoomNumber] = useState("");
-  const [matchingGuests, setMatchingGuests] = useState([]);
-  const [selectedGuest, setSelectedGuest] = useState(null);
-  const [selectedRoomType, setSelectedRoomType] = useState("");
-  const [availableRoomTypes, setAvailableRoomTypes] = useState(["Standard", "Deluxe", "Suite"]);
-  const [didSearch, setDidSearch] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+import { useState, useEffect } from "react"
+import { updateGuest } from "../../../../../api/index"
+
+const EditGuestModal = ({ onClose, onUpdate, refreshGuests, allGuests, currentGuestEmail }) => {
+  const [formData, setFormData] = useState({
+    email: currentGuestEmail || "",
+    roomNumber: "",
+    roomType: "Deluxe", // Default to Deluxe as it's an upgrade option
+  })
+
+  const [foundGuests, setFoundGuests] = useState([])
+  const [selectedGuest, setSelectedGuest] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  const [searchPerformed, setSearchPerformed] = useState(false)
+  const [apiStatus, setApiStatus] = useState(null)
+
+  // Room type options (ensure they're in ascending order of quality)
+  const roomTypes = ["Standard", "Deluxe", "Suite"]
+
+  useEffect(() => {
+    // If currentGuestEmail is provided, automatically search for that guest
+    if (currentGuestEmail) {
+      handleSearch()
+    }
+  }, [currentGuestEmail])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSearch = () => {
-    setDidSearch(true);
-    setError("");
-    setSuccess("");
+    setError("")
+    setSearchPerformed(true)
 
-    if (!searchEmail.trim() || !searchRoomNumber.trim()) {
-      setMatchingGuests([]);
-      setSelectedGuest(null);
-      setError("Please enter both email and room number");
-      return;
+    if (!formData.email.trim()) {
+      setError("Please enter an email to search")
+      setFoundGuests([])
+      return
     }
 
-    const found = allGuests.filter((g) => {
-      const emailMatch = g.email?.toLowerCase() === searchEmail.toLowerCase().trim();
-      const roomMatch = Array.isArray(g.roomNumber)
-        ? g.roomNumber.some(rn => rn.toString() === searchRoomNumber.trim())
-        : g.roomNumber?.toString() === searchRoomNumber.trim();
-      
-      return emailMatch && roomMatch;
-    });
+    const filtered = allGuests.filter((g) => g.email?.toLowerCase().includes(formData.email.toLowerCase().trim()))
 
-    setMatchingGuests(found);
-    if (found.length > 0) {
-      setSelectedGuest(found[0]);
-      // Default to the current room type
-      if (found[0].roomType) {
-        setSelectedRoomType(found[0].roomType);
-      } else {
-        setSelectedRoomType("Standard"); // Default if no room type is specified
-      }
-    } else {
-      setSelectedGuest(null);
-      setError("No guest found with that email and room number");
+    setFoundGuests(filtered)
+
+    if (filtered.length === 0) {
+      setError(`No guests found with email containing "${formData.email}"`)
+    } else if (filtered.length === 1) {
+      // Auto-select if only one guest is found
+      setSelectedGuest(filtered[0])
     }
-  };
+  }
 
-  const handleRoomTypeChange = (e) => {
-    setSelectedRoomType(e.target.value);
-  };
+  const handleSelectGuest = (guest) => {
+    setSelectedGuest(guest)
+    setFormData((prev) => ({
+      ...prev,
+      email: guest.email,
+    }))
+  }
 
-  const handleConfirm = async () => {
-    if (!selectedGuest || !selectedGuest.email || !searchRoomNumber || !selectedRoomType) {
-      setError("Missing required information. Please select a guest and room type.");
-      return;
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!selectedGuest) {
+      setError("Please select a guest first")
+      return
     }
 
-    setIsLoading(true);
-    setError("");
-    setSuccess("");
+    if (!formData.roomNumber) {
+      setError("Please enter a room number to update")
+      return
+    }
+
+    if (!formData.roomType) {
+      setError("Please select a room type")
+      return
+    }
+
+    setIsLoading(true)
+    setError("")
+    setSuccess("")
+    setApiStatus("Attempting to update guest room...")
 
     try {
-      const result = await updateGuest(selectedGuest.email, searchRoomNumber, selectedRoomType);
+      // Log the data we're sending
+      console.log("Submitting update with:", {
+        email: formData.email,
+        roomNumber: formData.roomNumber,
+        roomType: formData.roomType,
+      })
 
-      setSuccess(
-        `Room updated successfully! ${result.roomChange?.typeUpgrade ? "Guest has been upgraded to a better room." : ""}`
-      );
-      await refreshGuests();
+      // Our new updateGuest function will try multiple approaches
+      const result = await updateGuest(formData.email, formData.roomNumber, formData.roomType)
 
-      // Don't close the modal immediately on success to show the success message
+      setApiStatus("Update successful!")
+      setSuccess("Guest room updated successfully!")
+
+      // Refresh the guest list
+      await refreshGuests()
+
+      // Close modal after success
       setTimeout(() => {
-        onClose();
-      }, 2000);
+        onUpdate(formData)
+        onClose()
+      }, 2000)
     } catch (err) {
-      console.error("Update error:", err);
-      setError(err.response?.data?.message || "Failed to update guest room");
+      console.error("Update error:", err)
+      setApiStatus(`Update failed: ${err.message}`)
 
-      // If there are allowed changes in the error response, update the available room types
-      if (err.response?.data?.allowedChanges?.allowedNewTypes) {
-        setAvailableRoomTypes(err.response.data.allowedChanges.allowedNewTypes);
-      }
+      // Set a more user-friendly error message
+      setError("Failed to update guest room. Please try again or contact support.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="modal-overlay">
       <div className="edit-modal">
-        <div className="edit-header">Change Guest Room</div>
-
-        <div className="search-container">
-          <div className="search-input-group">
-            <input
-              type="text"
-              placeholder="Enter email address"
-              value={searchEmail}
-              onChange={(e) => setSearchEmail(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-              disabled={isLoading}
-            />
-            <input
-              type="text"
-              placeholder="Enter room number"
-              value={searchRoomNumber}
-              onChange={(e) => setSearchRoomNumber(e.target.value)}
-              onKeyPress={(e) => e.key === "Enter" && handleSearch()}
-              disabled={isLoading}
-            />
-            <button className="search-button" onClick={handleSearch} disabled={isLoading}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </button>
-          </div>
+        <div className="modal-header">
+          <h2>Edit Guest Room</h2>
+          <button className="close-btn" onClick={onClose}>
+            &times;
+          </button>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="success-message">{success}</div>}
+        <form onSubmit={handleSubmit} className="edit-guest-form">
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
+          {apiStatus && <div className="api-status">{apiStatus}</div>}
 
-        {matchingGuests.length === 0 && didSearch && !error && (
-          <div className="no-result">
-            <div className="search-icon">
-              <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="100" r="80" fill="#E0E0E0" />
-                <path
-                  d="M140 90C140 117.614 117.614 140 90 140C62.3858 140 40 117.614 40 90C40 62.3858 62.3858 40 90 40C117.614 40 140 62.3858 140 90Z"
-                  fill="#A0A0A0"
-                />
-                <path d="M140 90C140 117.614 117.614 140 90 140" stroke="white" strokeWidth="8" />
-                <rect x="130" y="120" width="10" height="40" rx="5" transform="rotate(45 130 120)" fill="#A0A0A0" />
-              </svg>
+          <div className="form-group">
+            <label htmlFor="email">
+              Guest Email: <span className="required">*</span>
+            </label>
+            <div className="search-container">
+              <input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="edit-input"
+                placeholder="guest@example.com"
+                disabled={isLoading || selectedGuest}
+                required
+              />
+              {!selectedGuest && (
+                <button type="button" className="search-btn" onClick={handleSearch} disabled={isLoading}>
+                  Search
+                </button>
+              )}
             </div>
-            <p>No matching result</p>
           </div>
-        )}
 
-        {selectedGuest && (
-          <div className="guest-result">
-            <div className="guest-info">
-              <h3>Guest Information</h3>
-              <p>
-                <strong>Name:</strong> {selectedGuest.fullName}
-              </p>
-              <p>
-                <strong>Email:</strong> {selectedGuest.email}
-              </p>
-              <p>
-                <strong>Current Room:</strong>{" "}
-                {Array.isArray(selectedGuest.roomNumber)
-                  ? selectedGuest.roomNumber.join(", ")
-                  : selectedGuest.roomNumber}
-              </p>
-              <p>
-                <strong>Status:</strong> {selectedGuest.status || "Checked In"}
-              </p>
+          {searchPerformed && foundGuests.length > 0 && !selectedGuest && (
+            <div className="guest-results">
+              <h4>Select a Guest:</h4>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Room</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {foundGuests.map((guest) => (
+                    <tr key={guest.email}>
+                      <td>{guest.fullName || guest.guestInfo?.fullName || "N/A"}</td>
+                      <td>{guest.email}</td>
+                      <td>{Array.isArray(guest.roomNumber) ? guest.roomNumber.join(", ") : guest.roomNumber}</td>
+                      <td>
+                        <button type="button" className="select-btn" onClick={() => handleSelectGuest(guest)}>
+                          Select
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
+          )}
 
-            <div className="room-type-selection">
-              <h3>Select New Room Type</h3>
-              <p className="info-text">Note: You can only upgrade a guest to a better room type, not downgrade.</p>
-
-              <div className="form-group">
-                <label htmlFor="roomType">Room Type:</label>
-                <select
-                  id="roomType"
-                  value={selectedRoomType}
-                  onChange={handleRoomTypeChange}
-                  className="edit-select"
+          {selectedGuest && (
+            <>
+              <div className="selected-guest-info">
+                <h4>Selected Guest:</h4>
+                <p>
+                  <strong>Name:</strong> {selectedGuest.fullName || selectedGuest.guestInfo?.fullName || "N/A"}
+                </p>
+                <p>
+                  <strong>Email:</strong> {selectedGuest.email}
+                </p>
+                <p>
+                  <strong>Current Room(s):</strong>{" "}
+                  {Array.isArray(selectedGuest.roomNumber)
+                    ? selectedGuest.roomNumber.join(", ")
+                    : selectedGuest.roomNumber}
+                </p>
+                <button
+                  type="button"
+                  className="change-guest-btn"
+                  onClick={() => {
+                    setSelectedGuest(null)
+                    setFormData((prev) => ({ ...prev, email: "" }))
+                  }}
                   disabled={isLoading}
                 >
-                  {availableRoomTypes.map((type) => (
+                  Change Guest
+                </button>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="roomNumber">
+                  Room Number to Update: <span className="required">*</span>
+                </label>
+                <input
+                  id="roomNumber"
+                  name="roomNumber"
+                  type="text"
+                  value={formData.roomNumber}
+                  onChange={handleChange}
+                  className="edit-input"
+                  placeholder="Enter room number to update"
+                  disabled={isLoading}
+                  required
+                />
+                <small className="help-text">Enter the specific room number you want to upgrade</small>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="roomType">
+                  New Room Type (Upgrade): <span className="required">*</span>
+                </label>
+                <select
+                  id="roomType"
+                  name="roomType"
+                  value={formData.roomType}
+                  onChange={handleChange}
+                  className="edit-input"
+                  disabled={isLoading}
+                  required
+                >
+                  <option value="">Select room type</option>
+                  {roomTypes.map((type) => (
                     <option key={type} value={type}>
                       {type}
                     </option>
                   ))}
                 </select>
+                <small className="help-text">Note: You can only upgrade to a higher room type</small>
               </div>
-            </div>
+            </>
+          )}
 
-            <div className="done-button-container">
-              <button className="done-button" onClick={handleConfirm} disabled={isLoading}>
-                {isLoading ? "Updating Room..." : "Change Room"}
-              </button>
-            </div>
-          </div>
-        )}
-
-        {!isLoading && (
-          <div className="modal-buttons">
-            <button className="cancel-button" onClick={onClose}>
+          <div className="form-buttons">
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={isLoading || !selectedGuest || !formData.roomNumber || !formData.roomType}
+            >
+              {isLoading ? "Updating..." : "Update Room"}
+            </button>
+            <button type="button" className="cancel-btn" onClick={onClose} disabled={isLoading}>
               Cancel
             </button>
           </div>
-        )}
+        </form>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EditGuestModal;
+export default EditGuestModal

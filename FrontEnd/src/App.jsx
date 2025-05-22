@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // sign-in and sign-up pages
 import SignInPage from './pages/SignIn/SignIn-page.jsx';
 import SignUpPage from './pages/SignUp/SignUp-page.jsx';
+import EmailVerification from './component/SignUpPageComponents/SignUpForm/EmailVerification.jsx';
 
 // Dashboard pages
 import FrontDesk from './pages/Dashboard/FrontDesk/FrontDesk.jsx';
@@ -54,7 +55,10 @@ function App() {
         <Route path="/auth" element={<SignPageLayout />}>
           <Route path="sign-in" element={<SignInPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
+          
         </Route>
+        <Route path="/verify-email" element={<EmailVerification/>}/>
+        
       </Routes>
     </Router>
   );

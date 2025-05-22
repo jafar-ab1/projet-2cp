@@ -1,23 +1,21 @@
-import { useState, useEffect } from "react";
-import { 
+
+import { useState, useEffect } from "react"
+import {
   getAllCheckInDueOutGuests,
   addGuest,
   updateGuest,
-  deleteGuest,
   sendCheckoutEmail,
-  sendCheckoutEmailAndDelete
-} from "../../../../api/index";
-import "../Table.css";
-import "../StatusBadge.css";
-import "./GuestStyles.css";
-import Pagination from "../Common/Pagination";
-import GuestTable from "./components/GuestTable";
-import AddGuestModal from "./components/AddGuestModal";
-import EditGuestModal from "./components/EditGuestModal";
+  sendCheckoutEmailAndDelete,
+} from "../../../../api/index"
+import "../Table.css"
+import "../StatusBadge.css"
+import "./GuestStyles.css"
+import Pagination from "../Common/Pagination"
+import GuestTable from "./components/GuestTable"
+import AddGuestModal from "./components/AddGuestModal"
+import EditGuestModal from "./components/EditGuestModal"
 
-
-import RemoveGuestModal from "./components/RemoveGuestModal";
-
+import RemoveGuestModal from "./components/RemoveGuestModal"
 
 const Guest = () => {
   const [guests, setGuests] = useState([])
@@ -87,16 +85,26 @@ const Guest = () => {
     setCurrentGuestEmail(email)
     setIsEditModalOpen(true)
   }
-const handleUpdateGuest = async (updateData) => {
-  try {
-    // You need to pass email, roomNumber, and type to updateGuest
-    await updateGuest(currentGuestEmail, updateData.roomNumber, updateData.roomType);
-    await fetchGuests();
-    setIsEditModalOpen(false);
-  } catch (err) {
-    setError(err.response?.data?.message || "Failed to update guest");
+  const handleUpdateGuest = async (updateData) => {
+    try {
+      console.log("Updating guest with data:", updateData)
+      // Pass email, roomNumber, and type to updateGuest
+      await updateGuest(updateData.email, updateData.roomNumber, updateData.roomType)
+      await fetchGuests()
+      setIsEditModalOpen(false)
+    } catch (err) {
+      console.error("Failed to update guest:", err)
+      let errorMessage = "Failed to update guest"
+
+      if (err.response && err.response.data && err.response.data.message) {
+        errorMessage = err.response.data.message
+      } else if (err.message) {
+        errorMessage = err.message
+      }
+
+      setError(errorMessage)
+    }
   }
-};
   const handleDelete = async (email) => {
     try {
       await sendCheckoutEmailAndDelete(email)
@@ -116,85 +124,79 @@ const handleUpdateGuest = async (updateData) => {
   }
 
   return (
-    
-        <div className="page">
-          <h2 className="page-title">Guest</h2>
+    <div className="page">
+      <h2 className="page-title">Guest</h2>
 
-          <div className="action-buttons-container">
-            <div className="left-buttons">
-              <button className="btn check-in-btn">Check in</button>
-              <button className="btn check-out-btn">Check out</button>
-            </div>
-            <div className="right-buttons">
-              <div className="search-container">
-                <input
-                  className="search"
-                  type="text"
-                  placeholder="search by room number"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button className="filter-btn">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                  </svg>
-                  Filter
-                </button>
-              </div>
-              <button className="btn edit-btn" onClick={() => setIsEditModalOpen(true)}>
-                Edit
-              </button>
-              <button className="btn remove-btn" onClick={() => setIsRemoveModalOpen(true)}>
-                Remove Guest
-              </button>
-              <button className="btn add-btn" onClick={() => setIsAddModalOpen(true)}>
-                Add Guest
-              </button>
-            </div>
-          </div>
-
-          {renderGuestTable()}
-
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-
-          {isAddModalOpen && (
-            <AddGuestModal
-              onClose={() => setIsAddModalOpen(false)}
-              onAddGuest={handleAddGuest}
-              refreshGuests={fetchGuests}
-              allGuests={guests}
-            />
-          )}
-
-         {isEditModalOpen && (
-  <EditGuestModal
-    onClose={() => setIsEditModalOpen(false)}
-    onUpdate={handleUpdateGuest}
-    refreshGuests={fetchGuests}
-    allGuests={guests}
-    currentGuestEmail={currentGuestEmail} // Pass the current email
-  />
-)}
-
-          {isRemoveModalOpen && (
-            <RemoveGuestModal
-              onClose={() => setIsRemoveModalOpen(false)}
-              refreshGuests={fetchGuests}
-              allGuests={guests}
-            />
-          )}
+      <div className="action-buttons-container">
+        <div className="left-buttons">
+          <button className="btn check-in-btn">Check in</button>
+          <button className="btn check-out-btn">Check out</button>
         </div>
+        <div className="right-buttons">
+          <div className="search-container">
+            <input
+              className="search"
+              type="text"
+              placeholder="search by room number"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button className="filter-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+              </svg>
+              Filter
+            </button>
+          </div>
+          <button className="btn edit-btn" onClick={() => setIsEditModalOpen(true)}>
+            Edit
+          </button>
+          <button className="btn remove-btn" onClick={() => setIsRemoveModalOpen(true)}>
+            Remove Guest
+          </button>
+          <button className="btn add-btn" onClick={() => setIsAddModalOpen(true)}>
+            Add Guest
+          </button>
+        </div>
+      </div>
 
+      {renderGuestTable()}
+
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+
+      {isAddModalOpen && (
+        <AddGuestModal
+          onClose={() => setIsAddModalOpen(false)}
+          onAddGuest={handleAddGuest}
+          refreshGuests={fetchGuests}
+          allGuests={guests}
+        />
+      )}
+
+      {isEditModalOpen && (
+        <EditGuestModal
+          onClose={() => setIsEditModalOpen(false)}
+          onUpdate={handleUpdateGuest}
+          refreshGuests={fetchGuests}
+          allGuests={guests}
+          currentGuestEmail={currentGuestEmail} // Pass the current email
+        />
+      )}
+
+      {isRemoveModalOpen && (
+        <RemoveGuestModal onClose={() => setIsRemoveModalOpen(false)} refreshGuests={fetchGuests} allGuests={guests} />
+      )}
+    </div>
   )
 }
 
