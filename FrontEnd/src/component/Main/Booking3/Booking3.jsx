@@ -106,17 +106,6 @@ function Booking3() {
           availableRoomTypes.push(createSampleRoom(type, data));
         })
 
-        // if (response.Deluxe && response.Deluxe.count > 0) {
-        //   availableRoomTypes.Deluxe = [createSampleRoom("Deluxe", response.Deluxe)];
-        // }
-        // if (response.Standard && response.Standard.count > 0) {
-        //   availableRoomTypes.Standard = [createSampleRoom("Standard", response.Standard)];
-        // }
-        // if (response.Suite && response.Suite.count > 0) {
-        //   availableRoomTypes.Suite = [createSampleRoom("Suite", response.Suite)];
-        // }
-
-        console.log("Processed room types:", availableRoomTypes); // Debug log
         setRoomTypes(availableRoomTypes);
 
         if (availableRoomTypes.length === 0) {
@@ -261,8 +250,8 @@ function Booking3() {
                       <Room
                         key={`${roomType.id}-${roomType.type}`}
                         room={roomType}
-                        handleAddToBasketClick={() => addToBasket(room)}
-                        isAdded={reservedRooms.some(r => r.type === room.type)}
+                        handleAddToBasketClick={() => addToBasket(roomType)}
+                        isAdded={reservedRooms.some(r => r.type === roomType.type)}
                       />
                   </div>
                 </div>
