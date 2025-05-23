@@ -403,7 +403,7 @@ exports.creatReservation = async (req, res) => {
                         <ul>
                             ${roomDetails.map(room => `
                                 <li>
-                    Chambre ${room.number} (${room.type}) - ${room.price} € / nuit × ${room.nights} nuit(s) = ${room.total} €
+                    Chambre ${room.number} (${room.type}) - ${room.price} DZ / nuit × ${room.nights} nuit(s) = ${room.total} €
                                 </li>
                             `).join('')}
                         </ul>
