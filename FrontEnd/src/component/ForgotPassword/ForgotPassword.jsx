@@ -91,6 +91,7 @@ export default function ForgotPassword() {
                 type="submit" 
                 text={loading ? "Sending..." : "Send Reset Code"} 
                 disabled={loading}
+                onClick={handleSubmit}
             />
             <div className={styles.footer}>
                 <Link to="/auth/sign-in" className={styles.backLink}>
