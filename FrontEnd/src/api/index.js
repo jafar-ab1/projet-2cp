@@ -183,6 +183,32 @@ export const getGuestByEmail = async (email) => {
     throw error;
   }
 }
+export const checkDailyDueOut = async () => {
+  try {
+    const response = await api.get('/user/change/dueOut');
+    
+    // Format the response data to match what your frontend expects
+    return {
+      totalReservations: response.data.totalReservations || 0,
+      successCount: response.data.successCount || 0,
+      failureCount: response.data.failureCount || 0,
+      emailsSent: response.data.emailsSent || 0,
+      failedUpdates: response.data.failedUpdates || []
+    };
+  } catch (error) {
+    console.error('Error in checkDailyDueOut:', error);
+    
+    // Return a consistent structure even when there's an error
+    return {
+      totalReservations: 0,
+      successCount: 0,
+      failureCount: 0,
+      emailsSent: 0,
+      failedUpdates: [],
+      error: error.response?.data?.message || error.message
+    };
+  }
+};
 
 export const getAllCheckInDueOutGuests = async () => {
   try {

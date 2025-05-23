@@ -1,140 +1,174 @@
-
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import {
   getAllCheckInDueOutGuests,
   addGuest,
   updateGuest,
   sendCheckoutEmail,
   sendCheckoutEmailAndDelete,
-} from "../../../../api/index"
-import "../Table.css"
-import "../StatusBadge.css"
-import "./GuestStyles.css"
-import Pagination from "../Common/Pagination"
-import GuestTable from "./components/GuestTable"
-import AddGuestModal from "./components/AddGuestModal"
-import EditGuestModal from "./components/EditGuestModal"
-
-import RemoveGuestModal from "./components/RemoveGuestModal"
+  checkDailyDueOut,
+} from "../../../../api/index";
+import "../Table.css";
+import "../StatusBadge.css";
+import "./GuestStyles.css";
+import Pagination from "../Common/Pagination";
+import GuestTable from "./components/GuestTable";
+import AddGuestModal from "./components/AddGuestModal";
+import EditGuestModal from "./components/EditGuestModal";
+import RemoveGuestModal from "./components/RemoveGuestModal";
 
 const Guest = () => {
-  const [guests, setGuests] = useState([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
-  const [currentGuestEmail, setCurrentGuestEmail] = useState("")
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
+  const [guests, setGuests] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+  const [currentGuestEmail, setCurrentGuestEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [lastDueOutCheck, setLastDueOutCheck] = useState(null);
 
-  const itemsPerPage = 7
+  const itemsPerPage = 7;
 
-  useEffect(() => {
-    fetchGuests()
-  }, [])
-
+  // Function to fetch guests
   const fetchGuests = async () => {
-  try {
-    setLoading(true)
-    const data = await getAllCheckInDueOutGuests()
+    try {
+      setLoading(true);
+      const data = await getAllCheckInDueOutGuests();
+      
+      const transformedGuests = data.reservations?.map(reservation => ({
+        ...reservation,
+        fullName: reservation.guestInfo?.fullName,
+        amount: reservation.totalPrice,
+        roomStatus: "Occupied"
+      })) || [];
+      
+      setGuests(transformedGuests);
+      setLoading(false);
+    } catch (err) {
+      setError("Failed to load guests");
+      setLoading(false);
+    }
+  };
+
+  // Function to check for due-out guests
+  const checkForDueOutGuests = async () => {
+    try {
+      const now = new Date();
+      console.log("Checking for due-out guests...", now);
+      
+      const result = await checkDailyDueOut();
+      setLastDueOutCheck(now);
+      
+      if (result.successCount > 0) {
+        console.log(`Processed ${result.successCount} due-out guests`);
+        // Refresh the guest list if any were processed
+        await fetchGuests();
+      }
+    } catch (err) {
+      console.error("Error in due-out check:", err);
+    }
+  };
+
+  // Run on component mount and set up interval
+  useEffect(() => {
+    // Initial fetch
+    fetchGuests();
     
-    // Transform the data to match what the table expects
-    const transformedGuests = data.reservations?.map(reservation => ({
-      ...reservation,
-      fullName: reservation.guestInfo?.fullName,
-      amount: reservation.totalPrice,
-      roomStatus: "Occupied" // Since these are checked-in guests
-    })) || []
+    // Initial due-out check
+    checkForDueOutGuests();
     
-    setGuests(transformedGuests)
-    setLoading(false)
-  } catch (err) {
-    setError("Failed to load guests")
-    setLoading(false)
-  }
-}
+    // Set up interval to check every hour (adjust as needed)
+    const intervalId = setInterval(() => {
+      checkForDueOutGuests();
+    }, 3600000); // 1 hour in milliseconds
+    
+    // Clean up interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
 
   const filteredGuests = guests.filter((guest) => {
-    const searchTerm = searchQuery.toLowerCase()
+    const searchTerm = searchQuery.toLowerCase();
     return (
       guest.email?.toLowerCase().includes(searchTerm) ||
       guest.fullName?.toLowerCase().includes(searchTerm) ||
       (Array.isArray(guest.roomNumber)
         ? guest.roomNumber.some((rn) => rn.toString().includes(searchTerm))
         : guest.roomNumber?.toString().includes(searchTerm))
-    )
-  })
+    );
+  });
 
-  const indexOfLastItem = currentPage * itemsPerPage
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage
-  const currentGuests = filteredGuests.slice(indexOfFirstItem, indexOfLastItem)
-  const totalPages = Math.ceil(filteredGuests.length / itemsPerPage)
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentGuests = filteredGuests.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredGuests.length / itemsPerPage);
 
   const handleAddGuest = async (guestData) => {
     try {
-      await addGuest(guestData)
-      await fetchGuests()
-      setIsAddModalOpen(false)
+      await addGuest(guestData);
+      await fetchGuests();
+      setIsAddModalOpen(false);
     } catch (err) {
-      setError(err.response?.data?.message || err.message || "Failed to add guest")
+      setError(err.response?.data?.message || err.message || "Failed to add guest");
     }
-  }
+  };
 
   const handleCheckout = async (email, roomNumber) => {
     try {
-      await sendCheckoutEmail(email, roomNumber)
-      await fetchGuests()
+      await sendCheckoutEmail(email, roomNumber);
+      await fetchGuests();
     } catch (err) {
-      setError("Failed to checkout guest")
+      setError("Failed to checkout guest");
     }
-  }
+  };
 
   const handleEdit = (email) => {
-    setCurrentGuestEmail(email)
-    setIsEditModalOpen(true)
-  }
+    setCurrentGuestEmail(email);
+    setIsEditModalOpen(true);
+  };
+
   const handleUpdateGuest = async (updateData) => {
     try {
-      console.log("Updating guest with data:", updateData)
-      // Pass email, roomNumber, and type to updateGuest
-      await updateGuest(updateData.email, updateData.roomNumber, updateData.roomType)
-      await fetchGuests()
-      setIsEditModalOpen(false)
+      await updateGuest(updateData.email, updateData.roomNumber, updateData.roomType);
+      await fetchGuests();
+      setIsEditModalOpen(false);
     } catch (err) {
-      console.error("Failed to update guest:", err)
-      let errorMessage = "Failed to update guest"
-
-      if (err.response && err.response.data && err.response.data.message) {
-        errorMessage = err.response.data.message
-      } else if (err.message) {
-        errorMessage = err.message
-      }
-
-      setError(errorMessage)
+      setError(err.response?.data?.message || err.message || "Failed to update guest");
     }
-  }
+  };
+
   const handleDelete = async (email) => {
     try {
-      await sendCheckoutEmailAndDelete(email)
-      await fetchGuests()
-      setIsRemoveModalOpen(false)
+      await sendCheckoutEmailAndDelete(email);
+      await fetchGuests();
+      setIsRemoveModalOpen(false);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to check out guest")
+      setError(err.response?.data?.message || "Failed to check out guest");
     }
-  }
+  };
 
-  // We'll only show loading/error states for the table, not the entire component
   const renderGuestTable = () => {
-    if (loading) return <div className="loading">Loading guests...</div>
-    if (error) return <div className="error">Error: {error}</div>
+    if (loading) return <div className="loading">Loading guests...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
 
-    return <GuestTable guests={currentGuests} onCheckout={handleCheckout} onEdit={handleEdit} onDelete={handleDelete} />
-  }
+    return (
+      <GuestTable
+        guests={currentGuests}
+        onCheckout={handleCheckout}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+    );
+  };
 
   return (
     <div className="page">
       <h2 className="page-title">Guest</h2>
+      {lastDueOutCheck && (
+        <div className="last-check-info">
+          Last due-out check: {lastDueOutCheck.toLocaleTimeString()}
+        </div>
+      )}
 
       <div className="action-buttons-container">
         <div className="left-buttons">
@@ -181,7 +215,11 @@ const Guest = () => {
 
       {renderGuestTable()}
 
-      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
 
       {isAddModalOpen && (
         <AddGuestModal
@@ -198,15 +236,19 @@ const Guest = () => {
           onUpdate={handleUpdateGuest}
           refreshGuests={fetchGuests}
           allGuests={guests}
-          currentGuestEmail={currentGuestEmail} // Pass the current email
+          currentGuestEmail={currentGuestEmail}
         />
       )}
 
       {isRemoveModalOpen && (
-        <RemoveGuestModal onClose={() => setIsRemoveModalOpen(false)} refreshGuests={fetchGuests} allGuests={guests} />
+        <RemoveGuestModal
+          onClose={() => setIsRemoveModalOpen(false)}
+          refreshGuests={fetchGuests}
+          allGuests={guests}
+        />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Guest
+export default Guest;
