@@ -38,6 +38,40 @@ export const registerUser = async (registerUserData) => {
     throw error;
   }
 };
+// Add to your existing API exports
+export const forgotPassword = async (email) => {
+  try {
+    const response = await api.post('/password/forgot-password', { email });
+    return response.data;
+  } catch (error) {
+    console.error('Forgot password failed:', error);
+    throw error;
+  }
+};
+
+export const verifyResetCode = async ({ email, code }) => {
+  try {
+    const response = await api.post('/password/verify-reset-code', { email, code });
+    return response.data;
+  } catch (error) {
+    console.error('Verify reset code failed:', error);
+    throw error;
+  }
+};
+
+export const resetPassword = async ({ token, email, newPassword }) => {
+  try {
+    const response = await api.post('/password/reset-password', { 
+      token, 
+      email, 
+      newPassword 
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Reset password failed:', error);
+    throw error;
+  }
+};
 
 // Email verification routes
 export const sendVerificationCode = async (email) => {
@@ -61,6 +95,15 @@ export const verifyEmail = async (email, code) => {
 };
 
 // Dashboard routes
+export const countRooms = async (type) => {
+  try {
+    const response = await api.get(`/dash/count/All/type/${type}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error counting ${type} rooms:`, error);
+    throw error;
+  }
+};
 export const getTodayCheckIns = async () => {
   const response = await api.get('/dash/today/in');
   return response.data;

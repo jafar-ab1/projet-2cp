@@ -4,7 +4,7 @@ const config = require("../../config.js");
 const VerificationCode = require('../models/VerificationCode');
 const { sendVerificationEmail } = require('../services/emailService');
 
-// Registration
+// Registration (keeps verification requirement)
 exports.register = async (req, res) => {
   try {
     const { fullName, email, password, mobileNumber } = req.body;
@@ -53,7 +53,7 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login
+// Login (removed verification check)
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -70,16 +70,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Email or password incorrect.' });
     }
 
-    // Check if email is verified
-    if (!user.isVerified) {
-      return res.status(403).json({ 
-        message: 'Please verify your email before logging in.',
-        requiresVerification: true,
-        email: user.email
-      });
-    }
-
-    // Generate JWT token
+    // Generate JWT token (no verification check)
     const token = jwt.sign(
       { id: user._id },
       config.jwt.keys.secret,
@@ -103,7 +94,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// Send verification code
+// Send verification code (unchanged)
 exports.sendVerificationCode = async (req, res) => {
   try {
     const { email } = req.body;
@@ -140,7 +131,7 @@ exports.sendVerificationCode = async (req, res) => {
   }
 };
 
-// Verify email
+// Verify email (unchanged)
 exports.verifyEmail = async (req, res) => {
   try {
     const { email, code } = req.body;

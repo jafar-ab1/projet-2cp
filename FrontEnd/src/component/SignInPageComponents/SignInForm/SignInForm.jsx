@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/auth/useAuth';
-
 import styles from './SignInForm.module.css';
-
 import { passwordSideIcon, usernameSideIcon } from '../../../constants';
 import Form from '../../sharedComponents/Form/Form';
 import FormHeader from '../../sharedComponents/FormHeader/FormHeader';
@@ -13,8 +11,6 @@ import CheckBoxInput from '../../sharedComponents/CheckBox-Input/CheckBox-Input'
 import Button from '../../sharedComponents/Button/Button';
 import Loading from '../../Loading/Loading';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-
 import { loginUserDataValidationSchema } from '../../../validation/auth/auth';
 
 export default function SignInForm() {
@@ -25,122 +21,127 @@ export default function SignInForm() {
     loading,
     err,
     accessToken,
-    actions: { login },
+    actions: { login, clearError },
   } = useAuth();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false,
   });
 
-  const setEmail = (email) => setFormData((prev) => ({ ...prev, email }));
-  const setPassword = (password) =>
-    setFormData((prev) => ({ ...prev, password }));
-  const toggleRememberMe = () =>
-    setFormData((prev) => ({ ...prev, rememberMe: !prev.rememberMe }));
-
   const [formDataError, setFormDataError] = useState({
     email: '',
     password: '',
   });
 
-  const clearErrors = () =>
-    setFormDataError({
-      email: '',
-      password: '',
-    });
+  const clearErrors = () => {
+    setFormDataError({ email: '', password: '' });
+    clearError();
+  };
 
-  const handleSignInButtonClick = async () => {
+  const setEmail = (email) => setFormData((prev) => ({ ...prev, email }));
+  const setPassword = (password) => setFormData((prev) => ({ ...prev, password }));
+  const toggleRememberMe = () => setFormData((prev) => ({ ...prev, rememberMe: !prev.rememberMe }));
+
+  const handleChange = (setState) => (value) => {
+    clearErrors();
+    setState(value);
+  };
+
+  const handleSignIn = async (e) => {
+    e.preventDefault();
+    clearErrors();
+
     const loginUserData = {
       email: formData.email,
       password: formData.password,
     };
 
-    const validationResult =
-      loginUserDataValidationSchema.safeParse(loginUserData);
-    const { success } = validationResult;
+    const validationResult = loginUserDataValidationSchema.safeParse(loginUserData);
 
-    if (success) {
-      login(loginUserData).then(() => {
-        const from = location.state?.from;
-        if (!from) return;
-        return navigate(from);
+    if (!validationResult.success) {
+      const { error: { formErrors: { fieldErrors } } } = validationResult;
+      return setFormDataError({
+        email: (fieldErrors?.email || [''])[0],
+        password: (fieldErrors?.password || [''])[0],
       });
     }
 
-    const {
-      error: {
-        formErrors: { fieldErrors },
-      },
-    } = validationResult;
-    return setFormDataError({
-      email: (fieldErrors?.email || [''])[0],
-      password: (fieldErrors?.password || [''])[0],
-    });
-  };
-
-  const handleChange = (setState) => {
-    return (value) => {
-      clearErrors();
-      return setState(value);
-    };
+    try {
+      await login(loginUserData);
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
+    } catch (error) {
+      // Error is handled by the useEffect below
+    }
   };
 
   useEffect(() => {
     if (!err) return;
-    const { status } = err;
-    if (status == 401) {
+
+    if (err.status === 401) {
       toast.error('Email or password incorrect');
+    } else if (err.message) {
+      toast.error(err.message);
     }
   }, [err]);
 
   useEffect(() => {
-    if (!accessToken) return;
-    navigate('/');
-  }, [accessToken]);
+    if (accessToken) {
+      navigate('/');
+    }
+  }, [accessToken, navigate]);
 
   if (loading) {
     return <Loading />;
   }
 
   return (
-    <Form>
+    <Form onSubmit={handleSignIn}>
       <FormHeader text="Sign in" />
-      {formDataError.form !== '' && (
-        <p className={styles.formError}>{formDataError.form}</p>
-      )}
       <FormFieldsContainer>
         <TextInput
-          canBeHidden={false}
-          name={'email'}
-          placeholder={'Email'}
+          type="email"
+          name="email"
+          placeholder="Email"
           sideIcon={usernameSideIcon}
           value={formData.email}
           setValue={handleChange(setEmail)}
           error={formDataError.email}
+          autoComplete="username"
+          required
         />
         <TextInput
-          canBeHidden={true}
-          name={'password'}
-          placeholder={'Password'}
+          type="password"
+          name="password"
+          placeholder="Password"
           sideIcon={passwordSideIcon}
           value={formData.password}
           setValue={handleChange(setPassword)}
           error={formDataError.password}
+          autoComplete="current-password"
+          required
         />
         <div className={styles.rememberMe}>
           <CheckBoxInput
             isChecked={formData.rememberMe}
             toggle={toggleRememberMe}
-            text="remember me"
+            text="Remember me"
           />
-          <Link to="/forgotPassword">forgot password?</Link>
+          <Link to="/forgot-password" className={styles.forgotPassword}>
+            Forgot password?
+          </Link>
         </div>
       </FormFieldsContainer>
-      <Button onClick={handleSignInButtonClick} text="Sign in" />
+      <Button 
+        type="submit" 
+        text="Sign in" 
+        disabled={loading}
+      />
       <div className={styles.footer}>
         <p>
-          Don't have an account? <Link to="/auth/sign-up">register</Link>
+          Don't have an account? <Link to="/auth/sign-up">Register</Link>
         </p>
       </div>
     </Form>

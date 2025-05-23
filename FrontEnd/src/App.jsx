@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignInPage from './pages/SignIn/SignIn-page.jsx';
 import SignUpPage from './pages/SignUp/SignUp-page.jsx';
 import EmailVerification from './component/SignUpPageComponents/SignUpForm/EmailVerification.jsx';
+import ForgotPasswordPage from './pages/ForgotPassword/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/ResetPassword/ResetPasswordPage.jsx';
 
 // Dashboard pages
 import FrontDesk from './pages/Dashboard/FrontDesk/FrontDesk.jsx';
@@ -55,10 +57,11 @@ function App() {
         <Route path="/auth" element={<SignPageLayout />}>
           <Route path="sign-in" element={<SignInPage />} />
           <Route path="sign-up" element={<SignUpPage />} />
-          
+          <Route path="verify" element={<EmailVerification/>}/>
         </Route>
         <Route path="/verify-email" element={<EmailVerification/>}/>
-        
+        <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
+        <Route path="/reset-password" element={<ResetPasswordPage/>}/>
       </Routes>
     </Router>
   );

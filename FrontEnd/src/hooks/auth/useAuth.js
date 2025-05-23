@@ -3,11 +3,14 @@ import {
   loginUser,
   registerUser,
   sendVerificationCode,
-  verifyEmail
+  verifyEmail,
+  forgotPassword,
+  verifyResetCode,
+  resetPassword
 } from '../../api';
 import { LOCAL_STORAGE } from '../../constants';
 
-const useAuth = create((set, get) => {
+const useAuth = create((set) => {
   const savedToken = localStorage.getItem(LOCAL_STORAGE.ACCESS_TOKEN);
   const savedUserData = localStorage.getItem(LOCAL_STORAGE.USER);
   let savedUser = null;
@@ -22,6 +25,7 @@ const useAuth = create((set, get) => {
     user: savedUser,
     accessToken: savedToken || null,
     pendingVerificationEmail: null,
+    pendingResetEmail: null,
     loading: false,
     err: null,
 
@@ -30,20 +34,8 @@ const useAuth = create((set, get) => {
         set({ loading: true, err: null });
         try {
           const response = await loginUser(data);
-
-          if (response.requiresVerification) {
-            set({
-              pendingVerificationEmail: response.email,
-              err: {
-                status: 403,
-                message: response.message,
-                requiresVerification: true
-              }
-            });
-            return { requiresVerification: true, email: response.email };
-          }
-
           const { token, user } = response;
+
           localStorage.setItem(LOCAL_STORAGE.ACCESS_TOKEN, token);
           localStorage.setItem(LOCAL_STORAGE.USER, JSON.stringify(user));
 
@@ -57,17 +49,6 @@ const useAuth = create((set, get) => {
           return { success: true };
         } catch (err) {
           const errorData = err.response?.data || { message: err.message };
-          if (errorData.requiresVerification) {
-            set({
-              pendingVerificationEmail: errorData.email,
-              err: errorData
-            });
-            return {
-              requiresVerification: true,
-              email: errorData.email
-            };
-          }
-
           set({ err: errorData });
           throw errorData;
         } finally {
@@ -117,8 +98,7 @@ const useAuth = create((set, get) => {
       sendVerificationCode: async (email) => {
         set({ loading: true, err: null });
         try {
-          const response = await sendVerificationCode(email);
-          return response;
+          return await sendVerificationCode(email);
         } catch (err) {
           const errorData = err.response?.data || { message: err.message };
           set({ err: errorData });
@@ -154,6 +134,56 @@ const useAuth = create((set, get) => {
         }
       },
 
+      forgotPassword: async (email) => {
+        set({ loading: true, err: null });
+        try {
+          const response = await forgotPassword(email);
+          set({
+            pendingResetEmail: email,
+            err: null
+          });
+          return { success: true, message: response.message };
+        } catch (err) {
+          const errorData = err.response?.data || { message: err.message };
+          set({ err: errorData });
+          throw errorData;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      verifyResetCode: async (email, code) => {
+        set({ loading: true, err: null });
+        try {
+          const response = await verifyResetCode({ email, code });
+          return { success: true, token: response.token };
+        } catch (err) {
+          const errorData = err.response?.data || { message: err.message };
+          set({ err: errorData });
+          throw errorData;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
+      resetPassword: async (token, email, newPassword) => {
+        set({ loading: true, err: null });
+        try {
+          const response = await resetPassword({ token, email, newPassword });
+          set({
+            pendingResetEmail: null,
+            err: null
+          });
+          return { success: true, message: response.message };
+        } catch (err) {
+          const errorData = err.response?.data || { message: err.message };
+          set({ err: errorData });
+          throw errorData;
+        } finally {
+          set({ loading: false });
+        }
+      },
+
       logout: () => {
         localStorage.removeItem(LOCAL_STORAGE.ACCESS_TOKEN);
         localStorage.removeItem(LOCAL_STORAGE.USER);
@@ -161,17 +191,14 @@ const useAuth = create((set, get) => {
           user: null,
           accessToken: null,
           pendingVerificationEmail: null,
+          pendingResetEmail: null,
           err: null
         });
       },
 
-      clearError: () => {
-        set({ err: null });
-      },
-
-      clearPendingVerification: () => {
-        set({ pendingVerificationEmail: null });
-      }
+      clearError: () => set({ err: null }),
+      clearPendingVerification: () => set({ pendingVerificationEmail: null }),
+      clearPendingReset: () => set({ pendingResetEmail: null })
     }
   };
 });
