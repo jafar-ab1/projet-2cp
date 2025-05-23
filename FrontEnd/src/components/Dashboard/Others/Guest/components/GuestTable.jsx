@@ -21,7 +21,7 @@ const GuestTable = ({ guests = [] }) => {
                 <td>{guest.email}</td>
                 <td>{guest.fullName}</td>
                 <td>{Array.isArray(guest.roomNumber) ? guest.roomNumber.join(", ") : guest.roomNumber}</td>
-                <td>${guest.amount || "900"}</td>
+                <td>DZD{guest.amount || "900"}</td>
                 <td>
                   <span
                     className={`status-badge ${guest.status ? guest.status.toLowerCase().replace(/\s+/g, "-") : "checked-in"}`}

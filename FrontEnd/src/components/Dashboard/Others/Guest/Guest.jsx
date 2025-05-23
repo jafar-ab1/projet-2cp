@@ -35,16 +35,25 @@ const Guest = () => {
   }, [])
 
   const fetchGuests = async () => {
-    try {
-      setLoading(true)
-      const data = await getAllCheckInDueOutGuests()
-      setGuests(data.reservations || [])
-      setLoading(false)
-    } catch (err) {
-      setError("Failed to load guests")
-      setLoading(false)
-    }
+  try {
+    setLoading(true)
+    const data = await getAllCheckInDueOutGuests()
+    
+    // Transform the data to match what the table expects
+    const transformedGuests = data.reservations?.map(reservation => ({
+      ...reservation,
+      fullName: reservation.guestInfo?.fullName,
+      amount: reservation.totalPrice,
+      roomStatus: "Occupied" // Since these are checked-in guests
+    })) || []
+    
+    setGuests(transformedGuests)
+    setLoading(false)
+  } catch (err) {
+    setError("Failed to load guests")
+    setLoading(false)
   }
+}
 
   const filteredGuests = guests.filter((guest) => {
     const searchTerm = searchQuery.toLowerCase()

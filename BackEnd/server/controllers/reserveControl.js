@@ -142,11 +142,8 @@ exports.creatReservation = async (req, res) => {
   try {
     // 1. Vérification de l'utilisateur
     const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé" });
-    }
+    if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
-    
     // 2. Validation des dates
     const startDate = new Date(checkInDate);
     const endDate = new Date(checkOutDate);
@@ -169,7 +166,10 @@ exports.creatReservation = async (req, res) => {
       });
     }
 
-    // 3. Trouver les réservations en conflit
+    // 3. Nombre de nuits
+    const nights = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+    // 4. Trouver les réservations en conflit
     const conflictingReservations = await Reservation.find({
       $or: [
         { checkInDate: { $gte: startDate, $lt: endDate } },
@@ -179,21 +179,19 @@ exports.creatReservation = async (req, res) => {
       status: { $in: ["Due in", "Checked in", "Due out"] }
     });
 
-    // 4. Traitement des réservations
+    // 5. Traitement des réservations
     const reservations = [];
     let totalPrice = 0;
-    const roomDetails = []; // Pour stocker les infos des chambres
+    const roomDetails = [];
 
     for (const request of roomsRequested) {
       const { type, quantity } = request;
 
-      // Trouver toutes les chambres de ce type
       const allRoomsOfType = await Room.find({ type });
       if (!allRoomsOfType || allRoomsOfType.length === 0) {
         return res.status(404).json({ message: `Aucune chambre de type ${type} disponible` });
       }
 
-      // Filtrer les chambres disponibles
       const availableRooms = allRoomsOfType.filter(room =>
         !conflictingReservations.some(res => res.roomNumber.toString() === room.roomNumber.toString())
       );
@@ -204,15 +202,16 @@ exports.creatReservation = async (req, res) => {
         });
       }
 
-      // Créer les réservations
       for (let i = 0; i < quantity; i++) {
         const room = availableRooms[i];
+        const roomPrice = room.price * nights;
+
         const reservation = await Reservation.create({
           email,
           roomNumber: room.roomNumber,
           checkInDate: startDate,
           checkOutDate: endDate,
-          totalPrice: room.price,
+          totalPrice: roomPrice,
           status: "Due in"
         });
 
@@ -220,40 +219,32 @@ exports.creatReservation = async (req, res) => {
         roomDetails.push({
           number: room.roomNumber,
           type: room.type,
-          price: room.price
+          price: room.price,
+          nights,
+          total: roomPrice
         });
-        totalPrice += room.price;
+        totalPrice += roomPrice;
       }
     }
 
-    let countStandard =0;
-    let countDeluxe =0;
-    let countSuite =0;
-    let total=0;
-    const guest = adults + childrens;
+    // 6. Vérification capacité
+    let totalCapacity = 0;
+    const guestCount = adults + childrens;
 
-    for (const request of roomsRequested){
+    for (const request of roomsRequested) {
+      const capacity =
+        request.type === "Standard" ? 2 :
+        request.type === "Deluxe" ? 2 :
+        request.type === "Suite" ? 4 : 0;
 
-      if (request.type=== "Standard"){
-        capacity=2;
-        countStandard= capacity*request.quantity;
-      }
-      else if (request.type=== "Deluxe"){
-        capacity=2;
-        countDeluxe= capacity*request.quantity;
-      }
-      else if (request.type= "Suite"){
-        capacity=4;
-        countSuite= capacity*request.quantity;
-      }
-      total = countStandard+countDeluxe+countSuite;
+      totalCapacity += capacity * request.quantity;
     }
-    console.log(total);
-    if (total<guest) return res.status(404).json({message : "capacity reserver non compatible avec numero de guest"})
 
+    if (totalCapacity < guestCount) {
+      return res.status(400).json({ message: "La capacité des chambres réservées est insuffisante pour le nombre de personnes." });
+    }
 
-
-    // 5. Envoi de l'email de confirmation
+    // 7. Envoi d'email
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
@@ -265,149 +256,38 @@ exports.creatReservation = async (req, res) => {
     const mailOptions = {
       from: `"${config.hotel.hotelName}" <${config.email.user}>`,
       to: user.email,
-      subject: `réservation - ${config.hotel.hotelName}`,
+      subject: `Réservation confirmée - ${config.hotel.hotelName}`,
       html: `
-        <!DOCTYPE html>
         <html>
         <head>
-            <style type="text/css">
-        /* Base Styles */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333333;
-            background-color: #f7f7f7;
-        }
-        
-        /* Email Container */
-        .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Header */
-        .email-header {
-            background: linear-gradient(135deg, #2c3e50, #4a6491);
-            padding: 30px 20px;
-            text-align: center;
-            color: white;
-        }
-        
-        .hotel-logo {
-            max-width: 150px;
-            height: auto;
-        }
-        
-        /* Content */
-        .email-content {
-            padding: 30px;
-        }
-        
-        .greeting {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        
-        .booking-details {
-            background: #f8fafc;
-            border-left: 4px solid #3498db;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 0 5px 5px 0;
-        }
-        
-        .detail-item {
-            margin-bottom: 10px;
-            display: flex;
-        }
-        
-        .detail-label {
-            font-weight: 600;
-            min-width: 120px;
-            color: #2c3e50;
-        }
-        
-        /* Room List */
-        .room-list {
-            margin: 20px 0;
-        }
-        
-        .room-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #eaeaea;
-            display: flex;
-            justify-content: space-between;
-        }
-        
-        /* Footer */
-        .email-footer {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .social-links {
-            margin: 15px 0;
-        }
-        
-        .social-icon {
-            margin: 0 10px;
-        }
-        
-        /* Responsive */
-        @media only screen and (max-width: 600px) {
-            .email-content {
-                padding: 20px;
-            }
-            
-            .detail-item {
-                flex-direction: column;
-            }
-            
-            .detail-label {
-                margin-bottom: 5px;
-            }
-        }
-    </style>
+        <style>
+          body { font-family: Arial, sans-serif; color: #333; }
+          .email-container { max-width: 600px; margin: auto; padding: 20px; background: #f7f7f7; border-radius: 8px; }
+          .header { background-color: #2c3e50; color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+          .room-list { background: #fff; padding: 20px; border-radius: 0 0 8px 8px; }
+        </style>
         </head>
         <body>
-            <div class="email-container">
-                <div class="email-header">
-                    <h1>Confirmation de réservation</h1>
-                </div>
-                <div class="email-content">
-                    <p>Bonjour ${user.fullName || 'Cher Client'},</p>
-                    <p>Votre réservation a bien été enregistrée :</p>
-                    
-                    <div class="booking-details">
-                        <h3>Détails du séjour</h3>
-                        <p><strong>Dates :</strong> ${startDate.toLocaleDateString('fr-FR')} au ${endDate.toLocaleDateString('fr-FR')}</p>
-                        <p><strong>Total :</strong> ${totalPrice} €</p>
-                        
-                        <h4>Chambres réservées :</h4>
-                        <ul>
-                            ${roomDetails.map(room => `
-                                <li>
-                                    Chambre ${room.number} (${room.type}) - ${room.price} €
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                    
-                    <p>Nous vous remercions pour votre confiance.</p>
-                </div>
-                <div class="email-footer">
-                    <p>${config.hotel.hotelName}</p>
-                </div>
+          <div class="email-container">
+            <div class="header">
+              <h2>Confirmation de réservation</h2>
             </div>
+            <div class="room-list">
+              <p>Bonjour ${user.fullName || 'Client'},</p>
+              <p>Votre réservation du <strong>${startDate.toLocaleDateString('fr-FR')}</strong> au <strong>${endDate.toLocaleDateString('fr-FR')}</strong> a bien été prise en compte.</p>
+              <p><strong>Nombre de nuits :</strong> ${nights}</p>
+              <p><strong>Total payé :</strong> ${totalPrice} €</p>
+              <h3>Détails des chambres :</h3>
+              <ul>
+                ${roomDetails.map(room => `
+                  <li>
+                    Chambre ${room.number} (${room.type}) - ${room.price} € / nuit × ${room.nights} nuit(s) = ${room.total} €
+                  </li>
+                `).join('')}
+              </ul>
+              <p>Merci pour votre réservation.</p>
+            </div>
+          </div>
         </body>
         </html>
       `
@@ -420,7 +300,7 @@ exports.creatReservation = async (req, res) => {
       console.error("Erreur d'envoi d'email:", emailError);
     }
 
-    // 6. Réponse finale
+    // 8. Réponse
     res.status(201).json({
       success: true,
       message: `${reservations.length} chambre(s) réservée(s) avec succès`,
@@ -442,6 +322,7 @@ exports.creatReservation = async (req, res) => {
     });
   }
 };
+
 
 exports.modifyStatusDueOut = async (req, res) => {
   try {

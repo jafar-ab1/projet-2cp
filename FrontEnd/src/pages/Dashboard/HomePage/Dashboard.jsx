@@ -9,12 +9,15 @@ import OccupancyStatistics from "../../../components/Dashboard/OccupancyStatisti
 
 import "./Dashboard.module.css"; // Use regular CSS for simplicity
 
-import { countRoomsByTypeAndAvailable } from "../../../api/index.js";
+import { countRoomsByTypeAndAvailable,countRooms } from "../../../api/index.js";
 
 const Dashboard = () => {
   const [countRoomsStandard, setCountRoomsStandard] = useState(0);
   const [countRoomsDeluxe, setCountRoomsDeluxe] = useState(0);
   const [countRoomsSuite, setCountRoomsSuite] = useState(0);
+  const [countStandard, setCountStandard] = useState(0);
+  const [countDeluxe, setCountDeluxe] = useState(0);
+  const [countSuite, setCountSuite] = useState(0);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,7 +36,23 @@ const Dashboard = () => {
   
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData2 = async () => {
+      try {
+        const Allstandard = await countRooms("Standard");
+        const Alldeluxe = await countRooms("Deluxe");
+        const Allsuite= await countRooms("Suite");
+          
+        setCountStandard(Allstandard.TypeCount);
+        setCountDeluxe(Alldeluxe.TypeCount);
+        setCountSuite(Allsuite.TypeCount);
+      } catch (error) {
+        console.error("Error fetching overview data:", error);
+      }
+    };
   
+    fetchData2();
+  }, []);
    
   
 
@@ -46,24 +65,24 @@ const Dashboard = () => {
         <div className="room-cards">
   <RoomCard 
     title="Standard room" 
-    deals={2} 
+    deals={countRoomsStandard} 
     booked={(countRoomsStandard) }  // Fallback to 0 if invalid
-    total={30} 
-    price={12000} 
+    total={countStandard} 
+    price={100} 
   />
   <RoomCard 
     title="Deluxe room" 
-    deals={2} 
+    deals={countRoomsDeluxe} 
     booked={countRoomsDeluxe} 
-    total={30} 
-    price={15000} 
+    total={countDeluxe} 
+    price={200} 
   />
   <RoomCard 
     title="Suite" 
-    deals={0} 
+    deals={countRoomsSuite} 
     booked={countRoomsSuite} 
-    total={30} 
-    price={20000} 
+    total={countSuite} 
+    price={300} 
   />
 </div>
         <div className="status-section">

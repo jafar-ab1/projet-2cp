@@ -82,17 +82,15 @@ function CheckOut() {
     };
   };
 
-  const handleReservation = async () => {
-    console.log(accessToken);
+// Called on form submit or button click
+const handleReservation = async () => {
+  if (!accessToken) {
+    return navigate('/auth/sign-in', {
+      state: { from: '/checkout' },
+    });
+  }
 
-    if (accessToken == null) {
-      return navigate('/auth/sign-in', {
-        state: {
-          from: '/checkout',
-        },
-      });
-    }
-
+  try {
     const data = await createReservation({
       roomsRequested: reservedRooms.map(roomType => ({
         type: roomType.type,
@@ -100,10 +98,18 @@ function CheckOut() {
       })),
       checkInDate: retrievedData.checkInDate,
       checkOutDate: retrievedData.checkOutDate,
+      adults: retrievedData.adults,
+      childrens: retrievedData.childrens
     });
 
-    return console.log(data);
-  };
+    console.log("Reservation Success:", data);
+    // navigate to success page or show confirmation modal
+  } catch (err) {
+    console.error("Reservation Error:", err);
+    // show error message to user
+  }
+};
+
 
   return (
     <div className="checkout-container">
