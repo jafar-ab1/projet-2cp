@@ -51,6 +51,18 @@ function Booking() {
     }
 
     setSubmitMessage("")
+    
+    const prevBookingData = localStorage.getItem("bookingData");
+    if(prevBookingData) {
+      try {
+        const data = JSON.parse(prevBookingData);
+        if (data != formattedData) {
+          localStorage.setItem("reservedRooms", JSON.stringify([]))
+        } 
+      } catch(e) {
+        localStorage.setItem("reservedRooms", JSON.stringify([]))
+      }
+    }
     localStorage.setItem("bookingData", JSON.stringify(formattedData))
     navigate("/Choose")
   }

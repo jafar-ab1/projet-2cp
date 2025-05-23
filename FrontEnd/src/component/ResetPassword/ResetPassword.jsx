@@ -160,6 +160,7 @@ export default function ResetPassword() {
                         name="verificationCode"
                         placeholder="Enter 6-digit code"
                         value={verificationCode}
+                        sideIcon={null}
                         setValue={handleVerificationCodeChange}
                         error={codeError}
                         maxLength={6}
