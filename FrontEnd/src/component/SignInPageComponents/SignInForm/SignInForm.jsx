@@ -88,7 +88,7 @@ export default function SignInForm() {
   }, [err]);
 
   useEffect(() => {
-    if (accessToken) {
+    if (accessToken !== null) {
       navigate('/');
     }
   }, [accessToken, navigate]);
@@ -138,6 +138,7 @@ export default function SignInForm() {
         type="submit" 
         text="Sign in" 
         disabled={loading}
+        onClick={handleSignIn}
       />
       <div className={styles.footer}>
         <p>
