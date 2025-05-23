@@ -1,0 +1,38 @@
+@startuml
+skinparam sequence {
+    ArrowColor #6F826A
+    ActorBorderColor #6F826A
+    LifeLineBorderColor #5F939A
+    LifeLineBackgroundColor #FFFFFF
+    ParticipantBorderColor #6F826A
+    ParticipantBackgroundColor #F5F5F5
+    ParticipantFontColor #1A1A19
+}
+
+actor Client << (S,#6F826A) >>
+participant "Système\nHôtelier" as System
+participant "Base de\nDonnées" as Database
+participant "Service\nPaiement" as Payment
+
+Client -> System : 1. Recherche chambres (dates/critères)
+System -> Database : 2. Vérifie disponibilité
+Database --> System : 3. Liste chambres disponibles
+System --> Client : 4. Affiche résultats
+
+Client -> System : 5. Sélectionne une chambre
+System -> Database : 6. Bloque temporairement la chambre
+Database --> System : 7. Confirmation blocage
+
+Client -> System : 8. Remplit formulaire (nom, carte...)
+System -> Payment : 9. Valide paiement (via API)
+Payment --> System : 10. Paiement accepté
+System -> Database : 11. Enregistre réservation
+Database --> System : 12. Confirmation enregistrement
+System --> Client : 13. Envoie confirmation (email/SMS)
+
+... Optionnel (si annulation) ...
+Client -> System : 14. Annule réservation
+System -> Database : 15. Libère la chambre
+Database --> System : 16. Confirmation annulation
+System --> Client : 17. Notifie annulation
+@enduml

@@ -203,6 +203,28 @@ export const addGuest = async (guestData) => {
     throw error
   }
 }
+<<<<<<< HEAD
+export const updateGuest = async (email, roomNumber, type) => {
+  try {
+    const response = await fetch(`/guest/update/${email}/${roomNumber}/${type}`, {
+      method: "PUT"
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || "Erreur lors de la modification du client");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Erreur updateGuest:", error.message);
+    throw error;
+  }
+};
+
+=======
+>>>>>>> ac7087dcc798ed0b7e02cf90af785ce3a4961437
 
 export const sendCheckoutEmail = async (email, roomNumber) => {
   try {
