@@ -92,3 +92,8 @@
   border-radius: 50%;
   background-color: #f0f0e8;
 }
+.circle-chart {
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+}

@@ -11,7 +11,8 @@ import CheckBoxInput from '../../sharedComponents/CheckBox-Input/CheckBox-Input'
 import Button from '../../sharedComponents/Button/Button';
 import Loading from '../../Loading/Loading';
 import toast from 'react-hot-toast';
-import {loginUserDataValidationSchema } from "../../../validation/auth/auth"
+import { loginUserDataValidationSchema } from '../../../validation/auth/auth';
+
 export default function SignInForm() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,9 +41,14 @@ export default function SignInForm() {
     clearError();
   };
 
-  const setEmail = (email) => setFormData((prev) => ({ ...prev, email }));
-  const setPassword = (password) => setFormData((prev) => ({ ...prev, password }));
-  const toggleRememberMe = () => setFormData((prev) => ({ ...prev, rememberMe: !prev.rememberMe }));
+  const setEmail = (email) =>
+    setFormData((prev) => ({ ...prev, email }));
+
+  const setPassword = (password) =>
+    setFormData((prev) => ({ ...prev, password }));
+
+  const toggleRememberMe = () =>
+    setFormData((prev) => ({ ...prev, rememberMe: !prev.rememberMe }));
 
   const handleChange = (setState) => (value) => {
     clearErrors();
@@ -70,9 +76,9 @@ export default function SignInForm() {
 
     try {
       await login(loginUserData);
-      // Navigation will be handled by the useEffect below after successful login
+      // Navigation is handled by the useEffect
     } catch (error) {
-      // Error is handled by the useEffect below
+      // handled in useEffect
     }
   };
 
@@ -86,18 +92,18 @@ export default function SignInForm() {
     }
   }, [err]);
 
-  useEffect(() => {
-    if (accessToken !== null && user) {
-      // Check user role and navigate accordingly
-      if (user.role === 'admin') {
-        navigate('/dashboard');
-      } else {
-        const from = location.state?.from?.pathname || '/';
-        navigate(from, { replace: true });
-      }
+useEffect(() => {
+  if (accessToken !== null && user) {
+    if (user.role === 'client') {
+      navigate('/');
+    } else if (user.role === 'admin') {
+      navigate('/dashboard'); // or whatever your admin dashboard route is
+    } else {
+      const from = location.state?.from?.pathname || '/';
+      navigate(from, { replace: true });
     }
-  }, [accessToken, user, navigate, location.state]);
-
+  }
+}, [accessToken, user, navigate, location.state]);
   if (loading) {
     return <Loading />;
   }
@@ -122,6 +128,7 @@ export default function SignInForm() {
           name="password"
           placeholder="Password"
           sideIcon={passwordSideIcon}
+          canBeHidden={true} // <--- This lets the icon toggle visibility
           value={formData.password}
           setValue={handleChange(setPassword)}
           error={formDataError.password}
