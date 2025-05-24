@@ -11,14 +11,23 @@ body, html {
     gap: 20px;
     padding: 20px;
     background-color: #F4F0E5;
- 
 }
 
+.RoomTypeSection {
+    display: flex;
+    flex-direction: column;
+}
+
+.AvailableRoomsByType {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
 .RoomContainer {
     display: flex;
+    gap: 10px;
     border: 1px solid #000000;
-    
     overflow: hidden;
     background-color: #F4F0E5;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -27,14 +36,15 @@ body, html {
     margin: auto;
 }
 
-.Room.image {
+.RoomImage {
     flex: 2;
 }
 
-.Room.image img {
+.RoomImage img {
     width: 100%;
-    height: 60%;
+    height: 100%;
     object-fit: cover;
+    background-position: center;
 }
 
 

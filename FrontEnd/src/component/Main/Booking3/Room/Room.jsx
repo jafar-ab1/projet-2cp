@@ -14,7 +14,7 @@ export default function Room({ room, handleAddToBasketClick: handleClick }) {
 
   return (
     <div key={room.id || room.roomNumber} className="RoomContainer">
-      <div className="Room image">
+      <div className="RoomImage">
         <img src={room.image_url || "/placeholder.svg"} alt={room.title} />
       </div>
       <div className="Description">

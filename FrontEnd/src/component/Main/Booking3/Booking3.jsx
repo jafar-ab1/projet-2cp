@@ -168,9 +168,9 @@ function Booking3() {
 
   const getRoomImageByType = (roomType) => {
     const type = roomType.toLowerCase();
-    if (type.includes("suite")) return "/images/suite-room.jpg";
-    if (type.includes("deluxe")) return "/images/deluxe-room.jpg";
-    return "/images/standard-room.jpg";
+    if (type.includes("suite")) return "src/assets/SUITE.png";
+    if (type.includes("deluxe")) return "src/assets/DELUXE.png";
+    return "src/assets/STANDARD.png";
   };
 
   const addToBasket = (room) => {
