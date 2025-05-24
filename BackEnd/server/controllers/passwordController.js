@@ -227,3 +227,21 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ message: "Erreur serveur" });
   }
 };
+
+exports.verifyCode = async (req, res) => {
+  try{
+    const {email, code} = req.params;
+
+    const user = await User.findOne({email});
+    if (!user) return res.status(404).json({message: "Utilisateur non trouvé"});
+
+    const codeVerif = await Code.findOne({email, code})
+    if (!codeVerif) return res.status(404).json({message: "code nontrouvé"});
+  
+
+    res.status(200).json({message: "code bien reçu"})
+  } catch(error) {
+    console.error("Erreur verifyCode:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+}

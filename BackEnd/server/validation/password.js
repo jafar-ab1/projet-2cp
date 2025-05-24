@@ -14,7 +14,15 @@ const passwordSchema = Joi.object({
           'any.required': 'Le mot de passe est obligatoire'
         }),
       code: Joi.number().required()
-})
+});
 
-module.exports = { passwordSchema};
+const verifyCodeSchema = Joi.object({
+    email: Joi.string().email({minDomainSegments: 2, tlds:{allow:['com','net','org','fr','dz']}}).required().messages({
+              "string.email": "email must be of type Email",
+              "any.required": "email is required"
+          }),
+    code: Joi.number().required()
+}); 
+
+module.exports = { passwordSchema, verifyCodeSchema};
 
