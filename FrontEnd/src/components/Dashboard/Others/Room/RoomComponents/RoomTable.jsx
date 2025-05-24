@@ -109,7 +109,7 @@ const RoomTable = ({ rooms, onEdit, onDelete }) => {
                 <td>{room.type}</td>
                 <td>{room.floor}</td>
                 <td>{formatFacilities(room.facilities)}</td>
-                <td>${room.price}</td>
+                <td>DZD{room.price}</td>
                 <td>
                   <StatusBadge status={room.status1} />
                 </td>

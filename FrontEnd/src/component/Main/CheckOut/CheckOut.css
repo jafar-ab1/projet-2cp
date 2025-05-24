@@ -226,4 +226,114 @@
     font-size: 14px;
     color: #333;
   }
-  
+  /* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Popup Container */
+.popup-container {
+  background-color: #f2efe5;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 400px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+/* Success Popup */
+.popup-success .popup-icon {
+  color: #84cc16;
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.popup-success .popup-title {
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.popup-success .popup-message {
+  color: #4a4a4a;
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* Error Popup */
+.popup-error .popup-icon {
+  color: #ef4444;
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.popup-error .popup-title {
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.popup-error .popup-message {
+  color: #4a4a4a;
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* Popup Button */
+.popup-button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.popup-button:hover {
+  background-color: #444;
+}
+
+/* Booking Details */
+.booking-details {
+  background-color: #e9e6dd;
+  padding: 15px;
+  border-radius: 2px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.booking-detail {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.booking-detail:last-child {
+  margin-bottom: 0;
+}
+
+.booking-detail-label {
+  color: #666;
+}
+
+.booking-detail-value {
+  color: #333;
+  font-weight: 500;
+}

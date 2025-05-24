@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Children, useEffect, useState } from 'react';
 import './CheckOut.css';
 import PoliciesData from '../../../Policies.json';
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,26 @@ function CheckOut() {
   const [branchPolicy, setBranchPolicy] = useState(null);
   const [termsAgreed, setTermsAgreed] = useState({
     privacyTerms: false,
+  });
+
+  const [Contact, setContact] = useState({
+    FirstName: '',
+    LastName: '',
+    Phone: '',
+    Email: '',
+  });
+
+  const [Address, setAddress] = useState({
+    Country: '',
+    Address: '',
+    City: '',
+    Code: '',
+  });
+
+  const [Payment, setPayment] = useState({
+    Card: '',
+    Expiration: '',
+    Name: '',
   });
 
   useEffect(() => {
@@ -40,26 +60,6 @@ function CheckOut() {
     }
   }, [policies]);
 
-  const [Contact, setContact] = useState({
-    FirstName: 'fdsfsf',
-    LastName: 'dsfs',
-    Phone: null,
-    Email: 'sdfdsfdsfds',
-  });
-
-  const [Address, setAddress] = useState({
-    Country: 'sdfsf',
-    Address: 'sdfsfs',
-    City: 'sdfsfsdf',
-    Code: null,
-  });
-
-  const [Payment, setPayment] = useState({
-    Card: null,
-    Expiration: 'dsfsdfsfs',
-    Name: 'sfsdfsf',
-  });
-
   const handleChange = (e, setState, state) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
@@ -71,10 +71,8 @@ function CheckOut() {
     });
   };
 
-  // Function to split the description into guarantee and cancel policies
   const splitDescription = (description) => {
     if (!description) return { guarantee: '', cancel: '' };
-
     const parts = description.split('Cancel Policy');
     return {
       guarantee: parts[0].replace('Guarantee Policy', '').trim(),
@@ -82,34 +80,37 @@ function CheckOut() {
     };
   };
 
-// Called on form submit or button click
-const handleReservation = async () => {
-  if (!accessToken) {
-    return navigate('/auth/sign-in', {
-      state: { from: '/checkout' },
-    });
-  }
+  const handleReservation = async () => {
+    if (!accessToken) {
+      return navigate('/auth/sign-in', {
+        state: { from: '/checkout' },
+      });
+    }
 
-  try {
-    const data = await createReservation({
-      roomsRequested: reservedRooms.map(roomType => ({
-        type: roomType.type,
-        quantity: roomType.reserved
-      })),
-      checkInDate: retrievedData.checkInDate,
-      checkOutDate: retrievedData.checkOutDate,
-      adults: retrievedData.adults,
-      childrens: retrievedData.childrens
-    });
+    try {
+      const data = await createReservation({
+        roomsRequested: reservedRooms.map(roomType => ({
+          type: roomType.type,
+          quantity: roomType.reserved
+        })),
+        checkInDate: retrievedData.checkInDate,
+        checkOutDate: retrievedData.checkOutDate,
+        adults: retrievedData.adults,
+        childrens: retrievedData.childrens
+      });
 
-    console.log("Reservation Success:", data);
-    // navigate to success page or show confirmation modal
-  } catch (err) {
-    console.error("Reservation Error:", err);
-    // show error message to user
-  }
-};
-
+      if (data?.success || data?.status === 200) {
+        window.alert('✅ Reservation successful!');
+        // Optionally navigate to confirmation page
+        // navigate('/confirmation');
+      } else {
+        window.alert('❌ Reservation failed. Please try again.');
+      }
+    } catch (error) {
+      console.error(error);
+      window.alert('❌ An error occurred during reservation.');
+    }
+  };
 
   return (
     <div className="checkout-container">

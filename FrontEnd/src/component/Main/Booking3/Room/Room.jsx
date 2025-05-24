@@ -39,7 +39,7 @@ export default function Room({ room, handleAddToBasketClick: handleClick }) {
           )}
         </div>
         <div className="Price">
-          <p>{room.price}</p>
+          <p>{room.price}DZD</p>
           <p> per night</p>
           <p>Excluding taxes and fees</p>
           <button onClick={() => handleClick(room)}>Add to Basket</button>
