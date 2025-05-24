@@ -322,6 +322,7 @@ exports.sendCheckoutEmailAndDelete = async (req, res) => {
     }
 };    
 
+
 exports.suppUser = async(req, res)=>{
     try{
         const {email} = req.params;

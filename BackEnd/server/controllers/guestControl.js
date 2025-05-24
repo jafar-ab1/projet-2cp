@@ -16,6 +16,8 @@ exports.getAll = async (req, res) => {
         res.status(500).json({ message: err.message })
     }
 }
+
+
 exports.getAllCheckInDueOut = async (req, res) => {
     try {
         // 1. Trouver toutes les réservations avec les statuts recherchés
@@ -317,6 +319,7 @@ exports.AddGuest = async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 }
+
 
 exports.editGuest = async (req, res) => {
     try {
