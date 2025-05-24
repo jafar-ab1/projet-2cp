@@ -41,8 +41,8 @@ const createSchema = Joi.object({
     'date.greater': 'La date de départ doit être après la date d\'arrivée',
     'any.required': 'Date de départ est requise'
   }),
-  adults: Joi.number().integer().optional(),
-  childrens: Joi.number().integer().optional(),
+  adults: Joi.number().integer().required(),
+  childrens: Joi.number().integer().required(),
   roomsRequested: Joi.array().items(
     Joi.object({
       type: Joi.string().valid('Standard', 'Deluxe', 'Suite').required()
