@@ -1,0 +1,137 @@
+@startuml HotelManagementSystem
+skinparam class {
+    BackgroundColor #DCD7C9
+    BorderColor #2C3930
+    ArrowColor #A27B5C
+    FontColor #3F4F44
+    FontSize 13
+    HeaderBackgroundColor #A27B5C
+    HeaderFontColor #DCD7C9
+}
+
+' ====== MAIN CLASSES ======
+class User {
+    + fullName: String {required}
+    + email: String {required, unique}
+    + password: String {required, minLength=8}
+    + mobileNumber: String {required}
+    + role: String <<Client,Admin>> {required, default="Client"}
+    --
+    + comparePassword(): boolean
+    + preSave(): void <<hook>>
+    --
+    + getAllUsers(): User[]
+    + getUserByEmail(): User
+    + modifyUser(): User
+    + suppUser(): void
+}
+
+class Branch {
+    + name: String <<Alger,Annaba,Oran>> {unique, required}
+    + location: String {required}
+    + email: String {required}
+    + phone: String {required}
+    --
+    + getAllBranches(): Branch[]
+    + getBranchDetails(): Branch
+}
+
+class Floor {
+    + floorNumber: Integer {required}
+    + status: String <<Complété,À compléter>> {required}
+    --
+    + getAllFloors(): Floor[]
+    + countFloorStatus(): Statistics
+}
+
+class Room {
+    + roomNumber: String {required, unique}
+    + type: String <<Standard,Deluxe,Suite>> {required}
+    + facilities: String[]
+    + status1: String <<Available,Occupied>>
+    --
+    + getAllRooms(): RoomWithFacilities[]
+    + getByType(): Room[]
+}
+
+class Reservation {
+    + email: String {required}
+    + roomNumber: String[] {required}
+    + checkInDate: Date {required}
+    + checkOutDate: Date {required}
+    + status: String <<Due in,Checked in,Due out,Checked out>> {required}
+    --
+    + creatReservation(): CreatedReservation
+    + modifyStatusDueOut(): UpdateResult
+    + occupancyStatistics(): OccupancyReport
+}
+
+class Tarif {
+    + roomType: String <<Standard,Deluxe,Suite>> {required, unique}
+    + price: Float {required}
+    --
+    + getTarif(): Tarif
+    + updateTarif(): Tarif
+}
+
+class Payment {
+    + amount: Float {required}
+    + paymentMethod: String <<Credit_card,Paypal,Cash>> {required}
+    + status: String <<Pending,Completed,Failed>>
+    --
+    + processPayment(): boolean
+    + generateReceipt(): String
+}
+
+class VerificationCode {
+    + code: String
+    + expiresAt: Date
+    --
+    + verifyCode(): boolean
+    + isExpired(): boolean
+}
+
+class Maintenance {
+    + issueDescription: String
+    + status: String <<In-progress,Completed>>
+    --
+    + createMaintenanceRequest(): void
+    + completeRequest(): void
+}
+
+class Feedback {
+    + rating: int
+    + comment: String
+    --
+    + submitFeedback(): void
+    + calculateAverageRating(): float
+}
+
+
+' ====== RELATIONSHIPS ======
+User "1" --> "0..*" VerificationCode : génère
+Branch "1" --> "1..*" Floor : contient
+Floor "1" --> "1..*" Room : possède
+Room --> Tarif : référence
+User "1" --> "0..*" Reservation : effectue
+Reservation "1" --> "1..*" Room : concerne
+Reservation "1" --> "1" Payment : a
+Room "1" --> "0..*" Maintenance : nécessite
+User "1" --> "0..*" Feedback : fournit
+
+' ====== NOTES ======
+note top of Reservation
+  **Workflow Réservation**:
+  1. Créer réservation
+  2. Assigner chambre
+  3. Paiement
+  4. Check-in/out
+end note
+
+note right of User
+  **Rôles Utilisateur**:
+  - Admin: Accès complet
+  - Client: Réservations seulement
+end note
+
+@enduml
