@@ -171,6 +171,7 @@ export default function ResetPassword() {
                     type="submit" 
                     text="Verify Code" 
                     disabled={loading}
+                    onClick={handleVerifyCode}
                 />
                 <div className={styles.footer}>
                     <button 
@@ -219,6 +220,7 @@ export default function ResetPassword() {
                 type="submit" 
                 text="Reset Password" 
                 disabled={loading}
+                onClick={handleResetPassword}
             />
         </Form>
     );

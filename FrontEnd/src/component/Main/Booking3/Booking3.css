@@ -5,6 +5,7 @@ body, html {
 .RoomsWrapper{
     background-color: #F4F0E5;
 }
+
 .AvailableRooms {
     display: flex;
     flex-direction: column;
