@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react"
 import { updateGuest } from "../../../../../api/index"
-
+import "./removeEdit.css";
 const EditGuestModal = ({ onClose, onUpdate, refreshGuests, allGuests, currentGuestEmail }) => {
   const [formData, setFormData] = useState({
     email: currentGuestEmail || "",

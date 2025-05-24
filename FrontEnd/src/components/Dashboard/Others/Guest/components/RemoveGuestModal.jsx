@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { sendCheckoutEmailAndDelete } from "../../../../../api/index";
-
+import "./removeEdit.css";
 
 const RemoveGuestModal = ({ onClose, allGuests, refreshGuests }) => {
   const [removeEmail, setRemoveEmail] = useState("");
