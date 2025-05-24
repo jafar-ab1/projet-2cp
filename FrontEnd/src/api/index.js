@@ -38,7 +38,7 @@ export const registerUser = async (registerUserData) => {
     throw error;
   }
 };
-// Add to your existing API exports
+
 export const forgotPassword = async (email) => {
   try {
     const response = await api.post('/password/forget-password', { email });

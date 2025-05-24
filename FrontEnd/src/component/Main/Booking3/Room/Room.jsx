@@ -1,3 +1,4 @@
+
 export default function Room({ room, handleAddToBasketClick: handleClick }) {
   // Determine room icon based on type
   const getRoomIcon = (type) => {

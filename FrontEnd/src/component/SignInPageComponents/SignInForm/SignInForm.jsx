@@ -11,8 +11,7 @@ import CheckBoxInput from '../../sharedComponents/CheckBox-Input/CheckBox-Input'
 import Button from '../../sharedComponents/Button/Button';
 import Loading from '../../Loading/Loading';
 import toast from 'react-hot-toast';
-import { loginUserDataValidationSchema } from '../../../validation/auth/auth';
-
+import {loginUserDataValidationSchema } from "../../../validation/auth/auth"
 export default function SignInForm() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -21,6 +20,7 @@ export default function SignInForm() {
     loading,
     err,
     accessToken,
+    user,
     actions: { login, clearError },
   } = useAuth();
 
@@ -70,8 +70,7 @@ export default function SignInForm() {
 
     try {
       await login(loginUserData);
-      const from = location.state?.from?.pathname || '/';
-      navigate(from, { replace: true });
+      // Navigation will be handled by the useEffect below after successful login
     } catch (error) {
       // Error is handled by the useEffect below
     }
@@ -88,10 +87,16 @@ export default function SignInForm() {
   }, [err]);
 
   useEffect(() => {
-    if (accessToken !== null) {
-      navigate('/');
+    if (accessToken !== null && user) {
+      // Check user role and navigate accordingly
+      if (user.role === 'admin') {
+        navigate('/dashboard');
+      } else {
+        const from = location.state?.from?.pathname || '/';
+        navigate(from, { replace: true });
+      }
     }
-  }, [accessToken, navigate]);
+  }, [accessToken, user, navigate, location.state]);
 
   if (loading) {
     return <Loading />;

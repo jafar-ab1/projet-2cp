@@ -96,7 +96,7 @@ function CheckOut() {
         checkInDate: retrievedData.checkInDate,
         checkOutDate: retrievedData.checkOutDate,
         adults: retrievedData.adults,
-        childrens: retrievedData.childrens
+        childrens : retrievedData.childrens,
       });
 
       if (data?.success || data?.status === 200) {

@@ -7,7 +7,7 @@ const { sendVerificationEmail } = require('../services/emailService');
 // Registration (keeps verification requirement)
 exports.register = async (req, res) => {
   try {
-    const { fullName, email, password, mobileNumber } = req.body;
+    const { fullName, email, password, mobileNumber, role  } = req.body;
     
     // Check if user already exists
     const found = await User.findOne({ email });
@@ -19,6 +19,7 @@ exports.register = async (req, res) => {
       email, 
       password, 
       mobileNumber,
+      role, // Include role from request
       isVerified: false
     });
     await user.save();
@@ -43,7 +44,8 @@ exports.register = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
+        role: user.role
       },
       requiresVerification: true
     });
@@ -53,7 +55,7 @@ exports.register = async (req, res) => {
   }
 };
 
-// Login (removed verification check)
+// Login (removed verification check, added role in response)
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -86,7 +88,8 @@ exports.login = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
+        role: user.role // Include role in the response
       }
     });
   } catch (error) {
@@ -131,7 +134,7 @@ exports.sendVerificationCode = async (req, res) => {
   }
 };
 
-// Verify email (unchanged)
+// Verify email (updated to include role in response)
 exports.verifyEmail = async (req, res) => {
   try {
     const { email, code } = req.body;
@@ -183,7 +186,8 @@ exports.verifyEmail = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
-        isVerified: user.isVerified
+        isVerified: user.isVerified,
+        role: user.role // Include role in the response
       }
     });
   } catch (error) {

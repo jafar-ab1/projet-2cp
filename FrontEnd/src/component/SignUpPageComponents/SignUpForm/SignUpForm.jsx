@@ -10,8 +10,7 @@ import Button from "../../sharedComponents/Button/Button";
 import { passwordSideIcon } from "../../../constants";
 import toast from "react-hot-toast";
 import Loading from "../../Loading/Loading";
-import { registerUserDataValidationSchema } from "../../../validation/auth/auth";
-
+import {registerUserDataValidationSchema} from "../../../validation/auth/auth.js"
 export default function SignUpForm() {
     const navigate = useNavigate();
     const { loading, err, accessToken, actions: { register, clearError } } = useAuth();
@@ -21,6 +20,7 @@ export default function SignUpForm() {
         fullName: "",
         email: "",
         password: "",
+        role: "client" // Default role
     });
 
     const [formDataError, setFormDataError] = useState({
@@ -28,6 +28,7 @@ export default function SignUpForm() {
         fullName: "",
         email: "",
         password: "",
+        role: "",
         form: ""
     });
 
@@ -36,6 +37,7 @@ export default function SignUpForm() {
         fullName: "",
         email: "",
         password: "",
+        role: "",
         form: ""
     });
 
@@ -47,6 +49,8 @@ export default function SignUpForm() {
         setFormData((prev) => ({ ...prev, email: value }));
     const setPassword = (value) =>
         setFormData((prev) => ({ ...prev, password: value }));
+    const setRole = (value) =>
+        setFormData((prev) => ({ ...prev, role: value }));
 
     const handleChange = (setFieldFn) => {
         return (value) => {
@@ -54,6 +58,12 @@ export default function SignUpForm() {
             clearError(); // Clear auth store errors
             setFieldFn(value);
         };
+    };
+
+    const handleRoleChange = (e) => {
+        clearErrors();
+        clearError();
+        setRole(e.target.value);
     };
 
     const handleSignUpButtonClick = async () => {
@@ -68,6 +78,7 @@ export default function SignUpForm() {
                 fullName: fieldErrors?.fullName?.[0] || "",
                 email: fieldErrors?.email?.[0] || "",
                 password: fieldErrors?.password?.[0] || "",
+                role: fieldErrors?.role?.[0] || "",
                 form: "Please correct the highlighted fields."
             });
             return;
@@ -172,6 +183,24 @@ export default function SignUpForm() {
                     setValue={handleChange(setPassword)}
                     error={formDataError.password}
                 />
+                
+                {/* Role Selection */}
+                <div className={styles.roleSelection}>
+                    <label htmlFor="role" className={styles.roleLabel}>Account Type:</label>
+                    <select 
+                        id="role"
+                        name="role"
+                        value={formData.role}
+                        onChange={handleRoleChange}
+                        className={`${styles.roleSelect} ${formDataError.role ? styles.error : ''}`}
+                    >
+                        <option value="client">client</option>
+                        <option value="admin">admin</option>
+                    </select>
+                    {formDataError.role && (
+                        <span className={styles.errorText}>{formDataError.role}</span>
+                    )}
+                </div>
             </FormFieldsContainer>
             <Button
                 onClick={handleSignUpButtonClick}
