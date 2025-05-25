@@ -59,10 +59,10 @@ export const verifyResetCode = async ({ email, code }) => {
   }
 };
 
-export const resetPassword = async ({ token, email, newPassword }) => {
+export const resetPassword = async ({ code, email, newPassword }) => {
   try {
     const response = await api.post('/password/reset-password', { 
-      token, 
+      code, 
       email, 
       newPassword 
     });
