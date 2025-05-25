@@ -397,7 +397,7 @@ exports.creatReservation = async (req, res) => {
                     <div class="booking-details">
                         <h3>Détails du séjour</h3>
                         <p><strong>Dates :</strong> ${startDate.toLocaleDateString('fr-FR')} au ${endDate.toLocaleDateString('fr-FR')}</p>
-                        <p><strong>Total :</strong> ${totalPrice} €</p>
+                        <p><strong>Total :</strong> ${totalPrice} DZ</p>
                         
                         <h4>Chambres réservées :</h4>
                         <ul>
