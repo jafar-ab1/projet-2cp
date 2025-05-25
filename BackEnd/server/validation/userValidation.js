@@ -26,10 +26,10 @@ const userSchema = Joi.object({
     }),
 
     userRole: Joi.string()
-    .valid('Client', 'Admin')
-    .default('Client')
+    .valid('client', 'admin')
+    .default('client')
     .messages({
-      'any.only': 'Le rôle doit être Client, Admin'
+      'any.only': 'Le rôle doit être client, admin'
     }),
 
   telephone: Joi.string()
