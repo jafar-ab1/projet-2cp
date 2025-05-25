@@ -230,7 +230,7 @@ exports.resetPassword = async (req, res) => {
 
 exports.verifyCode = async (req, res) => {
   try{
-    const {email, code} = req.params;
+    const {email, code} = req.body;
 
     const user = await User.findOne({email});
     if (!user) return res.status(404).json({message: "Utilisateur non trouvé"});
