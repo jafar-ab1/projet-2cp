@@ -210,7 +210,7 @@ export default function SignUpForm() {
             />
             {formDataError.form && <p className={styles.error}>{formDataError.form}</p>}
             <div className={styles.footer}>
-                <p>Already have an account? <Link to="/sign-in">Sign in</Link></p>
+                <p>Already have an account? <Link to="/auth/sign-in">Sign in</Link></p>
             </div>
         </Form>
     );

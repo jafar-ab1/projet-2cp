@@ -22,7 +22,7 @@ export default function NavBar() {
 
   return (
     <div className={styles.navbar}>
-      <LeftIcon />
+     <h1><Link to="/"><LeftIcon /></Link></h1> 
       <Links />
       <div className={styles['right-section']}>
         {accessToken ? (

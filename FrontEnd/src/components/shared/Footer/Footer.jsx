@@ -18,7 +18,7 @@ export default function Footer() {
         <div className={styles.center}>
           <ul>
             <li>
-              <Link to="/accomodations">accomodations</Link>
+              <Link to="/accomodation">accomodations</Link>
             </li>
             <li>
               <Link to="/occasions">occasions</Link>
@@ -39,7 +39,7 @@ export default function Footer() {
         </div>
         <div className={styles.right}>
           <button>
-            <Link>book now</Link>
+            <Link to="/book">book now</Link>
           </button>
         </div>
       </div>

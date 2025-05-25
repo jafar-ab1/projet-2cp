@@ -320,6 +320,9 @@ exports.AddGuest = async (req, res) => {
     }
 }
 
+// Complete corrected editGuest function structure:
+
+// Complete corrected editGuest function structure:
 
 exports.editGuest = async (req, res) => {
     try {
@@ -334,14 +337,13 @@ exports.editGuest = async (req, res) => {
             }
         });
 
-
-        // 1. Vérification de l'utilisateur
+        // 2. Vérification de l'utilisateur
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "Utilisateur non trouvé" });
         }
 
-        // 2. Trouver la réservation active
+        // 3. Trouver la réservation active
         const reservation = await Reservation.findOne({
             email,
             roomNumber,
@@ -351,61 +353,98 @@ exports.editGuest = async (req, res) => {
             return res.status(404).json({ message: "Aucune réservation active trouvée" });
         }
 
-        const countType = await Room.countDocuments({type: type, status1: "Available"});
-        if (countType === 0) {
-            return res.status(404).json({ message: "Aucune chambre de ce type trouvée" });
+        // 4. Get current room details
+        const currentRoom = await Room.findOne({ roomNumber: reservation.roomNumber });
+        if (!currentRoom) {
+            return res.status(404).json({ message: "Chambre actuelle non trouvée" });
         }
 
-        const newRoom = await Room.findOne({ type: type, status1: "Available" });
-        const newRoomNumber = newRoom.roomNumber;
-
-        // 5. Logique de changement de type de chambre
+        // 5. Validate room type change
         const roomTypeHierarchy = {
             'Standard': 1,
             'Deluxe': 2,
             'Suite': 3
         };
-        const currentRoom = await Room.findOne({ roomNumber: reservation.roomNumber });
-        const oldRoomNumber = reservation.roomNumber;
 
         const currentTypeLevel = roomTypeHierarchy[currentRoom.type];
         const newTypeLevel = roomTypeHierarchy[type];
 
-        // Vérification des règles de changement
         if (newTypeLevel < currentTypeLevel) {
             return res.status(400).json({ 
                 message: "Changement non autorisé : vous ne pouvez pas descendre de catégorie de chambre",
                 allowedChanges: {
                     currentType: currentRoom.type,
                     allowedNewTypes: Object.keys(roomTypeHierarchy)
-                        .filter(type => roomTypeHierarchy[type] >= currentTypeLevel)
+                        .filter(t => roomTypeHierarchy[t] >= currentTypeLevel)
                 }
             });
         }
 
-        // 6. Vérifier disponibilité de la nouvelle chambre
-        const conflictingReservation = await Reservation.findOne({
-            roomNumber: newRoomNumber,
-            status: { $in: ["Checked in", "Due out"] }
-        });
-        if (conflictingReservation) {
-            return res.status(409).json({ 
-                message: "La chambre demandée est déjà occupée",
-                availableRooms: await this.findAvailableRooms(currentRoom.type) // Fonction à implémenter
+        // Helper function to find truly available rooms
+        const findAvailableRooms = async (roomType) => {
+            try {
+                console.log(`Looking for available rooms of type: ${roomType}`);
+                
+                // 1. Get all rooms of the requested type
+                const allRoomsOfType = await Room.find({ type: roomType });
+                console.log(`Found ${allRoomsOfType.length} rooms of type ${roomType}`);
+                
+                // 2. Get all room numbers that have active reservations
+                const occupiedRoomNumbers = await Reservation.find({
+                    status: { $in: ["Checked in", "Due out"] }
+                }).distinct('roomNumber');
+                console.log(`Occupied room numbers:`, occupiedRoomNumbers);
+                
+                // 3. Filter rooms that are not occupied
+                const availableRooms = allRoomsOfType.filter(room => {
+                    const isNotOccupied = !occupiedRoomNumbers.includes(room.roomNumber);
+                    console.log(`Room ${room.roomNumber}: status1=${room.status1}, isNotOccupied=${isNotOccupied}`);
+                    return isNotOccupied;
+                });
+                
+                console.log(`Truly available rooms:`, availableRooms.map(r => r.roomNumber));
+                
+                return availableRooms.map(room => ({
+                    _id: room._id,
+                    roomNumber: room.roomNumber,
+                    type: room.type,
+                    price: room.price
+                }));
+                
+            } catch (error) {
+                console.error("Error finding available rooms:", error);
+                return [];
+            }
+        };
+
+        // 6. Find truly available rooms of the requested type
+        const availableRooms = await findAvailableRooms(type);
+        
+        if (availableRooms.length === 0) {
+            return res.status(404).json({ 
+                message: "Aucune chambre de ce type disponible actuellement",
+                requestedType: type
             });
         }
 
-        // 7. Effectuer le changement
+        // 7. Select the first available room
+        const selectedRoom = availableRooms[0];
+        const newRoomNumber = selectedRoom.roomNumber;
+        
+        // Get the full room object for email
+        const newRoom = await Room.findOne({ roomNumber: newRoomNumber });
+
+        // 8. Effectuer le changement
+        const oldRoomNumber = reservation.roomNumber;
         const updatedReservation = await Reservation.findOneAndUpdate(
             { _id: reservation._id },
-            { 
-                roomNumber: newRoomNumber},
+            { roomNumber: newRoomNumber },
             { new: true }
         );
 
-        // 8. Mettre à jour les statuts des chambres
+        // 9. Mettre à jour les statuts des chambres
         await Room.findOneAndUpdate(
-            { roomNumber: reservation.roomNumber },
+            { roomNumber: oldRoomNumber },
             { status1: "Available" }
         );
         await Room.findOneAndUpdate(
@@ -413,7 +452,8 @@ exports.editGuest = async (req, res) => {
             { status1: "Occupied" }
         );
 
-          const mailOptions = {
+        // 10. Send email notification
+        const mailOptions = {
             from: `"${config.hotel.hotelName}" <${config.email.user}>`,
             to: email,
             subject: `Modification de votre chambre - ${config.hotel.hotelName}`,
@@ -452,13 +492,12 @@ exports.editGuest = async (req, res) => {
 
         await transporter.sendMail(mailOptions);
 
-
         return res.status(200).json({
             message: "Chambre changée avec succès",
             reservation: updatedReservation,
             roomChange: {
-                from: currentRoom.roomNumber,
-                to: newRoom.roomNumber,
+                from: oldRoomNumber,
+                to: newRoomNumber,
                 typeUpgrade: newTypeLevel > currentTypeLevel
             }
         });
@@ -471,7 +510,6 @@ exports.editGuest = async (req, res) => {
         });
     }
 };
-
 
 exports.deleteGuest = async(req, res)=>{
     try{

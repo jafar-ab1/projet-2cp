@@ -1,7 +1,7 @@
 import { useState } from "react"
 import "./Booking.css"
 import { useNavigate } from "react-router-dom"
-
+import { Link} from "react-router-dom";
 function Booking() {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
@@ -209,8 +209,10 @@ function Booking() {
   return (
     <div className="Page">
       {/* Close button in the top right corner */}
-      <div className="CloseIcon" onClick={closeAllPopups}>
+      <div className="CloseIcon" >
+         <Link to="/">
         ✕
+        </Link>
       </div>
 
       <p className="Stay">Book your Stay</p>

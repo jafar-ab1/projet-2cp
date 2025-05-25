@@ -4,7 +4,7 @@ import PoliciesData from '../../../Policies.json';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../../hooks/auth/useAuth';
 import { createReservation } from '../../../api';
-
+import { Link } from "react-router-dom";
 function CheckOut() {
   const navigate = useNavigate();
   const { accessToken } = useAuth();
@@ -114,7 +114,7 @@ function CheckOut() {
 
   return (
     <div className="checkout-container">
-      <h1>← Check out</h1>
+      <h1><Link to="/Choose">← Check out</Link></h1>
 
       <div className="section">
         <h2>Contact info</h2>
