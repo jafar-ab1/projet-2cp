@@ -43,11 +43,11 @@ export const menuLinks = [
       },
       {
         name: 'oran',
-        to: '/branches/?city=oran',
+        to: '/branches/?city=algiers',
       },
       {
         name: 'annaba',
-        to: '/branches/?city=annaba',
+        to: '/branches/?city=algiers',
       },
     ],
   },
