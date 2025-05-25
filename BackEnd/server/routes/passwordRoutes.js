@@ -12,6 +12,6 @@ router.post('/forget-password',validate(useValidation.emailSchema), passControll
 
 router.post('/reset-password',validate(passVerif.passwordSchema), passController.resetPassword);
 
-router.get('/verify-reset-code/:email/:code', validate(passVerif.verifyCodeSchema,'params'), passController.verifyCode);
+router.post('/verify-reset-code/:email/:code', validate(passVerif.verifyCodeSchema,'params'), passController.verifyCode);
 
 module.exports = router;
